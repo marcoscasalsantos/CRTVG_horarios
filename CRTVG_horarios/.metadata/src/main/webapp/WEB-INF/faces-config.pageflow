@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pageflow:Pageflow xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pageflow="http://www.sybase.com/suade/pageflow" id="pf12858359622580" configfile="/CRTVG_horarios/src/main/webapp/WEB-INF/faces-config.xml">
+  <nodes xsi:type="pageflow:PFPage" name="pages/gestion/menuAyuntamientos.xhtml" x="122" y="178" id="pf128749884792913" referenceLink="//@navigationRule.4/@navigationCase.1/@toViewId|" path="/pages/gestion/menuAyuntamientos.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/gestion/menuEmpresas.xhtml" x="122" y="946" id="pf128749905805318" referenceLink="//@navigationRule.4/@navigationCase.2/@toViewId|" path="/pages/gestion/menuEmpresas.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/detalleUsuario.xhtml" x="122" y="2520" id="pf13250638162161" referenceLink="//@navigationRule.3/@navigationCase.0/@toViewId|" path="/pages/detalleUsuario.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="*" id="pf13723486759670" referenceLink="//@navigationRule.3/@fromViewId|" outlinks="pf13723486759671 pf13723486759672 pf13723486759673 pf13723486759676 pf13734407393750 pf13745783948390" path="*"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/error/error.xhtml" id="pf13723486759677" referenceLink="//@navigationRule.0/@navigationCase.0/@toViewId|" inlinks="pf13723486759671" path="/pages/error/error.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/error/viewExpired.xhtml" id="pf13723486759678" referenceLink="//@navigationRule.1/@navigationCase.0/@toViewId|" inlinks="pf13723486759672" path="/pages/error/viewExpired.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/login.xhtml" id="pf13723486759679" referenceLink="//@navigationRule.2/@navigationCase.0/@toViewId|" inlinks="pf13723486759673" path="/pages/login.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/horarios/horarios.xhtml" id="pf137234867596710" referenceLink="//@navigationRule.6/@fromViewId|" outlinks="pf137234867596711 pf137234867596712" path="/pages/horarios/horarios.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/usuarios/usuarios.xhtml" id="pf137234867596713" referenceLink="//@navigationRule.7/@fromViewId|" outlinks="pf137234867596714 pf137234867596715" path="/pages/usuarios/usuarios.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/territorio/territorio.xhtml" id="pf137234867596716" referenceLink="//@navigationRule.5/@navigationCase.0/@toViewId|" inlinks="pf13723486759676" path="/pages/territorio/territorio.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/horario/detalleHorario.xhtml" id="pf137234867596717" referenceLink="//@navigationRule.6/@navigationCase.0/@toViewId|" inlinks="pf137234867596711" path="/pages/horario/detalleHorario.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/horarios/nuevoHorario.xhtml" id="pf137234867596718" referenceLink="//@navigationRule.6/@navigationCase.1/@toViewId|" inlinks="pf137234867596712" path="/pages/horarios/nuevoHorario.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/usuarios/detalleUsuario.xhtml" id="pf137234867596719" referenceLink="//@navigationRule.7/@navigationCase.0/@toViewId|" inlinks="pf137234867596714" path="/pages/usuarios/detalleUsuario.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/usuarios/nuevoUsuario.xhtml" id="pf137234867596720" referenceLink="//@navigationRule.7/@navigationCase.1/@toViewId|" inlinks="pf137234867596715" path="/pages/usuarios/nuevoUsuario.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/usuario/detalleUsuario.xhtml" id="pf137234867596721" referenceLink="//@navigationRule.8/@fromViewId|" outlinks="pf137234867596722" path="/pages/usuario/detalleUsuario.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/menuPrincipal.xhtml" id="pf137234867596723" referenceLink="//@navigationRule.9/@navigationCase.0/@toViewId|" inlinks="pf137234867596722 pf137234867596724" path="/pages/menuPrincipal.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/usuario/nuevoUsuario.xhtml" id="pf137234867596725" referenceLink="//@navigationRule.9/@fromViewId|" outlinks="pf137234867596724" path="/pages/usuario/nuevoUsuario.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/horarios/horarioAnualEmpleado.xhtml" id="pf13734407393762" referenceLink="//@navigationRule.4/@navigationCase.0/@toViewId|" inlinks="pf13734407393750" path="/pages/horarios/horarioAnualEmpleado.xhtml"/>
+  <nodes xsi:type="pageflow:PFPage" name="pages/horarios/horariosUbicacionesSeccion.xhtml" id="pf13745783948391" referenceLink="//@navigationRule.3/@navigationCase.0/@toViewId|" inlinks="pf13745783948390" path="/pages/horarios/horariosUbicacionesSeccion.xhtml"/>
+  <links id="pf13723486759671" target="pf13723486759677" source="pf13723486759670" outcome="error"/>
+  <links id="pf13723486759672" target="pf13723486759678" source="pf13723486759670" outcome="viewExpired"/>
+  <links id="pf13723486759673" target="pf13723486759679" source="pf13723486759670" outcome="login"/>
+  <links id="pf13723486759676" target="pf137234867596716" source="pf13723486759670" outcome="territorio"/>
+  <links id="pf137234867596711" target="pf137234867596717" source="pf137234867596710" outcome="detalleHorario"/>
+  <links id="pf137234867596712" target="pf137234867596718" source="pf137234867596710" outcome="nuevoHorario"/>
+  <links id="pf137234867596714" target="pf137234867596719" source="pf137234867596713" outcome="detalleUsuario"/>
+  <links id="pf137234867596715" target="pf137234867596720" source="pf137234867596713" outcome="nuevoUsuario"/>
+  <links id="pf137234867596722" target="pf137234867596723" source="pf137234867596721" outcome="menuPrincipal"/>
+  <links id="pf137234867596724" target="pf137234867596723" source="pf137234867596725" outcome="menuPrincipal"/>
+  <links id="pf13734407393750" target="pf13734407393762" source="pf13723486759670" outcome="horarioAnualEmpleado"/>
+  <links id="pf13745783948390" target="pf13745783948391" source="pf13723486759670" outcome="horariosUbicacionesSeccion"/>
+</pageflow:Pageflow>

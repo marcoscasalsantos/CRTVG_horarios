@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/WEB-INF/facelets/templates/defaultLayout.xhtml">
+		<!-- Label que se mostrará en el bloque central de contenido de la plantilla -->
+		<ui:param name="labelContent" value="Sesion caducada"></ui:param>			
+		<ui:define name="content">	
+			<h:form id="sessionExpired">
+
+				<h:panelGrid id="sessionExpiredPanelGrid" cellspacing="10" styleClass="defaultPanelGrid" width="550">
+					
+					<h:outputText value="#{msg.sessionExpired_aviso}" styleClass="ui-widget" />
+																
+					<p:commandButton id="introducirUsuarioCommandButton" value="#{msg.sessionExpired_introducirUsuario}" action="login" ajax="false" immediate="true"/>
+					
+					
+				</h:panelGrid>
+
+			</h:form>
+		</ui:define>			
+	</ui:composition>
+</html>

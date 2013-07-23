@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags">
+	
+	<ui:composition template="/WEB-INF/facelets/templates/defaultLayout.xhtml">
+				
+		<!-- Label que se mostrará en el panel del contenido de la plantilla -->
+		<ui:param name="labelContent" value="Detalle RFC"></ui:param>
+				
+		<ui:define name="content">
+		
+			<h:form id="cambioDetailForm" prependId="false">
+					
+				<p:focus context="codigoAplicacion"/>							
+				
+				<p:fieldset style="width:600px">
+					<h:panelGrid columns="6" columnClasses="columnAlignRight,columnAlignLeft,columnAlignRight,columnAlignLeft,columnAlignRight,columnAlignLeft,columnAlignRight,columnAlignLeft" >
+						
+						<h:outputLabel for="idCambio" value="ID:" />
+						<p:inputText id="idCambio" value="#{cambioDetailBean.cambio.idCambio}" readonly="true"/>
+	
+						<h:outputLabel for="estadoCambio" value="Estado:" style="padding-left:20px"/>
+						<p:selectOneMenu id="estadoCambio" value="#{cambioDetailBean.cambio.estado}" effect="">            			
+	            			<f:selectItems value="#{cambioDetailBean.descripcionesEstados}"/>
+	        			</p:selectOneMenu>
+	        			
+	        			<h:outputLabel for="fechaPlanificada" value="F. Planificada:" style="padding-left:20px"/>
+						<p:calendar value="#{cambioDetailBean.cambio.fechaPlanificada}" navigator="true" pattern="dd/MM/yyyy HH:mm" stepMinute="5" locale="#{localeBean.locale}"/>					
+														
+					</h:panelGrid>
+				</p:fieldset>
+				
+				<br/>
+							
+				<p:fieldset>
+					<h:panelGrid columns="12" columnClasses="columnAlignRight,columnAlignLeft,columnAlignRight,columnAlignLeft,columnAlignRight,columnAlignLeft,
+					columnAlignRight,columnAlignLeft,columnAlignRight,columnAlignLeft,columnAlignRight,columnAlignLeft">
+							
+						<h:outputLabel for="tipoCambio" value="Tipo cambio:" />
+						<p:selectOneMenu id="tipoCambio" value="#{cambioDetailBean.cambio.tipoCambio}"  effect="">            			
+	            			<f:selectItems value="#{cambioDetailBean.tiposCambios}"/>
+	        			</p:selectOneMenu>
+						
+						<h:outputLabel for="codigoAplicacion" value="Aplicación:" style="padding-left:20px"/>
+						<p:selectOneMenu id="codigoAplicacion" value="#{cambioDetailBean.cambio.aplicacion}" converter="aplicacionConverter" effect="">            			
+	            			<f:selectItems value="#{cambioDetailBean.codigosAplicaciones}"/>
+	        			</p:selectOneMenu>
+	
+						<h:outputLabel for="version" value="Versión:" style="padding-left:20px"/>
+						<p:inputText id="version" value="#{cambioDetailBean.cambio.versionAplicacion}" />
+											
+						<h:outputLabel for="codigoEntorno" value="Entorno:" style="padding-left:20px"/>
+						<p:selectOneMenu id="codigoEntorno" value="#{cambioDetailBean.cambio.entorno}" converter="entornoConverter" effect="">	            			
+	            			<f:selectItems value="#{cambioDetailBean.codigosEntornos}" />
+	        			</p:selectOneMenu>
+	
+						<h:outputLabel for="codigoCentro" value="Centro:" style="padding-left:20px"/>
+						<p:selectOneMenu id="codigoCentro" value="#{cambioDetailBean.cambio.centro}" converter="centroConverter" effect="">
+	            			<f:selectItems value="#{cambioDetailBean.codigosCentros}" />
+	        			</p:selectOneMenu>
+	        			
+						<h:outputLabel for="prioridad" value="Prioridad:" style="padding-left:20px"/>
+						<p:selectOneMenu id="prioridad" value="#{cambioDetailBean.cambio.prioridad}" effect="">
+	            			<f:selectItems value="#{cambioDetailBean.descripcionesPrioridades}" />
+	        			</p:selectOneMenu>
+        			
+        			</h:panelGrid>
+        			<h:panelGrid columns="2">        			
+        				<h:panelGrid columns="1">
+        					<h:outputLabel for="descripcionJustificacion" value="Descripción/Justificación:" />
+        					<p:inputTextarea id="descripcionJustificacion" value="#{cambioDetailBean.cambio.descripcionJustificacion}" rows="3" cols="140"/>
+        				</h:panelGrid>
+        				<h:panelGrid columns="2">
+		        			<p:selectBooleanCheckbox id="correccionErrores" value="#{cambioDeatilBean.cambio.correccionErrores}" />
+		        			<h:outputLabel for="correccionErrores" value="Corrección errores" />
+		        								        			
+		        			<p:selectBooleanCheckbox id="mejorasServicio" value="#{cambioDeatilBean.cambio.mejorasServicio}" />
+		        			<h:panelGroup>
+		        				<h:outputLabel for="mejorasServicio" value="Nuevas funcionalidades" />
+		        				<p:tooltip for="mejorasServicio" value="Mejoras del servicio y/o nuevas funcionalidades. Innovación." />
+		        			</h:panelGroup> 
+		        			
+		        			<p:selectBooleanCheckbox id="cumplimientoNormativas" value="#{cambioDeatilBean.cambio.cumplimientoNormativas}" />
+		        			<h:panelGroup>
+		        				<h:outputLabel for="cumplimientoNormativas" value="Cumplimiento normativas" /> 
+								<p:tooltip for="cumplimientoNormativas" value="Cumplimiento de nuevas normativas legales y/o políticas internas."/>					
+							</h:panelGroup>
+							       				
+        				</h:panelGrid>
+        			</h:panelGrid>
+        			
+					<h:panelGrid columns="10" columnClasses="columnAlignRight,columnAlignLeft,columnAlignRight,columnAlignLeft,
+					columnAlignRight,columnAlignLeft,columnAlignRight,columnAlignLeft,columnAlignRight,columnAlignLeft" style="width:1024px">        		
+	        			        			
+	        			<p:selectBooleanCheckbox id="cambioVersion" value="#{cambioDeatilBean.cambio.cambioVersion}" />
+	        			<h:outputLabel for="cambioVersion" value="Cambia la versión" />
+	        								        			
+	        			<p:selectBooleanCheckbox id="cambioConfiguracion" value="#{cambioDeatilBean.cambio.cambioConfiguracion}" />
+	        			<h:outputLabel for="cambioConfiguracion" value="Cambia la configuración" /> 
+
+	        			<p:selectBooleanCheckbox id="cambioEnBD" value="#{cambioDeatilBean.cambio.cambioEnBD}" />
+	        			<h:panelGroup>
+	        				<h:outputLabel for="cambioEnBD" value="Cambia estructura BD" /> 
+							<p:tooltip for="cambioEnBD" value="Cambios en la estructura DDL de la BD." />
+						</h:panelGroup>
+
+	        			
+	        			<p:selectBooleanCheckbox id="cambioDependencias" value="#{cambioDeatilBean.cambio.cambioDependencias}" />
+	        			<h:panelGroup>
+	        				<h:outputLabel for="cambioDependencias" value="Cambian dependencias" /> 
+							<p:tooltip for="cambioDependencias" value="Cambian las dependencias de esta aplicación tiene como cliente de servicios de otras aplicaciones." />					
+						</h:panelGroup>
+											        			
+	        			<p:selectBooleanCheckbox id="cambioPlanPrevencion" value="#{cambioDeatilBean.cambio.cambioDependencias}" />
+	        			<h:panelGroup>	        				
+		        			<h:outputLabel for="cambioPlanPrevencion" value="Cambia plan prevención/recuperación" />
+		        			<p:tooltip for="cambioPlanPrevencion">
+			        			Requiere cambios en los planes de prevención y recuperación.<br/> 
+			        			Uso de otros sistemas de los que se requiera hacer backup para poder recuperar el servicio tras un incidente<br/>
+			        			(p.e. acceso a otra BD, WebDAV).
+		        			</p:tooltip>
+		        			 
+						</h:panelGroup>
+						
+	   				</h:panelGrid>        			
+        			
+        		</p:fieldset>
+   				
+   				<br/>  
+   				
+				<p:fieldset legend="Pasos cambio">
+					
+					<br/>
+					
+					<p:editor id="editor" value="#{cambioDeatilBean.cambio.pasosCambio}" width="600"/>  
+
+					<br/>							
+					
+   				</p:fieldset>
+   				   			
+   				<br/>
+   				   				
+   				<p:messages id="messages"/>    												
+				
+				<p:commandButton value="Guardar" actionListener="#{userBean.updateUser}" update="messages" icon="ui-icon-disk"/>
+				
+				&#160;&#160;&#160;
+		            	
+				<p:commandButton value="Volver" action="usuarios" ajax="false" immediate="true" icon="ui-icon-arrowreturnthick-1-w"/>
+   			    	
+			</h:form>		
+		</ui:define>
+		
+		
+		
+	</ui:composition>
+</html>
+
+

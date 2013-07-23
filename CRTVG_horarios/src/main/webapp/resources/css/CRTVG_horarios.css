@@ -1,0 +1,353 @@
+body
+{    
+    font-family:Verdana, Arial, Helvetica, sans-serif;  
+    font-size:11px;
+    font-weight:normal;
+    color:#000000;
+}
+
+.header{	
+	height: 80px;
+}
+
+
+img {border: none;}
+
+
+a {
+	text-decoration: none;
+	color:#000000;
+}
+
+a:visited {text-decoration: none;}
+
+a:active {text-decoration: none;}
+
+a:hover {text-decoration: underline;}
+
+
+
+.textoGris9{
+	font-family: Verdana, Arial, Helvetica, sans-serif; 
+	font-size: 9px; 
+	color: #999999; 
+	text-decoration: none;
+}
+
+.centered {     
+	margin: 0px auto; 
+} 
+
+.columnAlignLeft{
+	text-align: left;
+}
+
+.columnAlignLeftTop{
+	text-align: left;
+	vertical-align: top;
+}
+
+.columnAlignCenter{
+	text-align: center;
+}
+
+.columnAlignCenterTop{
+	text-align: center;
+	vertical-align: top;
+}
+
+.columnAlignRight{
+	text-align: right;
+}
+
+.columnAlignRightTop{
+	text-align: right;
+	vertical-align: top;
+}
+
+.nowrap{
+	white-space: nowrap;
+}
+
+.width100{
+	width: 100%;
+}
+
+.width30{
+	width: 30%;
+}
+
+.width120px{
+	width: 120px;
+}
+
+.width400px{
+	width: 400px;
+}
+
+.maxwidth355px{
+	width: 355px;
+	max-width: 355px;
+}
+
+
+
+
+.columnRightNowrap{
+	text-align: right;
+	white-space: nowrap;
+}
+
+.ui-fieldset {
+background-color: transparent;
+border-color: transparent;
+}
+
+
+.pf-picklist-source{
+    background-color: red !important;
+    color: white !important;
+    width: auto !important;
+}
+
+.pf-picklist-target{
+    background-color: red !important;
+    color: white !important;    
+    width: auto !important;
+}
+
+/* Para quitar el borde de las tablas anidadas dentro de tablas en horarios.xhtml */
+.ui-datatable .borderless td
+{
+	border-style: hidden !important;	
+}
+
+/* Estilo definido específicamente para el componente con id #horariosForm:horariosSemanasUbicacionesTable */
+/* Note that the colon : needs to be escaped by a backslash */
+/* character '#' is used as id selector */
+#horariosForm\:horariosSemanasUbicacionesTable td
+{
+	padding: 4px 4px;
+}
+
+
+
+.ui-datatable .hide-column-names table thead tr {
+    display: none;
+}
+
+/* Estilos para los festivos de los horarios seccion-ubicación-semana */
+.ui-datatable tbody .backgroundYellow,
+.ui-datatable .backgroundYellow td
+{
+	background: #FFFFCC;
+}
+
+/* Estilos para los festivos de los horarios seccion-ubicación-semana */
+.ui-datatable .backgroundYellow .ui-datatable-even:hover td,
+.ui-datatable .backgroundYellow .ui-datatable-odd:hover td
+{
+	/*border:1px solid #7096ab;*/
+	background:#85b2cb url("#{resource['primefaces-aristo:images/ui-bg_highlight-hard_80_85b2cb_1x100.png']}") 50% 50% repeat-x;
+	background:#85b2cb linear-gradient(top, rgba(255,255,255,0.6), rgba(255,255,255,0));
+	background:#85b2cb -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.6)), to(rgba(255,255,255,0)));
+	background:#85b2cb -moz-linear-gradient(top, rgba(255,255,255,0.6), rgba(255,255,255,0));
+	/*    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#CCFFFFFF, endColorstr=#00FFFFFF);
+	-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#CCFFFFFF, endColorstr=#00FFFFFF)";
+	*/
+	/*font-weight:bold;*/
+	color:#313131;
+	-moz-box-shadow:0 0 5px #85b2cb;
+	-webkit-box-shadow:0px 0px 8px #85b2cb;
+	/*box-shadow:0px 0px 8px #85b2cb; */
+}
+
+/* Estilos para los festivos de los horarios seccion-ubicación-semana */
+.ui-datatable .backgroundYellow .ui-state-highlight td,
+.ui-datatable .backgroundYellow .ui-state-highlight td
+{
+	border:1px solid #666666;
+	background:#aaaaaa;
+	background:#aaaaaa linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0));
+	background:#aaaaaa -webkit-gradient(linear, left top, left bottom, from(rgba(0,0,0,0.25)), to(rgba(0,0,0,0)));
+	background:#aaaaaa -moz-linear-gradient(top, rgba(0,0,0,0.25), rgba(0,0,0,0));
+	/*    filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33000000, endColorstr=#00000000);
+	-ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#33000000, endColorstr=#00000000)";
+	*/
+	color:#ffffff;
+	text-shadow:1px 1px 1px #333333;
+}
+
+
+.timeField input {
+	width: 80px;
+}
+
+.dateTimeField input {
+	width: 50px;
+}
+
+#horarioAnualForm\:horarioEneroTable,
+#horarioAnualForm\:horarioEneroTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+	
+}
+
+#horarioAnualForm\:horarioFebreroTable,
+#horarioAnualForm\:horarioFebreroTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+	
+}
+
+#horarioAnualForm\:horarioMarzoTable,
+#horarioAnualForm\:horarioMarzoTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+	
+}
+
+#horarioAnualForm\:horarioAbrilTable,
+#horarioAnualForm\:horarioAbrilTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+}
+
+#horarioAnualForm\:horarioMayoTable,
+#horarioAnualForm\:horarioMayoTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+
+}
+
+#horarioAnualForm\:horarioJunioTable,
+#horarioAnualForm\:horarioJunioTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+
+}
+
+#horarioAnualForm\:horarioJulioTable,
+#horarioAnualForm\:horarioJulioTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+}
+
+#horarioAnualForm\:horarioAgostoTable,
+#horarioAnualForm\:horarioAgostoTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+}
+
+#horarioAnualForm\:horarioSeptiembreTable,
+#horarioAnualForm\:horarioSeptiembreTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+}
+
+#horarioAnualForm\:horarioOctubreTable,
+#horarioAnualForm\:horarioOctubreTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+}
+
+#horarioAnualForm\:horarioNoviembreTable,
+#horarioAnualForm\:horarioNoviembreTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+}
+
+#horarioAnualForm\:horarioDiciembreTable,
+#horarioAnualForm\:horarioDiciembreTable td
+{
+	font-size: 85%;
+	padding: 2px !important;
+}
+
+
+.calendarPanelGrid
+.calendarPanelGrid tr, 
+.calendarPanelGrid td 
+{	
+	border: none !important; 
+	padding: 1px 1px !important;   
+}
+
+.topAligned,
+.topAligned td,
+.topAligned tr
+{
+	vertical-align: top;
+	border: none !important;	
+	padding: 1px 1px !important;
+}
+
+.middleAligned td,
+.middleAligned tr
+{
+	vertical-align: middle;
+	border: none !important;	
+}
+
+.reducedPadding td,
+.reducedPadding tr
+{
+	padding: 1px 4px !important;
+}
+
+
+.calendarDay
+{
+	width:30px;
+	padding:1px !important;
+	
+}
+
+.calendarDaySelected {
+	width:30px;	
+	padding:1px;
+	text-align:center;
+	background-color:#8080ff !important;
+}
+
+
+.calendarDay .ui-state-default {
+background-color:red !important;
+}
+.calendarDay .ui-state-hover {
+background-color:green !important;
+}
+.calendarDay .ui-state-active {
+background-color:blue !important;
+}
+
+
+.calendarButton {
+    height: 2.2em important!;
+    vertical-align: middle important!;
+    width: 2.2em important!;
+}
+
+.hide-column-names table thead tr {
+    display: none;
+}
+
+
+.square {
+    border: 1px solid black !important;
+    border-style: solid !important;    
+    width: 12px;
+    height: 12px;
+}

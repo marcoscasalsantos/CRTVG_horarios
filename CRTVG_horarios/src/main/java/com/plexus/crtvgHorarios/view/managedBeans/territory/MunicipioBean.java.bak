@@ -1,0 +1,63 @@
+package com.plexus.crtvg_horarios.view.bean.territory;
+
+import java.io.Serializable;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
+
+import org.primefaces.model.LazyDataModel;
+
+import com.coremain.cambioService.dto.MunicipioCdto;
+import com.plexus.crtvg_horarios.view.util.FacesUtils;
+import com.plexus.crtvg_horarios.view.util.dataModel.lazyDataModel.LazyMunicipioCdtoDataModel;
+
+@ManagedBean(name = "municipioBean")
+@ViewScoped
+public class MunicipioBean implements Serializable {
+ 
+	private static final long serialVersionUID = 1L;
+	
+	private LazyDataModel<MunicipioCdto> lazyModel; 
+	
+	private MunicipioCdto selectedMunicipio; // Al a#adir una nueva municipio la selectedMunicipio ser# la nueva municipio
+		
+	
+	public LazyDataModel<MunicipioCdto> getLazyModel() {
+		
+		if (lazyModel == null) {			
+			lazyModel = new LazyMunicipioCdtoDataModel();
+		}
+		
+		return lazyModel;
+	}
+
+	public void setLazyModel(LazyDataModel<MunicipioCdto> lazyModel) {
+		this.lazyModel = lazyModel;
+	}		
+
+	public MunicipioCdto getSelectedMunicipio() {
+		return selectedMunicipio;
+	}
+
+	public void setSelectedMunicipio(MunicipioCdto selectedMunicipio) {
+		this.selectedMunicipio = selectedMunicipio;
+	}
+		
+	
+	public String goMunicipioDetail() {
+		// TODO: indicar de alg#n modo la selectedMunicipio para tenerla en el nuevo municipioBean que se crear# al 
+		// cambiar de p#gina ya que este ManagedBean tiene ViewScope
+		return "detalleMunicipio";
+	}
+	
+	public void updateMunicipio(ActionEvent event){
+		
+		//CambioService cambioService = FacesUtils.getService("cambioService", CambioService.class);
+		
+		//cambioService.updateMunicipio(selectedMunicipio);		
+		
+		FacesUtils.setInfoMessage(null, "detalleMunicipio_municipioActualizada", null);
+	}
+	
+}

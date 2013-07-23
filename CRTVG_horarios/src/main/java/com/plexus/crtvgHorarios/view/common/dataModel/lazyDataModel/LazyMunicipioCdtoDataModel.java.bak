@@ -1,0 +1,71 @@
+package com.plexus.crtvg_horarios.view.util.dataModel.lazyDataModel;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
+
+import com.coremain.baseService.dto.LazyDataDto;
+import com.coremain.cambioService.dto.MunicipioCdto;
+import com.coremain.cambioService.service.CambioService;
+import com.plexus.crtvg_horarios.view.util.FacesUtils;
+
+public class LazyMunicipioCdtoDataModel extends LazyDataModel<MunicipioCdto> {
+	
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	@SuppressWarnings("unchecked")
+	@Override
+    public MunicipioCdto getRowData(String rowKey) {
+
+    	List<MunicipioCdto> wrappedData = (List<MunicipioCdto>) getWrappedData();
+    	
+    	for(MunicipioCdto municipioCdto : wrappedData) {
+            if(municipioCdto.getIdMunicipio().toString().equals(rowKey))
+                return municipioCdto;
+        }
+
+        return null;        
+    }
+
+    @Override
+    public Object getRowKey(MunicipioCdto municipioCdto) {
+        return municipioCdto.getIdMunicipio();
+    }
+
+    @SuppressWarnings("unchecked")
+	@Override
+    public List<MunicipioCdto> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,String> filters) {    	
+    	
+    	if (this.getWrappedData() == null)
+    		setWrappedData(new ArrayList<MunicipioCdto>());
+    	
+    	CambioService cambioService = FacesUtils.getService("cambioService", CambioService.class);
+    	    	
+    	// Transformamos el objeto SortOrder propio de Primefaces en una constante de texto: ASC, DESC o "";
+    	// Evitamos así acoplar la capa de servicios de negocio con la tecnología de Primefaces propia la capa de presentación
+    	String _sortOrder = "";     	
+    	if (sortOrder.name().equals("ASCENDING")){
+    		_sortOrder = "ASC";
+    	}
+    	else if (sortOrder.name().equals("DESCENDING")){
+    		_sortOrder = "DESC";
+    	}
+    		    	
+    	LazyDataDto<MunicipioCdto> lazyData = cambioService.getAllMunicipioCdtosLazyLoadCdto(first, pageSize, sortField, _sortOrder, filters);
+    	
+    	setWrappedData(lazyData.getData());
+    	    	
+    	this.setPageSize(pageSize);
+    	this.setRowCount(lazyData.getRowCount()); // Establece el número de filas que cumplen los criterios de filtrado   	
+    	    	
+    	return (List<MunicipioCdto>) this.getWrappedData();
+    }    
+    
+}
+                    

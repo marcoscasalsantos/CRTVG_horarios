@@ -1,0 +1,66 @@
+package com.plexus.crtvg_horarios.view.bean.territory;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
+
+import com.coremain.cambioService.dto.ProvinciaDto;
+import com.coremain.cambioService.service.CambioService;
+import com.coremain.cambioService.util.ConstantesCambioService;
+import com.coremain.userService.dto.UserDto;
+import com.plexus.crtvg_horarios.view.util.FacesUtils;
+
+@ManagedBean(name = "provinciaBean")
+@ViewScoped
+public class ProvinciaBean implements Serializable {
+ 
+	private static final long serialVersionUID = 1L;
+
+	private List<ProvinciaDto> provincias;
+	
+	private UserDto selectedProvincia; // Al a#adir una nueva provincia la selectedProvincia ser# la nueva provincia
+		
+	
+	public List<ProvinciaDto> getProvincias() {
+		
+		if (provincias == null) {
+			CambioService cambioService = FacesUtils.getService("cambioService", CambioService.class);
+			
+			provincias = cambioService.getProvinciasByCodigoIso31661Pais(ConstantesCambioService.CODIGO_ISO_31661_PAIS_ESPANHA);
+		}
+		
+		return provincias;
+	}
+
+	public void setProvincias(List<ProvinciaDto> provincias) {
+		this.provincias = provincias;
+	}		
+
+	public UserDto getSelectedProvincia() {
+		return selectedProvincia;
+	}
+
+	public void setSelectedProvincia(UserDto selectedProvincia) {
+		this.selectedProvincia = selectedProvincia;
+	}
+		
+	
+	public String goProvinciaDetail() {
+		// TODO: indicar de alg#n modo la selectedProvincia para tenerla en el nuevo provinciaBean que se crear# al 
+		// cambiar de p#gina ya que este ManagedBean tiene ViewScope
+		return "detalleProvincia";
+	}
+	
+	public void updateProvincia(ActionEvent event){
+		
+		//CambioService cambioService = FacesUtils.getService("cambioService", CambioService.class);
+		
+		//cambioService.updateProvincia(selectedProvincia);		
+		
+		FacesUtils.setInfoMessage(null, "detalleProvincia_provinciaActualizada", null);
+	}
+	
+}

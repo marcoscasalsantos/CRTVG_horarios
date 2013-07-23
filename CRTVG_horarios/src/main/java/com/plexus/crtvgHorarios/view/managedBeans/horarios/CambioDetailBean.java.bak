@@ -1,0 +1,347 @@
+package com.plexus.crtvg_horarios.view.bean.cambio;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
+import javax.faces.model.SelectItem;
+
+import com.coremain.cambioService.dto.SistemaDto;
+import com.coremain.cambioService.dto.CambioDto;
+import com.coremain.cambioService.dto.CentroDto;
+import com.coremain.cambioService.dto.EntornoDto;
+import com.coremain.cambioService.service.CambioService;
+import com.plexus.crtvg_horarios.view.util.FacesUtils;
+
+@ManagedBean(name = "cambioDetailBean")
+@ViewScoped
+public class CambioDetailBean implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+
+	private CambioDto cambio;
+
+	private List<SistemaDto> aplicaciones;
+
+	private List<EntornoDto> entornos;
+
+	private List<CentroDto> centros;
+
+	private List<SelectItem> descripcionesPrioridades;
+	private List<SelectItem> tiposCambios;
+	private List<SelectItem> codigosAplicaciones;
+	private List<SelectItem> codigosEntornos;
+	private List<SelectItem> codigosCentros;	
+	private List<SelectItem> descripcionesEstados;	
+	private List<SelectItem> nombresResponsables;	
+	
+	
+	
+	private String content;  
+    
+    private String color = "#33fc14";  
+  
+  
+    public void saveListener() {  
+        content = content.replaceAll("\\r|\\n", "");  
+  
+        /*
+        final FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Content",  
+                    content.length() > 150 ? content.substring(0, 100) : content);  
+  
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+        */  
+    }  
+  
+  
+    public void changeColor() {  
+        if (color.equals("#1433FC")) {  
+            color = "#33fc14";  
+        } else {  
+            color = "#1433FC";  
+        }  
+    }  
+  
+    public String getContent() {  
+        return content;  
+    }  
+  
+    public void setContent(final String content) {  
+        this.content = content;  
+    }   	
+	
+	
+	
+	
+	
+	
+	public CambioDetailBean() {
+		super();
+
+		// Al crear el ManagedBean recupera el atributo idUsuarioDetalle a editar del flashScope
+		Integer idCambioDetail = (Integer) FacesUtils.getFlashAttribute("idCambioDetail");
+
+		CambioService cambioService = FacesUtils.getService("cambioService", CambioService.class);
+		
+		cambioService.getTodoloquequiero(content);		
+		
+		cambio = cambioService.getCambioById(idCambioDetail);
+	}	
+
+
+
+
+	public CambioDto getCambio() {
+		return cambio;
+	}
+
+
+	public void setCambio(CambioDto cambio) {
+		this.cambio = cambio;
+	}
+
+
+	public List<SistemaDto> getAplicaciones() {
+		return aplicaciones;
+	}
+
+
+	public void setAplicaciones(List<SistemaDto> aplicaciones) {
+		this.aplicaciones = aplicaciones;
+	}
+
+
+	public List<EntornoDto> getEntornos() {
+		return entornos;
+	}
+
+
+	public void setEntornos(List<EntornoDto> entornos) {
+		this.entornos = entornos;
+	}
+
+
+	public List<CentroDto> getCentros() {
+		return centros;
+	}
+
+
+	public void setCentros(List<CentroDto> centros) {
+		this.centros = centros;
+	}			
+
+	
+	public void updateCambio(ActionEvent event){
+
+		CambioService cambioService = FacesUtils.getService("cambioService", CambioService.class);
+
+		cambioService.updateCambio(cambio);
+
+		FacesUtils.setInfoMessage(null, "cambioDetail_cambioActualizado", null);		
+	}	
+
+	public String goCambios() {				
+		return "cambios";
+	}
+	
+	
+	public List<SelectItem> getTiposCambios() {
+		
+		if (tiposCambios == null) {
+			
+			SelectItem item0 = new SelectItem("", "");
+			SelectItem item1 = new SelectItem("1", "Cambio versión");
+			SelectItem item2 = new SelectItem("2", "Script BD");
+			SelectItem item3 = new SelectItem("3", "Configuración");
+			
+			tiposCambios = new ArrayList<SelectItem>();
+			
+			tiposCambios.add(item0);
+			tiposCambios.add(item1);
+			tiposCambios.add(item2);
+			tiposCambios.add(item3);
+		}
+			
+		return tiposCambios;		
+	}	
+	
+	
+	public List<SelectItem> getDescripcionesPrioridades() {
+		
+		if (descripcionesPrioridades == null) {
+			
+			SelectItem item0 = new SelectItem("", "");
+			
+			SelectItem item1 = new SelectItem("1", "NORMAL");
+			SelectItem item2 = new SelectItem("2", "BAJA");
+			SelectItem item3 = new SelectItem("3", "ALTA");
+			SelectItem item4 = new SelectItem("4", "URGENTE");
+			
+			descripcionesPrioridades = new ArrayList<SelectItem>();
+			
+			descripcionesPrioridades.add(item0);
+			descripcionesPrioridades.add(item1);
+			descripcionesPrioridades.add(item2);
+			descripcionesPrioridades.add(item3);
+			descripcionesPrioridades.add(item4);
+		}
+			
+		return descripcionesPrioridades;
+						
+	}	
+	
+	
+	public List<SelectItem> getCodigosAplicaciones() {
+		
+		if (codigosAplicaciones == null) {
+			
+			SelectItem item0 = new SelectItem("", "");
+			SelectItem item1 = new SelectItem("1", "TAOPE");
+			SelectItem item2 = new SelectItem("2", "IANUS");
+			SelectItem item3 = new SelectItem("3", "Software sistemas");
+			SelectItem item4 = new SelectItem("4", "Hardware");
+			
+			codigosAplicaciones = new ArrayList<SelectItem>();
+			
+			codigosAplicaciones.add(item0);
+			codigosAplicaciones.add(item1);
+			codigosAplicaciones.add(item2);
+			codigosAplicaciones.add(item3);
+			codigosAplicaciones.add(item4);
+			
+		}
+			
+		return codigosAplicaciones;
+						
+	}
+	
+	public List<SelectItem> getCodigosEntornos() {
+		
+		if (codigosEntornos == null) {
+			
+			SelectItem item0 = new SelectItem("", "");
+			SelectItem item1 = new SelectItem("1", "PRO");
+			SelectItem item2 = new SelectItem("2", "FOR");
+			SelectItem item3 = new SelectItem("3", "PRE");
+			SelectItem item4 = new SelectItem("4", "DES");
+			
+			codigosEntornos = new ArrayList<SelectItem>();
+			
+			codigosEntornos.add(item0);
+			codigosEntornos.add(item1);
+			codigosEntornos.add(item2);
+			codigosEntornos.add(item3);
+			codigosEntornos.add(item4);
+		}
+			
+		return codigosEntornos;		
+	}	
+	
+	public List<SelectItem> getCodigosCentros() {
+		
+		if (codigosCentros == null) {
+			
+			SelectItem item0 = new SelectItem("", "");
+			SelectItem item15 = new SelectItem("0", "SSCC");			
+			SelectItem item1 = new SelectItem("1", "ASF");
+			SelectItem item2 = new SelectItem("2", "BAR");
+			SelectItem item3 = new SelectItem("3", "BBZ");
+			SelectItem item4 = new SelectItem("4", "CHC");
+			SelectItem item5 = new SelectItem("5", "CHV");
+			SelectItem item6 = new SelectItem("6", "COS");
+			SelectItem item7 = new SelectItem("7", "GAL");
+			SelectItem item8 = new SelectItem("8", "HLA");
+			SelectItem item9 = new SelectItem("9", "MNF");
+			SelectItem item10 = new SelectItem("10", "OUR");
+			SelectItem item11 = new SelectItem("11", "PON");
+			SelectItem item12 = new SelectItem("12", "SAL");
+			SelectItem item13 = new SelectItem("13", "VER");
+			SelectItem item14 = new SelectItem("14", "XUN");
+			SelectItem item16 = new SelectItem("16", "Varios");
+						
+			codigosCentros = new ArrayList<SelectItem>();
+			
+			codigosCentros.add(item0);
+			codigosCentros.add(item1);
+			codigosCentros.add(item2);
+			codigosCentros.add(item3);
+			codigosCentros.add(item4);
+			codigosCentros.add(item5);
+			codigosCentros.add(item6);
+			codigosCentros.add(item7);
+			codigosCentros.add(item8);
+			codigosCentros.add(item9);
+			codigosCentros.add(item10);
+			codigosCentros.add(item11);
+			codigosCentros.add(item12);
+			codigosCentros.add(item13);
+			codigosCentros.add(item14);
+			codigosCentros.add(item15);
+			codigosCentros.add(item16);
+			
+		}
+			
+		return codigosCentros;		
+	}		
+	
+	public List<SelectItem> getDescripcionesEstados() {
+		
+		if (descripcionesEstados == null) {
+			
+			SelectItem item0 = new SelectItem("", "");
+			SelectItem item1 = new SelectItem("1", "Borrador");
+			SelectItem item2 = new SelectItem("2", "Solicitud");
+			SelectItem item4 = new SelectItem("4", "Aprobado");
+			SelectItem item5 = new SelectItem("5", "Planificado");
+			SelectItem item6 = new SelectItem("6", "Ejecutado");
+			SelectItem item7 = new SelectItem("7", "Cerrado");			
+			SelectItem item8 = new SelectItem("8", "Fallido");
+			SelectItem item9 = new SelectItem("9", "Cancelado");			
+			
+			descripcionesEstados = new ArrayList<SelectItem>();
+			
+			descripcionesEstados.add(item0);
+			descripcionesEstados.add(item1);
+			descripcionesEstados.add(item2);
+			descripcionesEstados.add(item4);
+			descripcionesEstados.add(item5);
+			descripcionesEstados.add(item6);
+			descripcionesEstados.add(item7);
+			descripcionesEstados.add(item8);
+			descripcionesEstados.add(item9);			
+			
+		}
+		
+			
+		return descripcionesEstados;		
+	}		
+	
+	public List<SelectItem> getNombresResponsables() {
+		
+		if (nombresResponsables == null) {
+			
+			SelectItem item0 = new SelectItem("", "");
+			SelectItem item1 = new SelectItem("1", "Responsable proyecto");
+			SelectItem item2 = new SelectItem("2", "Gestión Cambios");
+			SelectItem item3 = new SelectItem("3", "Calidad");
+			SelectItem item4 = new SelectItem("4", "Sistemas");
+			SelectItem item5 = new SelectItem("5", "Admin BBDD");
+			
+			nombresResponsables = new ArrayList<SelectItem>();
+			
+			nombresResponsables.add(item0);
+			nombresResponsables.add(item1);
+			nombresResponsables.add(item2);
+			nombresResponsables.add(item3);
+			nombresResponsables.add(item4);
+			nombresResponsables.add(item5);
+		}
+			
+		return nombresResponsables;		
+	}
+		
+	
+}

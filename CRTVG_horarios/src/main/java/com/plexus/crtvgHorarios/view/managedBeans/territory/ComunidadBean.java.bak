@@ -1,0 +1,66 @@
+package com.plexus.crtvg_horarios.view.bean.territory;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.event.ActionEvent;
+
+import com.coremain.cambioService.dto.ComunidadDto;
+import com.coremain.cambioService.service.CambioService;
+import com.coremain.cambioService.util.ConstantesCambioService;
+import com.coremain.userService.dto.UserDto;
+import com.plexus.crtvg_horarios.view.util.FacesUtils;
+
+@ManagedBean(name = "comunidadBean")
+@ViewScoped
+public class ComunidadBean implements Serializable {
+ 
+	private static final long serialVersionUID = 1L;
+
+	private List<ComunidadDto> comunidades;
+	
+	private UserDto selectedComunidad; // Al a#adir una nueva comunidad la selectedComunidad ser# la nueva comunidad
+		
+	
+	public List<ComunidadDto> getComunidades() {
+		
+		if (comunidades == null) {
+			CambioService cambioService = FacesUtils.getService("cambioService", CambioService.class);
+			
+			comunidades = cambioService.getComunidadesByCodigoIso31661Pais(ConstantesCambioService.CODIGO_ISO_31661_PAIS_ESPANHA);
+		}
+		
+		return comunidades;
+	}
+
+	public void setComunidades(List<ComunidadDto> comunidades) {
+		this.comunidades = comunidades;
+	}		
+
+	public UserDto getSelectedComunidad() {
+		return selectedComunidad;
+	}
+
+	public void setSelectedComunidad(UserDto selectedComunidad) {
+		this.selectedComunidad = selectedComunidad;
+	}
+		
+	
+	public String goComunidadDetail() {
+		// TODO: indicar de alg#n modo la selectedComunidad para tenerla en el nuevo comunidadBean que se crear# al 
+		// cambiar de p#gina ya que este ManagedBean tiene ViewScope
+		return "detalleComunidad";
+	}
+	
+	public void updateComunidad(ActionEvent event){
+		
+		//CambioService cambioService = FacesUtils.getService("cambioService", CambioService.class);
+		
+		//cambioService.updateComunidad(selectedComunidad);		
+		
+		FacesUtils.setInfoMessage(null, "detalleComunidad_comunidadActualizada", null);
+	}
+	
+}

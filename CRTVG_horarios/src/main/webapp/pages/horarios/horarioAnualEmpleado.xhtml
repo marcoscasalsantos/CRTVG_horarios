@@ -1,0 +1,1145 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+			
+	<ui:composition template="/WEB-INF/facelets/templates/defaultLayout.xhtml">
+	
+		<!-- Label que se mostrará en el panel del contenido de la plantilla -->
+		<ui:param name="labelContent" value="#{msg.horarioAnualEmpleado_titulo}"></ui:param>
+				
+		<ui:define name="content">
+						
+			<h:form id="horarioAnualForm">
+	
+				<h:outputScript library="js" name="localCalendar.js" />
+									
+				<p:growl id="growl" showDetail="false" life="4000" />
+									
+				 <h:panelGrid columns="6" style="margin-bottom:10px" cellpadding="5">	
+				 
+					<p:outputLabel for="categoria" value="#{msg.horarioAnualEmpleado_categoria}:" />
+
+					<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->
+					<p:selectOneMenu id="categoria" value="#{horarioAnualBean.selectedCategoria}" converter="omnifaces.SelectItemsConverter">
+						<p:ajax listener="#{horarioAnualBean.categoriaChangeListener}" update="empleados, anhos, calendarioAnualPanelGrid, definicionesHorariosPanelGrid" />												    
+	            		<f:selectItem itemLabel=" - Todas - " itemValue=""/>
+	            		<f:selectItems value="#{horarioAnualBean.categoriasSelectItems}" />
+	        		</p:selectOneMenu>
+									
+					<p:outputLabel for="empleados" value="#{msg.horarioAnualEmpleado_empleado}:" />
+
+					<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->
+					<p:selectOneMenu id="empleados" value="#{horarioAnualBean.selectedEmpleado}" converter="omnifaces.SelectItemsConverter" filter="true" filterMatchMode="contains">
+						<p:ajax listener="#{horarioAnualBean.empleadoChangeListener}" update="anhos, calendarioAnualPanelGrid, definicionesHorariosPanelGrid" />	
+						<!-- FIXME incluir un panel con todos meses a actualizar tras la llamada ajax-->
+																	    
+	            		<f:selectItems value="#{horarioAnualBean.empleadosSelectItems}" />            		
+	        		</p:selectOneMenu>
+	        			        		
+	        		<p:outputLabel for="anhos" value="#{msg.horarioAnualEmpleado_anho}:"/>
+	        		
+	        		<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->
+					<p:selectOneMenu id="anhos" value="#{horarioAnualBean.selectedAnho}" converter="omnifaces.SelectItemsConverter">
+						<p:ajax listener="#{horarioAnualBean.anhoChangeListener}" update="calendarioAnualPanelGrid, definicionesHorariosPanelGrid" />
+						
+						<!-- FIXME incluir un panel con todos meses a actualizar tras la llamada ajax-->
+																		    
+	            		<f:selectItems value="#{horarioAnualBean.anhosSelectItems}" />
+	        		</p:selectOneMenu>
+	        			        		
+	        	</h:panelGrid>
+
+				<p:panelGrid columns="2" styleClass="topAligned">
+					<p:panelGrid id="calendarioAnualPanelGrid" columns="3" styleClass="calendarPanelGrid" style="width:408"> 
+	
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"   selection="#{horarioAnualBean.selectedSemanasEnero}"-->
+						<p:dataTable id="horarioEneroTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.enero.semanas}" paginator="false"
+							 style="width:255px" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    	 	<h:outputText value="#{msg.horarioAnualEmpleado_enero}"/> 			
+					    	</f:facet>    	    
+					    	    
+					        <p:column>
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />	
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+		
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"  -->
+						<p:dataTable id="horarioFebreroTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.febrero.semanas}" paginator="false"
+							 style="width:251px" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    		<h:outputText value="#{msg.horarioAnualEmpleado_febrero}"/> 						
+					    	</f:facet>
+					    	  		    	    				    	    
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+		
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"  -->
+						<p:dataTable id="horarioMarzoTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.marzo.semanas}" paginator="false"
+							style="width:251px" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    		<h:outputText value="#{msg.horarioAnualEmpleado_marzo}"/> 						
+					    	</f:facet>		    	    
+					    	    
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+		
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"  -->
+						<p:dataTable id="horarioAbrilTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.abril.semanas}" paginator="false"
+							 style="width:251px" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    		<h:outputText value="#{msg.horarioAnualEmpleado_abril}"/>					
+					    	</f:facet>
+					    	    										    	 					    	    
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+		
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"  -->
+						<p:dataTable id="horarioMayoTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.mayo.semanas}" paginator="false"
+							  style="width:251px" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    		<h:outputText value="#{msg.horarioAnualEmpleado_mayo}"/> 						
+					    	</f:facet>
+					    	    
+										    	    
+					    	    
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+		
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"  -->
+						<p:dataTable id="horarioJunioTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.junio.semanas}" paginator="false"
+							 style="width:251px" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    		<h:outputText value="#{msg.horarioAnualEmpleado_junio}"/> 						
+					    	</f:facet>
+					    	    
+										    	    
+					    	    
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+		
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"  -->
+						<p:dataTable id="horarioJulioTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.julio.semanas}" paginator="false"
+							 style="width:251px" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    		<h:outputText value="#{msg.horarioAnualEmpleado_julio}"/> 						
+					    	</f:facet>
+					    	    
+										    	    
+					    	    
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+		
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"  -->
+						<p:dataTable id="horarioAgostoTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.agosto.semanas}" paginator="false"
+							  style="width:251px" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    		<h:outputText value="#{msg.horarioAnualEmpleado_agosto}"/> 						
+					    	</f:facet>
+					    	    
+										    	    
+					    	    
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+		
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"  -->
+						<p:dataTable id="horarioSeptiembreTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.septiembre.semanas}" paginator="false"
+							  style="width:251px" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    		<h:outputText value="#{msg.horarioAnualEmpleado_septiembre}"/> 						
+					    	</f:facet>
+					    	    
+										    	    
+					    	    
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+		
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"  -->
+						<p:dataTable id="horarioOctubreTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.octubre.semanas}" paginator="false"
+							 style="width:251px" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    		<h:outputText value="#{msg.horarioAnualEmpleado_octubre}"/> 						
+					    	</f:facet>
+					    	    
+										    	    
+					    	    
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+		
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"  -->
+						<p:dataTable id="horarioNoviembreTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.noviembre.semanas}" paginator="false"
+							 style="width:251px;" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    		<h:outputText value="#{msg.horarioAnualEmpleado_noviembre}"/> 						
+					    	</f:facet>
+					    	    
+										    	    
+					    	    
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+		
+						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"  -->
+						<p:dataTable id="horarioDiciembreTable" var="horarioSemana" value="#{horarioAnualBean.horarioAnual.diciembre.semanas}" paginator="false"
+							  style="width:251px" emptyMessage="#{msg.emptyMessage}">
+							 								 								    
+					    	<f:facet name="header">			    		
+					    		<h:outputText value="#{msg.horarioAnualEmpleado_diciembre}"/> 						
+					    	</f:facet>
+					    	    
+										    	    
+					    	    
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+					            </f:facet>
+					            			            			            
+								<p:commandButton id="lunesEneroButton" value="#{horarioSemana.diaLunes}" actionListener="lunesEneroListener"   
+		                             update="lunesEneroButton" rendered="#{horarioSemana.fechaLunes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioLunes} !important;"/>        
+					        </p:column>
+					        
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="martesEneroButton" value="#{horarioSemana.diaMartes}" actionListener="martesEneroListener"   
+		                             update="martesEneroButton" rendered="#{horarioSemana.fechaMartes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMartes} !important;"/> 						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="miercolesEneroButton" value="#{horarioSemana.diaMiercoles}" actionListener="miercolesEneroListener"   
+		                             update="miercolesEneroButton" rendered="#{horarioSemana.fechaMiercoles != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioMiercoles} !important;"/>						            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="juevesEneroButton" value="#{horarioSemana.diaJueves}" actionListener="juevesEneroListener"   
+		                             update="juevesEneroButton" rendered="#{horarioSemana.fechaJueves != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioJueves} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="viernesEneroButton" value="#{horarioSemana.diaViernes}" actionListener="viernesEneroListener"   
+		                             update="viernesEneroButton" rendered="#{horarioSemana.fechaViernes != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioViernes} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="sabadoEneroButton" value="#{horarioSemana.diaSabado}" actionListener="sabadoEneroListener"   
+		                             update="sabadoEneroButton" rendered="#{horarioSemana.fechaSabado != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioSabado} !important;"/>							            
+					        </p:column>
+		
+					        <p:column>			            
+					            <f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+					            </f:facet>
+					            			            
+								<p:commandButton id="domingoEneroButton" value="#{horarioSemana.diaDomingo}" actionListener="domingoEneroListener"   
+		                             update="domingoEneroButton" rendered="#{horarioSemana.fechaDomingo != null}" styleClass="calendarDay" style="background-color:#{horarioSemana.hexColorHorarioDomingo} !important;"/> 						            
+					        </p:column>
+					        				        
+				        </p:dataTable>
+			        
+			        </p:panelGrid>
+		        
+					<p:panelGrid id="definicionesHorariosPanelGrid" columns="1" styleClass="topAligned">
+					
+						<p:panel id="nuevaDefinicionHorarioPanel" header="#{msg.horarioAnualEmpleado_nuevaDefinicionHorario}" styleClass="middleAligned" rendered="#{horarioAnualBean.panelNuevaDefinicionHorarioVisible}">
+														
+							<h:panelGrid columns="2" columnClasses="columnAlignRight, middleAligned">
+							
+								<p:outputLabel for="fechaInicio" value="#{msg.horarioAnualEmpleado_periodoFechas}:" />
+							
+								<h:panelGroup>
+									<p:calendar id="fechaInicio" value="#{horarioAnualBean.definicionHorario.fechaDesde}" locale="#{localeBean.locale}" pattern="dd/MM/yyyy" 
+										navigator="true" styleClass="timeField">        						  
+		    						</p:calendar> -
+									<p:calendar id="fechaFin" value="#{horarioAnualBean.definicionHorario.fechaHasta}" locale="#{localeBean.locale}" pattern="dd/MM/yyyy" 
+										navigator="true" styleClass="timeField">        						  
+		    						</p:calendar>
+	    						</h:panelGroup>
+	    								    					
+		    					<p:outputLabel for="patronDiasSemana" value="#{msg.horarioAnualEmpleado_patronDiasSemana}:" />	
+										    								    						
+								<h:panelGrid id="patronDiasSemana" columns="7" styleClass="reducedPadding">
+									<p:outputLabel for="lunesCheck" value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
+									<p:outputLabel for="martesCheck" value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
+									<p:outputLabel for="miercolesCheck" value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
+									<p:outputLabel for="juevesCheck" value="#{msg.horarioAnualEmpleado_abreviaturaJueves}" />
+									<p:outputLabel for="viernesCheck" value="#{msg.horarioAnualEmpleado_abreviaturaViernes}" />
+									<p:outputLabel for="sabadoCheck" value="#{msg.horarioAnualEmpleado_abreviaturaSabado}" />
+									<p:outputLabel for="domingoCheck" value="#{msg.horarioAnualEmpleado_abreviaturaDomingo}" />
+									
+									<p:selectBooleanCheckbox id="lunesCheck" value="#{horarioAnualBean.definicionHorario.aplicarLunes}">            						  
+	            						<p:ajax event="valueChange"/>
+	        						</p:selectBooleanCheckbox>        						
+									<p:selectBooleanCheckbox id="martesCheck" value="#{horarioAnualBean.definicionHorario.aplicarMartes}">            						  
+	            						<p:ajax event="valueChange"/>
+	        						</p:selectBooleanCheckbox> 
+									<p:selectBooleanCheckbox id="miercolesCheck" value="#{horarioAnualBean.definicionHorario.aplicarMiercoles}">            						  
+	            						<p:ajax event="valueChange"/>
+	        						</p:selectBooleanCheckbox> 
+									<p:selectBooleanCheckbox id="juevesCheck" value="#{horarioAnualBean.definicionHorario.aplicarJueves}">            						  
+	            						<p:ajax event="valueChange"/>
+	        						</p:selectBooleanCheckbox>         						 
+									<p:selectBooleanCheckbox id="viernesCheck" value="#{horarioAnualBean.definicionHorario.aplicarViernes}">            						  
+	            						<p:ajax event="valueChange"/>
+	        						</p:selectBooleanCheckbox> 
+									<p:selectBooleanCheckbox id="sabadoCheck" value="#{horarioAnualBean.definicionHorario.aplicarSabado}">            						  
+	            						<p:ajax event="valueChange"/>
+	        						</p:selectBooleanCheckbox> 
+									<p:selectBooleanCheckbox id="domingoCheck" value="#{horarioAnualBean.definicionHorario.aplicarDomingo}">            						  
+	            						<p:ajax event="valueChange"/>
+	        						</p:selectBooleanCheckbox> 																						
+								</h:panelGrid>
+								
+	    						
+	    						
+		    					<h:panelGroup>
+		    					
+		    						<p:outputLabel for="numSemanasAlternancia" value="#{msg.horarioAnualEmpleado_numSemanasAlternancia}:" />	
+		    						
+						    		<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->					  				
+									<p:selectOneMenu id="numSemanasAlternancia" value="#{horarioAnualBean.definicionHorario.numSemanasAlternancia}" editable="true">
+										<p:ajax event="valueChange"/>											    
+					            		<f:selectItems value="#{horarioAnualBean.numSemanasAlternanciaSelectItems}" /> 
+					        		</p:selectOneMenu>
+		    						<p:tooltip for="numSemanasAlternancia" value="#{msg.horarioAnulaEmpleado_numSemanasAlternanciaTooltip}" />  						
+		    												
+		    												
+		    												
+		    						<p:spacer width="20"/>
+		    															
+	    							<p:outputLabel for="definicionHorarioColorPickerButton" value="#{msg.horarioAnualEmpleado_colorHorario}:" />
+		    					
+		    						<p:colorPicker id="definicionHorarioColorPickerButton" value="#{horarioAnualBean.definicionHorario.colorHorario}"/>
+		    					</h:panelGroup>		    					
+		    											
+														
+								<p:outputLabel for="nuevaDefinicionHorarioHoraDesde" value="#{msg.horarioAnualEmpleado_periodoHoras}:" />
+								    
+							    <h:panelGroup> 
+								    <p:calendar id="nuevaDefinicionHorarioHoraDesde" value="#{horarioAnualBean.definicionHorario.horaDesde}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField"> 
+								    	<p:ajax event="dateSelect" /> 
+								    </p:calendar> -  
+								    <p:calendar id="nuevaDefinicionHorarioHoraHasta" value="#{horarioAnualBean.definicionHorario.horaHasta}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField" >
+								    	<p:ajax event="dateSelect" />
+								    </p:calendar>
+							    </h:panelGroup>
+							    
+							    <p:outputLabel for="nuevaDefinicionHorarioUbicaciones" value="#{msg.horarioAnualEmpleado_ubicacion}:" />
+								    
+								<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->					  				
+								<p:selectOneMenu id="nuevaDefinicionHorarioUbicaciones" value="#{horarioAnualBean.definicionHorario.ubicacion}" converter="omnifaces.SelectItemsConverter">
+									<p:ajax event="change" />
+				            		<f:selectItems value="#{horarioAnualBean.ubicacionesSelectItems}" /> 
+				        		</p:selectOneMenu>
+				        		
+				        		<p:outputLabel for="nuevaDefinicionHorarioProducciones" value="#{msg.horarioAnualEmpleado_produccion}:" />
+				        		
+								<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->					  				
+								<p:selectOneMenu id="nuevaDefinicionHorarioProducciones" value="#{horarioAnualBean.definicionHorario.produccion}" converter="omnifaces.SelectItemsConverter">
+									<p:ajax event="change" />
+				            		<f:selectItems value="#{horarioAnualBean.produccionesSelectItems}" /> 
+				        		</p:selectOneMenu>		
+				        				
+			        		
+			        		</h:panelGrid>
+			        		
+							<f:facet name="footer">
+				        		<p:commandButton id="anhadirHorarioButton" value="#{msg.boton_anhadir}" update=":horarioAnualForm:definicionesHorariosPanelGrid :horarioAnualForm:calendarioAnualPanelGrid" 
+				        			actionListener="#{horarioAnualBean.anhadirDefinicionHorario}"/>
+									
+				        		<p:commandButton id="cancelarHorarioButton" value="#{msg.boton_cancelar}" update=":horarioAnualForm:definicionesHorariosPanelGrid" actionListener="#{horarioAnualBean.cancelarNuevaDefinicionHorario}"/>									
+		   					</f:facet>
+              					
+    					</p:panel>					
+							        	       
+						<p:dataTable id="definicionesHorariosTable" var="definicionHorario" value="#{horarioAnualBean.horarioAnual.definicionesHorarios}"
+							emptyMessage="#{msg.horarioAnualEmpleado_sinHorariosDefinidos}" styleClass="hide-column-names">
+							
+		   					<f:facet name="header">
+		   						<h:outputText value="#{msg.horarioAnualEmpleado_definicionesHorarios}"/> 
+		   					</f:facet>					
+														
+							<p:column>			            
+					            <p:colorPicker id="popupColorPickerButton" value="#{definicionHorario.colorHorario}" />
+					        </p:column>
+																																				
+							<p:column>
+							    <h:panelGrid columns="2" cellpadding="5" styleClass="middleAligned">       
+
+									<p:outputLabel for="horaDesde" value="#{msg.horarioAnualEmpleado_periodoHoras}:" />					         									    
+					         									    
+								    <h:panelGroup> 
+									    <p:calendar id="horaDesde" value="#{definicionHorario.horaDesde}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField"> 
+									    	<p:ajax event="dateSelect" listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="actualizarHorarioButton" /> 
+									    </p:calendar> -  
+									    <p:calendar id="horaHasta" value="#{definicionHorario.horaHasta}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField">
+									    	<p:ajax event="dateSelect" listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="actualizarHorarioButton" />
+									    </p:calendar>
+								    </h:panelGroup>
+								    
+								    <p:outputLabel for="ubicaciones" value="#{msg.horarioAnualEmpleado_ubicacion}:" />
+								    
+									<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->
+									<p:selectOneMenu id="ubicaciones" value="#{definicionHorario.ubicacion}" converter="omnifaces.SelectItemsConverter">
+										<p:ajax listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="definicionesHorariosTable"/>
+					            		<f:selectItems value="#{horarioAnualBean.ubicacionesSelectItems}" /> 
+					        		</p:selectOneMenu>	
+					        		
+					        		<p:outputLabel for="producciones" value="#{msg.horarioAnualEmpleado_produccion}:" />
+					        		
+									<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->					  				
+									<p:selectOneMenu id="producciones" value="#{definicionHorario.produccion}" converter="omnifaces.SelectItemsConverter">
+										<p:ajax listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="definicionesHorariosTable"/>
+				            			<f:selectItems value="#{horarioAnualBean.produccionesSelectItems}" /> 
+				        			</p:selectOneMenu>
+				        							    
+				        			<!-- Usar este recuadro para mostrar el color del horario cuando no se permita editarlo
+				        			<div class="square" style="background: yellow;"></div>
+				        			  -->
+					        							        	
+								</h:panelGrid>
+							</p:column>
+							
+							<p:column>
+								<p:commandButton id="actualizarHorarioButton" update=":horarioAnualForm:calendarioAnualPanelGrid" actionListener="#{horarioAnualBean.aplicarCambiosDefinicionHorario}"
+					        		rendered="#{horarioAnualBean.botonAplicarCambiosDefinicionHorarioVisible}" icon="ui-icon-check" title="#{msg.boton_aplicar}"/>
+					        			
+								<p:commandButton id="eliminarHorarioButton" update=":horarioAnualForm:calendarioAnualPanelGrid" actionListener="#{horarioAnualBean.eliminarDefinicionHorario}"
+					        		 icon="ui-icon-minusthick" title="#{msg.boton_eliminar}"/>			        										
+							</p:column>
+																									
+							<f:facet name="footer">
+		   						 <p:commandButton id="nuevoHorarioButton" value="#{msg.boton_nuevo}" update=":horarioAnualForm:definicionesHorariosPanelGrid" actionListener="#{horarioAnualBean.nuevaDefinicionHorario}"
+				        			 icon="ui-icon-plusthick" />
+				        			 
+				        		<p:commandButton id="guardarCambiosHorariosButton" value="#{msg.boton_guardar}" update=":horarioAnualForm:growl" actionListener="#{horarioAnualBean.guardarCambiosHorarioEmpleado}"
+				        			  icon="ui-icon-check"  rendered="#{horarioAnualBean.botonGuardarVisible}"/>				        			 
+		   					</f:facet>	
+										
+						</p:dataTable>
+						
+					</p:panelGrid>
+		        
+		        </p:panelGrid>	        
+	        		
+			</h:form>		 				
+			
+		</ui:define>
+	</ui:composition>
+</html>
+
+		
+

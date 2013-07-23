@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+    version="2.0">
+    
+	<application>
+		
+		<!-- 
+	    <el-resolver>
+	    	org.springframework.web.jsf.el.SpringBeanFacesELResolver
+	    </el-resolver>
+	     -->
+	
+		<locale-config>
+			<default-locale>gl</default-locale>
+			<!-- <supported-locale>es</supported-locale>  -->
+		</locale-config>
+		
+		<!-- Resource bundle for application labels/text messages -->
+		<!-- Los archvos ubicados en src/main/resources son empaquetados por maven en la raiz del classpath -->
+		<resource-bundle>
+			<base-name>messages</base-name>
+			<var>msg</var>
+		</resource-bundle>
+		
+		<!-- Resource bundle for application system messages-->
+		<!-- Los archvos ubicados en src/main/resources son empaquetados por maven en la raiz del classpath -->
+		<resource-bundle>
+			<base-name>applicationVersion</base-name>
+			<var>appVersion</var>
+		</resource-bundle>	
+						
+	</application>
+	
+	
+	<!-- Define un exception-handle-factory para gestionar las excepciones de la aplicación -->
+
+	 
+	<!-- Comentado por conflictos durante la carga de Omnifaces que se opto por no usar, aunque usaremos las funcionalidades "sueltas" agregandolas a FacesUtils
+	http://balusc.blogspot.com.es/2012/03/full-ajax-exception-handler.html	     
+	<factory>
+		<exception-handler-factory>com.plexus.crtvgHorarios.view.common.exceptionHandler.ApplicationExceptionHandlerFactory</exception-handler-factory>
+	</factory>
+     -->	
+                 
+	<factory>
+	    <exception-handler-factory>
+	        org.omnifaces.exceptionhandler.FullAjaxExceptionHandlerFactory
+	    </exception-handler-factory>
+	</factory>     
+
+     
+     
+	<lifecycle>		
+		<!-- Listener del ciclo de vida de una petición JSF utilizado para customizar los mensajes
+	  	de spring-security y mostrarlos con JSF
+	 	-->			 	
+		<phase-listener>com.plexus.crtvgHorarios.view.common.phaseListener.LoginErrorPhaseListener</phase-listener>
+	</lifecycle> 
+	
+
+	<!-- navigation rules -->
+	
+	<!-- La página inicial a la que se va tras el login satisfactorio está definida en el archivo security-context.xml -->
+
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>error</from-outcome>
+			<to-view-id>/pages/error/error.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>viewExpired</from-outcome>
+			<to-view-id>/pages/error/viewExpired.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	 
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>login</from-outcome>
+			<to-view-id>/pages/login.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+				
+		<navigation-case>
+			<from-outcome>horariosUbicacionesSeccion</from-outcome>
+			<to-view-id>/pages/horarios/horariosUbicacionesSeccion.xhtml</to-view-id>
+		</navigation-case>
+				
+	</navigation-rule>	
+	 
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+				
+		<navigation-case>
+			<from-outcome>horarioAnualEmpleado</from-outcome>
+			<to-view-id>/pages/horarios/horarioAnualEmpleado.xhtml</to-view-id>
+		</navigation-case>
+				
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+				
+		<navigation-case>
+			<from-outcome>territorio</from-outcome>
+			<to-view-id>/pages/territorio/territorio.xhtml</to-view-id>
+		</navigation-case>
+				
+	</navigation-rule>
+		
+	<navigation-rule>
+		<from-view-id>/pages/horarios/horarios.xhtml</from-view-id>
+				
+		<navigation-case>
+			<from-outcome>detalleHorario</from-outcome>
+			<to-view-id>/pages/horario/detalleHorario.xhtml</to-view-id>
+		</navigation-case>
+		
+		<navigation-case>
+			<from-outcome>nuevoHorario</from-outcome>
+			<to-view-id>/pages/horarios/nuevoHorario.xhtml</to-view-id>
+		</navigation-case>			
+		
+	</navigation-rule>
+	
+
+	<navigation-rule>
+		<from-view-id>/pages/usuarios/usuarios.xhtml</from-view-id>
+				
+		<navigation-case>
+			<from-outcome>detalleUsuario</from-outcome>
+			<to-view-id>/pages/usuarios/detalleUsuario.xhtml</to-view-id>
+		</navigation-case>
+		
+		<navigation-case>
+			<from-outcome>nuevoUsuario</from-outcome>
+			<to-view-id>/pages/usuarios/nuevoUsuario.xhtml</to-view-id>
+		</navigation-case>			
+		
+	</navigation-rule>
+
+
+	
+	<navigation-rule>
+		<from-view-id>/pages/usuario/detalleUsuario.xhtml</from-view-id>
+		
+		<navigation-case>
+			<from-outcome>menuPrincipal</from-outcome>
+			<to-view-id>/pages/menuPrincipal.xhtml</to-view-id>
+		</navigation-case>
+		
+	</navigation-rule>
+	
+	<navigation-rule>
+		<from-view-id>/pages/usuario/nuevoUsuario.xhtml</from-view-id>
+		
+		<navigation-case>
+			<from-outcome>menuPrincipal</from-outcome>
+			<to-view-id>/pages/menuPrincipal.xhtml</to-view-id>
+		</navigation-case>
+		
+	</navigation-rule>	
+		
+
+</faces-config>

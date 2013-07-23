@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>	
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+	
+	<ui:composition template="/WEB-INF/facelets/templates/defaultLayout.xhtml">
+	
+		<!-- Label que se mostrará en el panel del contenido de la plantilla -->
+		<ui:param name="labelContent" value="#{msg.horariosUbicacionesSeccion_titulo}"></ui:param>
+				
+		<ui:define name="content">
+						
+			<h:form id="horariosForm">
+				
+				<h:outputScript library="js" name="localCalendar.js" />
+									
+				<p:growl id="growl" showDetail="true" life="3000" />
+				
+				 <h:panelGrid columns="4" style="margin-bottom:10px" cellpadding="5">					
+									
+					<h:outputText value="#{msg.horariosUbicacionesSeccion_seccion}:" />
+
+					<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->
+					<p:selectOneMenu id="secciones" value="#{horariosBean.selectedSeccion}" converter="omnifaces.SelectItemsConverter">
+						<p:ajax listener="#{horariosBean.seccionChangeListener}" update="horariosSemanasUbicacionesTable" />									    
+	            		<f:selectItems value="#{horariosBean.seccionesSelectItems}" /> 
+	        		</p:selectOneMenu>
+	        			        		
+	        		<h:outputText value="#{msg.horariosUbicacionesSeccion_semana}:" />
+	        		
+	        		<h:panelGroup>
+		        		<p:commandButton id="semanaAnteriorButton" icon="ui-icon-triangle-1-w" actionListener="#{horariosBean.mostrarSemanaAnterior}"   
+			               update="semana, horariosSemanasUbicacionesTable" style="height: 2em; vertical-align:top; width:2em;" title="Anterior"  />
+			               
+		        		<p:calendar id="semana" value="#{horariosBean.selectedSemana}" locale="#{localeBean.locale}" pattern="dd/MM/yyyy" styleClass="timeField">	        			
+	        				<p:ajax event="dateSelect" listener="#{horariosBean.semanaChangeListener}" update="horariosSemanasUbicacionesTable" />  
+	    				</p:calendar>
+	    				
+	    				<p:spacer width="1"/>
+	    					    				
+		        		<p:commandButton id="semanaSiguienteButton" icon="ui-icon-triangle-1-e" actionListener="#{horariosBean.mostrarSemanaSiguiente}"   
+			               update="semana, horariosSemanasUbicacionesTable" style="height: 2em; vertical-align:top; width:2em;" title="Siguiente"  />	    				 
+    				</h:panelGroup> 
+	        		
+	        	</h:panelGrid>
+	        		
+	        		<!-- rowKey="#{horarioSemanaUbicacion.idHorarioSemanaUbicacion}" -->
+				<p:dataTable id="horariosSemanasUbicacionesTable" var="horarioSemanaUbicacion" value="#{horariosBean.horariosSemanasUbicaciones}" paginator="false"					
+					resizableColumns="false" emptyMessage="">
+								 								    
+			    	<f:facet name="header">
+			    		<h:outputText value="Semana do " style="font-weight: bold"/>
+			    		<h:outputText value="#{horariosBean.diaInicioSemana}" >
+              				<f:convertDateTime pattern="dd" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+ 						</h:outputText>
+ 						<h:outputText value=" ao " style="font-weight: bold"/>
+ 						<h:outputText value="#{horariosBean.diaFinSemana}" >
+              				<f:convertDateTime pattern="dd 'do' MM'/'yyyy" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>              					
+ 						</h:outputText>			    		
+ 						<h:outputText value=" - #{horariosBean.selectedSeccion.nombreSeccion}" style="font-weight: bold"/>
+			    	</f:facet>
+			    	    
+			        <p:column style="width:5%">
+			            <f:facet name="header">
+			                    <h:outputText value="#{msg.horariosUbicacionesSeccion_ubicacion}"/>
+			            </f:facet>
+			            <h:outputText value="#{horarioSemanaUbicacion.ubicacion.nombreUbicacion}" />
+			        </p:column>
+			        
+			        <p:column styleClass="#{horarioSemanaUbicacion.lunesFestivo?'backgroundYellow':''}">			            
+			            <f:facet name="header" >
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_lunes}"/>
+			            </f:facet>
+			            
+						<p:dataTable id="horasDiaLunes" var="horasDia" value="#{horarioSemanaUbicacion.lunes}" styleClass="borderless hide-column-names"
+							selectionMode="single" selection="#{horariosBean.selectedHorasDia}" rowKey="#{horasDia.idHorasDia}" emptyMessage="">
+						
+							<p:ajax event="rowSelect" listener="#{horariosBean.rowSelectListener}" update=":horariosForm:dialogPanel" oncomplete="horarioDialog.show()" />        					  						
+						
+        					<p:column>
+            					<h:outputText value="#{horasDia.horaDesde}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText>
+            					<h:outputText value=" - "/>
+            					<h:outputText value="#{horasDia.horaHasta}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText> 
+            					<br/>            					
+            					<h:outputText value="#{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" rendered="#{horasDia.empleadoSustituto == null}"/>
+            					<h:panelGroup rendered="#{horasDia.empleadoSustituto != null}">
+            						<h:outputText id="sustituto" value="#{horasDia.empleadoSustituto.nombre} #{horasDia.empleadoSustituto.apellido1}" style="color: red"/>
+            						<p:tooltip for="sustituto" value="Sustituye a: #{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" />
+            					</h:panelGroup>
+            					<br/>
+            					<h:outputText value="#{horasDia.produccion.nombreProduccion}"/>
+        					</p:column>        					
+    					</p:dataTable> 
+    					
+		            
+			        </p:column>			        	        
+			        
+			        <p:column styleClass="#{horarioSemanaUbicacion.martesFestivo?'backgroundYellow':''}">			        	
+			            <f:facet name="header">
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_martes}"/>				
+			            </f:facet>
+			           
+						<p:dataTable id="horasDiaMartes" var="horasDia" value="#{horarioSemanaUbicacion.martes}" styleClass="borderless hide-column-names"
+							selectionMode="single" selection="#{horariosBean.selectedHorasDia}" rowKey="#{horasDia.idHorasDia}" emptyMessage="">
+							
+							<p:ajax event="rowSelect" listener="#{horariosBean.rowSelectListener}" update=":horariosForm:dialogPanel" oncomplete="horarioDialog.show()" />
+							
+        					<p:column>            					
+            					<h:outputText value="#{horasDia.horaDesde}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText>
+            					<h:outputText value=" - "/>
+            					<h:outputText value="#{horasDia.horaHasta}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText> 
+            					<br/>            					
+            					<h:outputText value="#{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" rendered="#{horasDia.empleadoSustituto == null}"/>
+            					<h:panelGroup rendered="#{horasDia.empleadoSustituto != null}">
+            						<h:outputText id="sustituto" value="#{horasDia.empleadoSustituto.nombre} #{horasDia.empleadoSustituto.apellido1}" style="color: red"/>
+            						<p:tooltip for="sustituto" value="Sustituye a: #{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" />
+            					</h:panelGroup>
+            					<br/>
+            					<h:outputText value="#{horasDia.produccion.nombreProduccion}"/>   
+        					</p:column>
+    					</p:dataTable>
+
+			        </p:column>	
+			        
+			        <p:column styleClass="#{horarioSemanaUbicacion.miercolesFestivo?'backgroundYellow':''}">
+			            <f:facet name="header">
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_miercoles}"/>
+			            </f:facet>
+			            
+						<p:dataTable var="horasDia" value="#{horarioSemanaUbicacion.miercoles}" styleClass="borderless hide-column-names"
+							selectionMode="single" selection="#{horariosBean.selectedHorasDia}" rowKey="#{horasDia.idHorasDia}" emptyMessage="">
+							
+							<p:ajax event="rowSelect" listener="#{horariosBean.rowSelectListener}" update=":horariosForm:dialogPanel" oncomplete="horarioDialog.show()" />
+							
+        					<p:column>
+            					<h:outputText value="#{horasDia.horaDesde}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText>
+            					<h:outputText value=" - "/>
+            					<h:outputText value="#{horasDia.horaHasta}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText> 
+            					<br/>            					
+            					<h:outputText value="#{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" rendered="#{horasDia.empleadoSustituto == null}"/>
+            					<h:panelGroup rendered="#{horasDia.empleadoSustituto != null}">
+            						<h:outputText id="sustituto" value="#{horasDia.empleadoSustituto.nombre} #{horasDia.empleadoSustituto.apellido1}" style="color: red"/>
+            						<p:tooltip for="sustituto" value="Sustituye a: #{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" />
+            					</h:panelGroup>
+            					<br/>
+            					<h:outputText value="#{horasDia.produccion.nombreProduccion}"/>
+        					</p:column>
+    					</p:dataTable>
+
+			        </p:column>    
+			        			        
+
+			        <p:column styleClass="#{horarioSemanaUbicacion.juevesFestivo?'backgroundYellow':''}">
+			            <f:facet name="header">
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_jueves}"/>
+			            </f:facet>
+			            <p:dataTable var="horasDia" value="#{horarioSemanaUbicacion.jueves}" styleClass="borderless hide-column-names"
+			            	selectionMode="single" selection="#{horariosBean.selectedHorasDia}" rowKey="#{horasDia.idHorasDia}" emptyMessage="">
+			            	
+			            	<p:ajax event="rowSelect" listener="#{horariosBean.rowSelectListener}" update=":horariosForm:dialogPanel" oncomplete="horarioDialog.show()" />
+			            	
+        					<p:column>
+            					<h:outputText value="#{horasDia.horaDesde}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText>
+            					<h:outputText value=" - "/>
+            					<h:outputText value="#{horasDia.horaHasta}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText> 
+            					<br/>            					
+            					<h:outputText value="#{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" rendered="#{horasDia.empleadoSustituto == null}"/>
+            					<h:panelGroup rendered="#{horasDia.empleadoSustituto != null}">
+            						<h:outputText id="sustituto" value="#{horasDia.empleadoSustituto.nombre} #{horasDia.empleadoSustituto.apellido1}" style="color: red"/>
+            						<p:tooltip for="sustituto" value="Sustituye a: #{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" />
+            					</h:panelGroup>
+            					<br/>
+            					<h:outputText value="#{horasDia.produccion.nombreProduccion}"/>   
+        					</p:column>        					
+    					</p:dataTable>
+
+			        </p:column>
+			        
+			        <p:column styleClass="#{horarioSemanaUbicacion.viernesFestivo?'backgroundYellow':''}">
+			            <f:facet name="header">
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_viernes}"/>
+			            </f:facet>
+			            <p:dataTable var="horasDia" value="#{horarioSemanaUbicacion.viernes}" styleClass="borderless hide-column-names"
+			            	selectionMode="single" selection="#{horariosBean.selectedHorasDia}" rowKey="#{horasDia.idHorasDia}" emptyMessage="">
+			            	
+			            	<p:ajax event="rowSelect" listener="#{horariosBean.rowSelectListener}" update=":horariosForm:dialogPanel" oncomplete="horarioDialog.show()" />
+			            	
+        					<p:column>
+            					<h:outputText value="#{horasDia.horaDesde}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText>
+            					<h:outputText value=" - "/>
+            					<h:outputText value="#{horasDia.horaHasta}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText> 
+            					<br/>            					
+            					<h:outputText value="#{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" rendered="#{horasDia.empleadoSustituto == null}"/>
+            					<h:panelGroup rendered="#{horasDia.empleadoSustituto != null}">
+            						<h:outputText id="sustituto" value="#{horasDia.empleadoSustituto.nombre} #{horasDia.empleadoSustituto.apellido1}" style="color: red"/>
+            						<p:tooltip for="sustituto" value="Sustituye a: #{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" />
+            					</h:panelGroup>
+            					<br/>
+            					<h:outputText value="#{horasDia.produccion.nombreProduccion}"/>   
+        					</p:column>    					
+    					</p:dataTable>
+			        
+			        </p:column>
+			        
+			        <p:column  styleClass="#{horarioSemanaUbicacion.sabadoFestivo?'backgroundYellow':''}">
+			            <f:facet name="header">
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_sabado}"/>
+			            </f:facet>
+			            <p:dataTable var="horasDia" value="#{horarioSemanaUbicacion.sabado}" styleClass="borderless hide-column-names"
+			            	selectionMode="single" selection="#{horariosBean.selectedHorasDia}" rowKey="#{horasDia.idHorasDia}" emptyMessage="">
+			            	
+			            	<p:ajax event="rowSelect" listener="#{horariosBean.rowSelectListener}" update=":horariosForm:dialogPanel" oncomplete="horarioDialog.show()" />
+			            	
+        					<p:column>
+            					<h:outputText value="#{horasDia.horaDesde}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText>
+            					<h:outputText value=" - "/>
+            					<h:outputText value="#{horasDia.horaHasta}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText> 
+            					<br/>            					
+            					<h:outputText value="#{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" rendered="#{horasDia.empleadoSustituto == null}"/>
+            					<h:panelGroup rendered="#{horasDia.empleadoSustituto != null}">
+            						<h:outputText id="sustituto" value="#{horasDia.empleadoSustituto.nombre} #{horasDia.empleadoSustituto.apellido1}" style="color: red"/>
+            						<p:tooltip for="sustituto" value="Sustituye a: #{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" />
+            					</h:panelGroup>
+            					<br/>
+            					<h:outputText value="#{horasDia.produccion.nombreProduccion}"/>   
+        					</p:column>     					
+    					</p:dataTable>
+ 			            	
+			        </p:column>			        
+			        
+			        <p:column styleClass="#{horarioSemanaUbicacion.domingoFestivo?'backgroundYellow':''}">
+			            <f:facet name="header">
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_domingo}"/>
+			            </f:facet>
+			            <p:dataTable var="horasDia" value="#{horarioSemanaUbicacion.domingo}" styleClass="borderless hide-column-names"
+			            	selectionMode="single" selection="#{horariosBean.selectedHorasDia}" rowKey="#{horasDia.idHorasDia}" emptyMessage="">
+			            	
+			            	<p:ajax event="rowSelect" listener="#{horariosBean.rowSelectListener}" update=":horariosForm:dialogPanel" oncomplete="horarioDialog.show()" />
+			            	
+        					<p:column>
+            					<h:outputText value="#{horasDia.horaDesde}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText>
+            					<h:outputText value=" - "/>
+            					<h:outputText value="#{horasDia.horaHasta}">
+            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+            					</h:outputText> 
+            					<br/>            					
+            					<h:outputText value="#{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" rendered="#{horasDia.empleadoSustituto == null}"/>
+            					<h:panelGroup rendered="#{horasDia.empleadoSustituto != null}">
+            						<h:outputText id="sustituto" value="#{horasDia.empleadoSustituto.nombre} #{horasDia.empleadoSustituto.apellido1}" style="color: red"/>
+            						<p:tooltip for="sustituto" value="Sustituye a: #{horasDia.empleado.nombre} #{horasDia.empleado.apellido1}" />
+            					</h:panelGroup>
+            					<br/>
+            					<h:outputText value="#{horasDia.produccion.nombreProduccion}"/>   
+        					</p:column>      					
+    					</p:dataTable>
+ 			            	
+			        </p:column>
+			        			        											        
+					<f:facet name="footer"> 
+												
+						<h:commandLink style="float:right" immediate="true">
+							<p:graphicImage value="/resources/images/ico_excel.gif" style="vertical-align: bottom" title="Exportar a Excel"/>  
+							<p:dataExporter type="xls" target="horariosSemanasUbicacionesTable" fileName="Horarios"/>  
+						</h:commandLink>
+							
+						&#160;&#160;&#160;
+																			
+						<h:commandLink style="float:right" immediate="true">
+							<p:graphicImage value="/resources/images/ico_pdf.gif" style="vertical-align: bottom" title="Exportar a PDF"/> 
+							<p:dataExporter type="pdf" target="horariosSemanasUbicacionesTable" fileName="Horarios" encoding="ISO8859-1"/>  
+						</h:commandLink>
+													
+					</f:facet>				        
+			        
+			    </p:dataTable> 		
+			    
+			    
+   				<!-- Mejor poner los componentes hidden al final de la página para que no se den problemas en el renderizado del resto de componentes -->
+			    <!--  ver: http://forum.primefaces.org/viewtopic.php?f=3&t=22346 -->
+			    
+			    		
+			    <p:dialog id="dialog" widgetVar="horarioDialog" resizable="false" header="Edición horario">
+				
+					<p:ajax event="close" update=":horariosForm:horariosSemanasUbicacionesTable" oncomplete="horarioDialog.hide()"/>
+    			    			
+					<h:panelGrid id="dialogPanel" columns="2" cellpadding="5" >
+						
+						<p:outputLabel for="empleado" value="#{msg.horarioAnualEmpleado_empleado}:"  />
+						<h:outputText id="empleado" value="#{horariosBean.horasDiaEdicion.empleado.nombre} #{horariosBean.horasDiaEdicion.empleado.apellidos}"/>
+						
+						
+						<p:outputLabel for="empleadoSustituto" value="#{msg.horarioAnualEmpleado_sustituto}:" />
+						
+						<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->
+						<p:selectOneMenu id="empleadoSustituto" value="#{horariosBean.horasDiaEdicion.empleadoSustituto}" converter="omnifaces.SelectItemsConverter">
+							<!-- <p:ajax listener="#{horariosBean.sustitutoChangeListener}" />  -->	
+		            		<f:selectItems value="#{horariosBean.sustitutosSelectItems}" />
+		        		</p:selectOneMenu>
+															
+					    <p:outputLabel for="horaDesde" value="Horario día: " />
+					    <h:panelGroup>
+						    <p:calendar id="horaDesde" value="#{horariosBean.horasDiaEdicion.horaDesde}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField"/> -  
+						    <p:calendar id="horaHasta" value="#{horariosBean.horasDiaEdicion.horaHasta}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField"/>
+					    </h:panelGroup>
+					    																
+		        		<p:outputLabel for="produccion" value="#{msg.horarioAnualEmpleado_produccion}:" />
+		        		
+						<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->					  				
+						<p:selectOneMenu id="produccion" value="#{horariosBean.horasDiaEdicion.produccion}" converter="omnifaces.SelectItemsConverter">
+							<!-- <p:ajax event="change" />  -->
+		            		<f:selectItems value="#{horariosBean.produccionesSelectItems}" /> 
+		        		</p:selectOneMenu>
+																		
+					</h:panelGrid>
+					
+					<f:facet name="footer">
+						<p:commandButton id="aceptarButton" value="Aceptar" update=":horariosForm:horariosSemanasUbicacionesTable :horariosForm:growl" actionListener="#{horariosBean.aceptarHorarioDiaEdicion}" oncomplete="horarioDialog.hide()"/>
+						<p:spacer width="10" />
+						<p:commandButton id="cancelarButton" value="Cancelar" update=":horariosForm:horariosSemanasUbicacionesTable" oncomplete="horarioDialog.hide()" immediate="true"/>
+					</f:facet>
+					
+    			</p:dialog>			    
+			    
+			</h:form>					 				
+			
+		</ui:define>
+	</ui:composition>
+</html>
+
+		
+

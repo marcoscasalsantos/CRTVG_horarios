@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- <f:view locale="#{localeBean.locale}">  -->
+	
+		<h:head>
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+				 
+			<h:outputStylesheet library="css" name="CRTVG_horarios.css" />	
+			
+			<!-- FIXME Las librerias de javaScript se cargarán en las páginas que lo necesiten
+			 -->
+			<h:outputScript library="js" name="localCalendar.js" />	
+		
+			<!-- Título que aparecerá en el navegador -->
+			<title><h:outputText value="#{msg.defaultLayout_tituloParaNavegador}"/></title>
+			
+		</h:head>
+		
+		<h:body>
+		
+			<!-- 
+				Situando gestionCambio.css en el body forzamos a que la carga de estas css se haga de último, machacando los estilos
+				provenientes del jar de primefaces (theme.css y primefaces.css)
+				
+				<h:outputStylesheet library="css" name="gestionCambio.css" />			
+			-->
+					
+		
+			<div id="layout">
+			
+				<div id="header" class="header">
+					<ui:include src="/pages/loginHeader.xhtml" />
+				</div>		
+			
+				<div id="content" style="width:340px; margin-left:auto; margin-right:auto;">
+					<ui:insert name="content">
+						<span><h:outputText value="#{msg.defaultLayout_paginaEnConstruccion}"/></span>
+					</ui:insert>
+				</div>
+				
+			</div>
+		</h:body>
+		
+	<!-- </f:view>  -->
+</html>

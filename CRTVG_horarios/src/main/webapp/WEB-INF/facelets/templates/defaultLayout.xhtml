@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<!-- <f:view locale="#{localeBean.locale}">  -->
+	
+		<h:head>
+	        <f:facet name="first">
+				 	          
+	            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	            
+	            <!--
+	            Para DESARROLLO indicar content "no-cache" para PRODUCCIÓN activar la cache para mejorar el rendimiento
+	            <meta http-equiv="pragma" content="no-cache"/>
+	            <meta http-equiv="cache-control" content="no-cache"/>
+	            <meta http-equiv="expires" content="0"/>
+	             -->
+				 
+				<h:outputStylesheet library="css" name="CRTVG_horarios.css" />
+	
+				  
+				<!-- FIXME Las librerias de javaScript se cargarán en las páginas que lo necesiten
+				 -->
+	
+				 					  			  					
+				<!-- Título que aparecerá en el navegador -->
+				<title>CRTVG Planificación recursos producción</title>
+			            	            
+	        </f:facet>
+	    </h:head>
+	
+	
+	
+		<h:body>
+		
+			<!-- 
+				Situando gestionCambio.css en el body forzamos a que la carga de estas css se haga de último, machacando los estilos
+				provenientes de primefaces-3.1.jar (theme.css y primefaces.css)
+				
+				You need to ensure that you load the stylesheet by <h:outputStylesheet> in the <h:body>.
+				JSF will automatically relocate the stylesheet to the end of the generated HTML <head> 
+				and this will thus ensure that the stylesheet is loaded after the PrimeFaces' default styles.
+				http://stackoverflow.com/questions/8768317/how-do-i-override-those-classes-defined-in-primefaces-css/8774997#8774997
+			-->
+			<h:outputStylesheet library="css" name="CRTVG_horarios.css" />
+				
+			<div id="layout">
+		
+				<div id="header" class="header">
+					<ui:include src="/pages/header.xhtml" />						
+				</div>
+			
+				<div id="menuBar"> 
+					<ui:include src="/pages/menuBar.xhtml" />					
+				</div>	
+			
+				<div id="content">
+					
+					<!-- El <ui:param name="labelContent" se establecera en cada página con el título del panel general del content -->				
+					<p:panel header="#{labelContent}">
+						<!--  div style="width:948px"> -->
+							<ui:insert name="content">
+								<span><h:outputText value="#{msg.defaultLayout_paginaEnConstruccion}"/></span>
+							</ui:insert>
+	
+					</p:panel>
+				</div>
+			
+				<div id="footer">
+					<ui:include src="/pages/footer.xhtml" />
+				</div>
+				
+			</div>
+		</h:body>
+	
+	 <!-- </f:view>  -->
+	
+</html>
