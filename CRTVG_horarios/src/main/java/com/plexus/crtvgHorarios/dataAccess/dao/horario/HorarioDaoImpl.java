@@ -56,7 +56,7 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" dh.id_definicion as idDefinicionHorario, " +
 		" h.id_traballador as idEmpleado, " +
 		" eh.id_estado as idEstado, " +
-		" eh.id_excepcion as idExcepcion, " +
+		" eh.id_excepcion as idExcepcionHorario, " +
 		" fud.id_festivo as idFestivo, " +
 		" h.id_horas_dia as idHorasDia, " +
 		" h.id_produccion as idProduccion, " +
@@ -93,17 +93,24 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" t2.apelido1 as apellido1Sustituto, " +					
 		" t2.apelido2 as apellido2Sustituto, " +
 		" h.categoria, " +
+		" dh.cor_horario as colorHorario, " +
+		" e.descricion as descripcionEstado , " +
+		" eh.descricion as descripcionExcepcion, " +
+		" eh.estado_contrato as estadoContratoSustituto, " +
 		" p.familia as familiaProduccion, " +
 		" u.fase, " +
 		" fechas.fecha_dia as fechaDia, " + 
 		" fud.festividad, " +
 		" h.hora_desde as horaDesde, " + 
 		" h.hora_ata as horaHasta, " +
+		" dh.id_definicion as idDefinicionHorario, " +
 		" h.id_traballador as idEmpleado, " +
+		" eh.id_estado as idEstado, " +
+		" eh.id_excepcion as idExcepcion, " +
 		" fud.id_festivo as idFestivo, " +
 		" h.id_horas_dia as idHorasDia, " +
 		" h.id_produccion as idProduccion, " +
-		" h.id_sustituto as idSustituto, " +
+		" eh.id_sustituto as idSustituto, " +
 		" h.id_ubicacion as idUbicacion, " +
 		" h.nome as nombreEmpleado, " +
 		" p.descricion as nombreProduccion, " + 
@@ -116,17 +123,19 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		"   from horarios_horas hh " +
 		"   inner join traballadores t1 on (hh.id_traballador = t1.dni and hh.id_traballador = ?) ) h on (fechas.fecha_dia = h.data_dia) " +
 		" left join " +
-		"  (select f.id_festivo as id_festivo, f.fecha as fecha_dia, f.festividade as festividad, fu.id_festivo_ubicacion as id_festivo_ubicacion, fu.id_ubicacion as id_ubicacion " +
+		"  (select f.id_festivo as id_festivo, f.data as fecha_dia, f.festividade as festividad, fu.id_festivo_ubicacion as id_festivo_ubicacion, fu.id_ubicacion as id_ubicacion " +
 		"   from festivos f " +
-		"   inner join festivos_ubicaciones fu on f.id_festivo = fu.id_festivo) fud on (h.data_dia = fud.fecha_dia and h.id_ubicacion = fud.id_ubicacion) " + 
+		"   inner join festivos_ubicacions fu on f.id_festivo = fu.id_festivo) fud on (h.data_dia = fud.fecha_dia and h.id_ubicacion = fud.id_ubicacion) " + 
 		" left join ubicacions u on (h.id_ubicacion = u.codigo) " +
 		" left join seccions_ubicacions su on u.codigo = su.id_ubicacion " +
 		" left join seccions s on su.id_seccion = s.id_seccion " +
 		" left join traballadores t1 on (h.id_traballador = t1.dni) " +
+		" left join definicions_horarios dh on (h.id_definicion = dh.id_definicion) " +
 		" left join excepcions_horarios eh on h.id_excepcion = eh.id_excepcion " +
+		" left join estados e on eh.id_estado = e.codigo " +
 		" left join traballadores t2 on eh.id_sustituto = t2.dni " +
 		" left join produccions p on h.id_produccion = p.codigo " +
-		" order by fechas.fecha_dia, hora_desde ";
+		" order by fechas.fecha_dia, h.hora_desde ";
 			
 	private static final String SQL_DELETE_ALL_UNIDADES_HORARIO_ANHO = " delete from horarios_horas where id_traballador = ? and extract (year from data_dia) = ? ";
 	
@@ -138,10 +147,10 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 	private static final String SQL_DELETE_ALL_DEFINICIONES_HORARIO_ANHO = " delete from definicions_horarios where id_traballador = ? and extract (year from data_desde) = ? ";
 
 	
-	private static final String SQL_INSERT_DEFINICIONES_HORARIO = " insert into definicion_horario " +
+	private static final String SQL_INSERT_DEFINICIONES_HORARIO = " insert into definicions_horarios " +
 		" (id_definicion, id_traballador, data_desde, data_ata, aplica_luns, aplica_martes, aplica_mercores, aplica_xoves, aplica_venres, aplica_sabado, aplica_domingo, num_semanas_alternar, " +
 		" hora_desde, hora_ata, id_produccion, id_ubicacion, cor_horario, data_modificacion) " + 
-		" values (SEQ_DEFINICIONS_HORARIOS.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp) " ;
+		" values (SEQ_DEFINICIONS_HORARIOS.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp) ";
 	
 	
 	private static final String SQL_SELECT_DEFINICIONES_HORARIO_BY_EMPLEADO_AND_ANHO = " select id_definicion as idDefinicionHorario, " +
@@ -205,6 +214,7 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		
 	}
 
+
 	
 	@Override
 	public void insertUnidadesHorarios(final List<UnidadHorarioPojo> unidadesHorarios) {
@@ -227,8 +237,9 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 					ps.setTimestamp(4, new java.sql.Timestamp(unidadHorario.getHoraHasta().getTime()));
 				
 				ps.setString(5, unidadHorario.getIdEmpleado());
-				ps.setString(6, unidadHorario.getIdSustituto());
-				ps.setString(7, unidadHorario.getIdProduccion());												
+				ps.setLong(6, unidadHorario.getIdDefinicionHorario());
+				ps.setLong(7, unidadHorario.getIdExcepcionHorario());
+				ps.setString(8, unidadHorario.getIdProduccion());
 				
 			}
 		 
@@ -285,7 +296,6 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 				
 				ps.setString(14, definicionHorario.getIdProduccion());
 				ps.setString(15, definicionHorario.getIdUbicacion());
-				
 				ps.setString(16, definicionHorario.getColorHorario());
 				
 			}

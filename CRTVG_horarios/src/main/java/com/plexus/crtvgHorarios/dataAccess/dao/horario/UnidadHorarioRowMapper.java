@@ -41,9 +41,7 @@ public class UnidadHorarioRowMapper implements RowMapper<UnidadHorarioPojo> {
             
             unidadHorario.setDescripcionEstado(rs.getString("descripcionEstado"));
             
-            unidadHorario.setDescripcionExcepcion(rs.getString("descripcionExcepcion"));
-            
-            
+            unidadHorario.setDescripcionExcepcion(rs.getString("descripcionExcepcion"));            
             
             unidadHorario.setFamiliaProduccion(rs.getString("familiaProduccion"));
             unidadHorario.setFase(rs.getString("fase"));
@@ -54,9 +52,19 @@ public class UnidadHorarioRowMapper implements RowMapper<UnidadHorarioPojo> {
             unidadHorario.setHoraDesde(rs.getTime("horaDesde"));
             unidadHorario.setHoraHasta(rs.getTime("horaHasta"));
             
-            unidadHorario.setIdEmpleado(rs.getString("idEmpleado"));       
+            unidadHorario.setIdDefinicionHorario(rs.getLong("idDefinicionHorario"));
+            if (rs.wasNull()){
+            	unidadHorario.setIdDefinicionHorario(null);
+            }
+            
+            unidadHorario.setIdEmpleado(rs.getString("idEmpleado"));
             
             unidadHorario.setIdEstado(rs.getString("idEstado"));
+            
+            unidadHorario.setIdExcepcionHorario(rs.getLong("idExcepcionHorario"));
+            if (rs.wasNull()){
+            	unidadHorario.setIdExcepcionHorario(null);
+            }
 
             unidadHorario.setIdFestivo(rs.getLong("idFestivo"));
             if (rs.wasNull()){

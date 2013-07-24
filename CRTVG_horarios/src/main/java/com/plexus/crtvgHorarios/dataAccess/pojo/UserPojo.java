@@ -22,6 +22,7 @@ public class UserPojo extends BasePojo {
 	private boolean enabled;
 	private boolean blocked;
 
+	
 
 	public Long getUserId() {
 		return userId;

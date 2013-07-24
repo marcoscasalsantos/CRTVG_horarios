@@ -177,6 +177,13 @@ public class DefinicionHorarioDto extends BaseDto {
 	public String getColorHorario() {
 		return colorHorario;
 	}
+	
+	public String getHexColorHorario() {
+		if (colorHorario == null)
+			return "";
+		
+		return "#" + colorHorario;
+	}
 
 
 	public void setColorHorario(String colorHorario) {

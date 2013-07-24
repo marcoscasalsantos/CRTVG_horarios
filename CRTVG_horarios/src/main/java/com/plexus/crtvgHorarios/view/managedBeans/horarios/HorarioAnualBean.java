@@ -12,6 +12,7 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import org.omnifaces.util.selectitems.SelectItemsBuilder;
+import org.primefaces.event.RowEditEvent;
 
 import com.plexus.crtvgHorarios.dto.categorias.CategoriaDto;
 import com.plexus.crtvgHorarios.dto.empleados.EmpleadoDto;
@@ -63,11 +64,13 @@ public class HorarioAnualBean implements Serializable {
 		botonAplicarCambiosDefinicionHorarioVisible = false;
 		botonGuardarVisible = false;
 	
-		SelectItem selectItem1 = new SelectItem(new Integer(1), "1");
-		SelectItem selectItem2 = new SelectItem(new Integer(2), "2");
-		SelectItem selectItem3 = new SelectItem(new Integer(4), "4");
+		SelectItem selectItem0 = new SelectItem(null, "Todas las semanas");
+		SelectItem selectItem1 = new SelectItem(new Integer(2), "Semanas alternas");
+		SelectItem selectItem2 = new SelectItem(new Integer(3), "Cada 3 semanas");
+		SelectItem selectItem3 = new SelectItem(new Integer(4), "Cada 4 semanas");
 		
 		numSemanasAlternanciaSelectItems = new ArrayList<SelectItem>();
+		numSemanasAlternanciaSelectItems.add(selectItem0);
 		numSemanasAlternanciaSelectItems.add(selectItem1);
 		numSemanasAlternanciaSelectItems.add(selectItem2);
 		numSemanasAlternanciaSelectItems.add(selectItem3);
@@ -173,10 +176,10 @@ public class HorarioAnualBean implements Serializable {
 	}		
 	
 	
-	public void aplicarCambiosDefinicionHorario() {
+	public void definicionHorarioRowEditListener(RowEditEvent event) {
 		
+		DefinicionHorarioDto ddd = (DefinicionHorarioDto) event.getObject();
 		// TODO: aplica los cambios de la definiciónHorario seleccionada en el horario anual tratado.
-		
 		
 		
 	}
@@ -247,7 +250,16 @@ public class HorarioAnualBean implements Serializable {
 	
 	
 	
-	
+	public List<SelectItem> getNumSemanasAlternanciaSelectItems() {
+		return numSemanasAlternanciaSelectItems;
+	}
+
+
+	public void setNumSemanasAlternanciaSelectItems(List<SelectItem> numSemanasAlternanciaSelectItems) {
+		this.numSemanasAlternanciaSelectItems = numSemanasAlternanciaSelectItems;
+	}
+
+
 	public List<SelectItem> getCategoriasSelectItems() {
 		return categoriasSelectItems;
 	}

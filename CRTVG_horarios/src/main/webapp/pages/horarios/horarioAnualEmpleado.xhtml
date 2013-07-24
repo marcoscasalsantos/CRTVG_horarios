@@ -52,10 +52,11 @@
 																		    
 	            		<f:selectItems value="#{horarioAnualBean.anhosSelectItems}" />
 	        		</p:selectOneMenu>
-	        			        		
+	        			       
 	        	</h:panelGrid>
 
-				<p:panelGrid columns="2" styleClass="topAligned">
+				<p:panelGrid columns="2" columnClasses="topAlignedReducedPadding,topAlignedReducedPadding" >
+				
 					<p:panelGrid id="calendarioAnualPanelGrid" columns="3" styleClass="calendarPanelGrid" style="width:408"> 
 	
 						<!-- rowKey="#{horarioSemana.idHorarioSemanaEmpleado}"   selection="#{horarioAnualBean.selectedSemanasEnero}"-->
@@ -971,7 +972,7 @@
 	    								    					
 		    					<p:outputLabel for="patronDiasSemana" value="#{msg.horarioAnualEmpleado_patronDiasSemana}:" />	
 										    								    						
-								<h:panelGrid id="patronDiasSemana" columns="7" styleClass="reducedPadding">
+								<h:panelGrid id="patronDiasSemana" columns="7" styleClass="reducedPaddingPanelGrid">
 									<p:outputLabel for="lunesCheck" value="#{msg.horarioAnualEmpleado_abreviaturaLunes}" />
 									<p:outputLabel for="martesCheck" value="#{msg.horarioAnualEmpleado_abreviaturaMartes}" />
 									<p:outputLabel for="miercolesCheck" value="#{msg.horarioAnualEmpleado_abreviaturaMiercoles}" />
@@ -1003,29 +1004,25 @@
 	        						</p:selectBooleanCheckbox> 																						
 								</h:panelGrid>
 								
-	    						
-	    						
-		    					<h:panelGroup>
-		    					
-		    						<p:outputLabel for="numSemanasAlternancia" value="#{msg.horarioAnualEmpleado_numSemanasAlternancia}:" />	
-		    						
-						    		<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->					  				
-									<p:selectOneMenu id="numSemanasAlternancia" value="#{horarioAnualBean.definicionHorario.numSemanasAlternancia}" editable="true">
+	    						<p:outputLabel for="numSemanasAlternancia" value="#{msg.horarioAnualEmpleado_numSemanasAlternancia}:" />		    					
+		   		    		
+	    						<h:panelGroup id="numSemanasAlternanciaPanelGroup">	    							    						
+									<p:selectOneMenu id="numSemanasAlternancia" value="#{horarioAnualBean.definicionHorario.numSemanasAlternancia}">
 										<p:ajax event="valueChange"/>											    
 					            		<f:selectItems value="#{horarioAnualBean.numSemanasAlternanciaSelectItems}" /> 
 					        		</p:selectOneMenu>
-		    						<p:tooltip for="numSemanasAlternancia" value="#{msg.horarioAnulaEmpleado_numSemanasAlternanciaTooltip}" />  						
-		    												
-		    												
-		    												
-		    						<p:spacer width="20"/>
-		    															
-	    							<p:outputLabel for="definicionHorarioColorPickerButton" value="#{msg.horarioAnualEmpleado_colorHorario}:" />
-		    					
-		    						<p:colorPicker id="definicionHorarioColorPickerButton" value="#{horarioAnualBean.definicionHorario.colorHorario}"/>
-		    					</h:panelGroup>		    					
-		    											
-														
+					        		
+	    							<p:tooltip for="numSemanasAlternancia">
+		    							<h:outputText value="#{msg.horarioAnulaEmpleado_numSemanasAlternanciaTooltip}" escape="false" />		    							
+		    						</p:tooltip>					        		
+					        		
+	    						</h:panelGroup>	    						  												
+	    															    															
+   								<p:outputLabel for="definicionHorarioColorPickerButton" value="#{msg.horarioAnualEmpleado_colorHorario}: " />
+    					
+    							<p:colorPicker id="definicionHorarioColorPickerButton" value="#{horarioAnualBean.definicionHorario.colorHorario}"/>
+		   		
+		    																									
 								<p:outputLabel for="nuevaDefinicionHorarioHoraDesde" value="#{msg.horarioAnualEmpleado_periodoHoras}:" />
 								    
 							    <h:panelGroup> 
@@ -1059,6 +1056,8 @@
 							<f:facet name="footer">
 				        		<p:commandButton id="anhadirHorarioButton" value="#{msg.boton_anhadir}" update=":horarioAnualForm:definicionesHorariosPanelGrid :horarioAnualForm:calendarioAnualPanelGrid" 
 				        			actionListener="#{horarioAnualBean.anhadirDefinicionHorario}"/>
+				        			
+				        		 <p:spacer width="5" />
 									
 				        		<p:commandButton id="cancelarHorarioButton" value="#{msg.boton_cancelar}" update=":horarioAnualForm:definicionesHorariosPanelGrid" actionListener="#{horarioAnualBean.cancelarNuevaDefinicionHorario}"/>									
 		   					</f:facet>
@@ -1066,53 +1065,113 @@
     					</p:panel>					
 							        	       
 						<p:dataTable id="definicionesHorariosTable" var="definicionHorario" value="#{horarioAnualBean.horarioAnual.definicionesHorarios}"
-							emptyMessage="#{msg.horarioAnualEmpleado_sinHorariosDefinidos}" styleClass="hide-column-names">
+							emptyMessage="#{msg.horarioAnualEmpleado_sinHorariosDefinidos}" editable="true" >
 							
 		   					<f:facet name="header">
 		   						<h:outputText value="#{msg.horarioAnualEmpleado_definicionesHorarios}"/> 
-		   					</f:facet>					
+		   					</f:facet>
+		   					
+		   					<p:ajax event="rowEdit" listener="#{horarioAnualBean.definicionHorarioRowEditListener}" update=":horarioAnualForm:calendarioAnualPanelGrid"/>
 														
-							<p:column>			            
-					            <p:colorPicker id="popupColorPickerButton" value="#{definicionHorario.colorHorario}" />
+							<p:column style="width:10%">
+								<f:facet name="header" >
+									<h:outputText value="Color" />
+					            </f:facet>
+										           		
+								<p:cellEditor>  
+                					<f:facet name="output">  
+                    					<div class="square" style="background: #{definicionHorario.hexColorHorario}"></div>  
+                					</f:facet>  
+                					
+                					<f:facet name="input">  
+                    					<p:colorPicker id="popupColorPickerButton" value="#{definicionHorario.colorHorario}" />  
+                					</f:facet>  
+            					</p:cellEditor>										           		
+										           												        			
 					        </p:column>
 																																				
-							<p:column>
-							    <h:panelGrid columns="2" cellpadding="5" styleClass="middleAligned">       
+							<p:column style="width:10%">
+								<f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_periodoHoras}" />
+					            </f:facet>
 
-									<p:outputLabel for="horaDesde" value="#{msg.horarioAnualEmpleado_periodoHoras}:" />					         									    
-					         									    
-								    <h:panelGroup> 
-									    <p:calendar id="horaDesde" value="#{definicionHorario.horaDesde}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField"> 
-									    	<p:ajax event="dateSelect" listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="actualizarHorarioButton" /> 
-									    </p:calendar> -  
-									    <p:calendar id="horaHasta" value="#{definicionHorario.horaHasta}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField">
-									    	<p:ajax event="dateSelect" listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="actualizarHorarioButton" />
-									    </p:calendar>
-								    </h:panelGroup>
-								    
-								    <p:outputLabel for="ubicaciones" value="#{msg.horarioAnualEmpleado_ubicacion}:" />
-								    
-									<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->
-									<p:selectOneMenu id="ubicaciones" value="#{definicionHorario.ubicacion}" converter="omnifaces.SelectItemsConverter">
-										<p:ajax listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="definicionesHorariosTable"/>
-					            		<f:selectItems value="#{horarioAnualBean.ubicacionesSelectItems}" /> 
-					        		</p:selectOneMenu>	
-					        		
-					        		<p:outputLabel for="producciones" value="#{msg.horarioAnualEmpleado_produccion}:" />
-					        		
-									<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->					  				
-									<p:selectOneMenu id="producciones" value="#{definicionHorario.produccion}" converter="omnifaces.SelectItemsConverter">
-										<p:ajax listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="definicionesHorariosTable"/>
-				            			<f:selectItems value="#{horarioAnualBean.produccionesSelectItems}" /> 
-				        			</p:selectOneMenu>
-				        							    
-				        			<!-- Usar este recuadro para mostrar el color del horario cuando no se permita editarlo
-				        			<div class="square" style="background: yellow;"></div>
-				        			  -->
-					        							        	
-								</h:panelGrid>
+								<p:cellEditor>  
+                					<f:facet name="output">  
+										<h:outputText value="#{definicionHorario.horaDesde}">
+		            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+		            					</h:outputText>
+		            					<h:outputText value="-"/>
+		            					<h:outputText value="#{definicionHorario.horaHasta}">
+		            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+		            					</h:outputText>  
+                					</f:facet>  
+                					
+                					<f:facet name="input">  
+			    						<h:panelGrid columns="2" cellpadding="5" styleClass="middleAligned">							         									    										 
+										    <p:calendar id="horaDesde" value="#{definicionHorario.horaDesde}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField"> 
+										    	<p:ajax event="dateSelect" listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="guardarCambiosHorariosButton" /> 
+										    </p:calendar> -  
+										    <p:calendar id="horaHasta" value="#{definicionHorario.horaHasta}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField">
+										    	<p:ajax event="dateSelect" listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="guardarCambiosHorariosButton" />
+										    </p:calendar>
+										</h:panelGrid>                    					  
+                					</f:facet>  
+            					</p:cellEditor>
 							</p:column>
 							
+							<p:column style="width:10%">
+							
+								<f:facet name="header" >
+									<h:outputText value="Ubicacion" />
+					            </f:facet>				
+							
+								<p:cellEditor>  
+                					<f:facet name="output">                					
+                						<h:outputText value="#{definicionHorario.ubicacion.nombreUbicacion}"/>                					  
+                					</f:facet>  
+                					
+                					<f:facet name="input">  
+										<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->	 
+										<p:selectOneMenu id="ubicaciones" value="#{definicionHorario.ubicacion}" converter="omnifaces.SelectItemsConverter">
+											<p:ajax listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="definicionesHorariosTable"/>
+						            		<f:selectItems value="#{horarioAnualBean.ubicacionesSelectItems}" /> 
+						        		</p:selectOneMenu>
+                					</f:facet>  
+            					</p:cellEditor>			
+														
+					        </p:column>
+					        
+					        <p:column style="width:10%">
+								<f:facet name="header" >
+									<h:outputText value="#{msg.horarioAnualEmpleado_produccion}" />
+					            </f:facet>					        
+
+								<p:cellEditor>  
+                					<f:facet name="output">                					
+                						<h:outputText value="#{definicionHorario.produccion.nombreProduccion}" />                					  
+                					</f:facet>  
+                					
+                					<f:facet name="input">  
+										<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->									 					  				
+										<p:selectOneMenu id="producciones" value="#{definicionHorario.produccion}" converter="omnifaces.SelectItemsConverter">
+											<p:ajax listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="definicionesHorariosTable"/>
+					            			<f:selectItems value="#{horarioAnualBean.produccionesSelectItems}" /> 
+					        			</p:selectOneMenu>
+                					</f:facet>  
+            					</p:cellEditor>			
+							</p:column>
+							
+							<p:column style="width:5%">								
+								<p:rowEditor/>
+        					</p:column>
+        					
+        					<p:column style="width:5%">
+								<p:commandLink id="eliminarHorarioButton" actionListener="#{horarioAnualBean.eliminarDefinicionHorario}" update=":horarioAnualForm:calendarioAnualPanelGrid" 
+            						 title="#{msg.boton_eliminar}" styleClass="ui-icon ui-icon-trash" />
+            				</p:column>
+								            						 						        							
+							
+							<!-- 
 							<p:column>
 								<p:commandButton id="actualizarHorarioButton" update=":horarioAnualForm:calendarioAnualPanelGrid" actionListener="#{horarioAnualBean.aplicarCambiosDefinicionHorario}"
 					        		rendered="#{horarioAnualBean.botonAplicarCambiosDefinicionHorarioVisible}" icon="ui-icon-check" title="#{msg.boton_aplicar}"/>
@@ -1120,10 +1179,13 @@
 								<p:commandButton id="eliminarHorarioButton" update=":horarioAnualForm:calendarioAnualPanelGrid" actionListener="#{horarioAnualBean.eliminarDefinicionHorario}"
 					        		 icon="ui-icon-minusthick" title="#{msg.boton_eliminar}"/>			        										
 							</p:column>
+							 -->
 																									
 							<f:facet name="footer">
 		   						 <p:commandButton id="nuevoHorarioButton" value="#{msg.boton_nuevo}" update=":horarioAnualForm:definicionesHorariosPanelGrid" actionListener="#{horarioAnualBean.nuevaDefinicionHorario}"
 				        			 icon="ui-icon-plusthick" />
+				        			 				        			 
+				        		<p:spacer width="5" />
 				        			 
 				        		<p:commandButton id="guardarCambiosHorariosButton" value="#{msg.boton_guardar}" update=":horarioAnualForm:growl" actionListener="#{horarioAnualBean.guardarCambiosHorarioEmpleado}"
 				        			  icon="ui-icon-check"  rendered="#{horarioAnualBean.botonGuardarVisible}"/>				        			 

@@ -23,10 +23,21 @@ public class EmpleadoDto extends BaseDto implements Cloneable{
 		// TODO Auto-generated constructor stub
 	}
 
+	public EmpleadoDto(String idEmpleado, String nombre, String apellido1, String apellido2) {
+		super();
+		this.idEmpleado = idEmpleado;
+		this.nombre = nombre;
+		this.apellido1 = apellido1;
+		this.apellido2 = apellido2;
+	}
+
+
 	public EmpleadoDto(String idEmpleado) {
 		super();
 		this.idEmpleado = idEmpleado;
 	}
+	
+	
 	
 	public String getIdEmpleado() {
 		return idEmpleado;

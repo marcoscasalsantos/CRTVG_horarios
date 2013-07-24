@@ -23,7 +23,8 @@ public class UnidadHorarioPojo extends BasePojo {
 	private String idEmpleado;	
 	private String idProduccion;
 	private Long idSeccion;
-	private Long idDefinicion;
+	private Long idDefinicionHorario;
+	private Long idExcepcionHorario;
 		
 	// Festivos
 	private Long idFestivo;
@@ -205,12 +206,7 @@ public class UnidadHorarioPojo extends BasePojo {
 	public void setIdSeccion(Long idSeccion) {
 		this.idSeccion = idSeccion;
 	}
-	public Long getIdDefinicion() {
-		return idDefinicion;
-	}
-	public void setIdDefinicion(Long idDefinicion) {
-		this.idDefinicion = idDefinicion;
-	}
+
 	public String getNombreSeccion() {
 		return nombreSeccion;
 	}
@@ -247,6 +243,19 @@ public class UnidadHorarioPojo extends BasePojo {
 	public void setDescripcionEstado(String descripcionEstado) {
 		this.descripcionEstado = descripcionEstado;
 	}
+	public Long getIdDefinicionHorario() {
+		return idDefinicionHorario;
+	}
+	public void setIdDefinicionHorario(Long idDefinicionHorario) {
+		this.idDefinicionHorario = idDefinicionHorario;
+	}
+	public Long getIdExcepcionHorario() {
+		return idExcepcionHorario;
+	}
+	public void setIdExcepcionHorario(Long idExcepcionHorario) {
+		this.idExcepcionHorario = idExcepcionHorario;
+	}
+
 	
 	
 }

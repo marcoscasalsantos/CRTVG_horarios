@@ -38,7 +38,7 @@ public class EmpleadoDaoImpl extends BaseDao implements EmpleadoDao {
     		" order by nombreProduccion ";
     
     private static final String SQL_SELECT_ALL_EMPLEADOS =
-    		" SELECT dni as idTraballador, nome as nombre, apelido1 as apellido1, apelido2 as apellido2, categoria as idCategoria " +
+    		" SELECT dni as idEmpleado, nome as nombre, apelido1 as apellido1, apelido2 as apellido2, categoria as idCategoria " +
     		" FROM traballadores " + 
     		" order by nombre, apellido1, apellido2 ";
     
@@ -49,10 +49,10 @@ public class EmpleadoDaoImpl extends BaseDao implements EmpleadoDao {
     		" order by nombre, apellido1, apellido2 ";
     	
     private static final String SQL_SELECT_ANHO_INI_HORARIOS =
-    		" select to_char(min(fecha_dia),'yyyy') as anho from horarios_horas where id_traballador = ? ";
+    		" select to_char(min(data_dia),'yyyy') as anho from horarios_horas where id_traballador = ? ";
     
     private static final String SQL_SELECT_ANHO_FIN_HORARIOS =
-    		" select to_char(max(fecha_dia),'yyyy') as anho from horarios_horas where id_traballador = ? ";
+    		" select to_char(max(data_dia),'yyyy') as anho from horarios_horas where id_traballador = ? ";
     
     
     
