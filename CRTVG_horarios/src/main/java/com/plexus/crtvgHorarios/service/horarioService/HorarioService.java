@@ -22,8 +22,6 @@ public interface HorarioService {
 	 * @return Lista de horariosSemanasDtos que contiene los horarios para la categoria y semana indicadas
 	 */
 	public List<HorarioSemanaUbicacionDto> getHorariosSeccionSemana(Long idSeccion, Date semana);
-
-	public HorarioMesDto getHorarioMesEmpleado(Date mesAnho, EmpleadoDto empleado, List<DefinicionHorarioDto> definicionesHorarios);
 	
 	public HorarioAnualEmpleadoDto getHorarioAnualEmpleado(Integer anho, EmpleadoDto empleado);
 

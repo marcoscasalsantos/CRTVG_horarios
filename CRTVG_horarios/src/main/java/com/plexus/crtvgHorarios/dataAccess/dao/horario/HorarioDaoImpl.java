@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import com.plexus.crtvgHorarios.dataAccess.dao.common.BaseDao;
 import com.plexus.crtvgHorarios.dataAccess.pojo.DefinicionHorarioPojo;
+import com.plexus.crtvgHorarios.dataAccess.pojo.ExcepcionHorarioPojo;
 import com.plexus.crtvgHorarios.dataAccess.pojo.UnidadHorarioPojo;
 import com.plexus.crtvgHorarios.dto.horarios.DefinicionHorarioDto;
 
@@ -57,6 +58,7 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" h.id_traballador as idEmpleado, " +
 		" eh.id_estado as idEstado, " +
 		" eh.id_excepcion as idExcepcionHorario, " +
+		" eh.cor_excepcion as colorExcepcion, " +
 		" fud.id_festivo as idFestivo, " +
 		" h.id_horas_dia as idHorasDia, " +
 		" h.id_produccion as idProduccion, " +
@@ -106,7 +108,8 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" dh.id_definicion as idDefinicionHorario, " +
 		" h.id_traballador as idEmpleado, " +
 		" eh.id_estado as idEstado, " +
-		" eh.id_excepcion as idExcepcion, " +
+		" eh.id_excepcion as idExcepcionHorario, " +
+		" eh.cor_excepcion as colorExcepcion, " +		
 		" fud.id_festivo as idFestivo, " +
 		" h.id_horas_dia as idHorasDia, " +
 		" h.id_produccion as idProduccion, " +
@@ -146,14 +149,26 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 	
 	private static final String SQL_DELETE_ALL_DEFINICIONES_HORARIO_ANHO = " delete from definicions_horarios where id_traballador = ? and extract (year from data_desde) = ? ";
 
+	private static final String SQL_DELETE_ALL_EXCEPCIONES_HORARIO_ANHO = 
+		" delete from " +
+		" excepcions_horarios where id_excepcion in " + 
+		" (select id_excepcion " +
+		" from " + 
+		" horarios_horas h " +
+		" inner join definicions_horarios d on h.id_definicion = d.id_definicion " +
+		" where d.id_traballador = ? and extract (year from d.data_desde) = ? ) ";
 	
 	private static final String SQL_INSERT_DEFINICIONES_HORARIO = " insert into definicions_horarios " +
 		" (id_definicion, id_traballador, data_desde, data_ata, aplica_luns, aplica_martes, aplica_mercores, aplica_xoves, aplica_venres, aplica_sabado, aplica_domingo, num_semanas_alternar, " +
 		" hora_desde, hora_ata, id_produccion, id_ubicacion, cor_horario, data_modificacion) " + 
 		" values (SEQ_DEFINICIONS_HORARIOS.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, current_timestamp) ";
 	
+	private static final String SQL_INSERT_EXCEPCIONES_HORARIO = " insert into excepcions_horarios " +
+			" (id_excepcion, id_estado, descricion, id_sustituto, estado_contrato, cor_excepcion, data_modificacion) " +		 
+			" values (SEQ_EXCEPCIONS_HORARIOS.NEXTVAL, ?, ?, ?, ?, ?, current_timestamp) ";			
 	
-	private static final String SQL_SELECT_DEFINICIONES_HORARIO_BY_EMPLEADO_AND_ANHO = " select id_definicion as idDefinicionHorario, " +
+	
+	private static final String SQL_SELECT_DEFINICIONES_HORARIOS_BY_EMPLEADO_AND_ANHO = " select id_definicion as idDefinicionHorario, " +
 		" id_traballador as idEmpleado, " +
 		" data_desde as fechaDesde, " +
 		" data_ata as fechaHasta, " +
@@ -164,6 +179,8 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" aplica_venres as aplicarViernes, " +
 		" aplica_sabado as aplicarSabado, " +
 		" aplica_domingo as aplicarDomingo, " +
+		" p.descricion as nombreProduccion, " +
+		" u.descricion as nombreUbicacion, " +
 		" num_semanas_alternar as numSemanasAlternancia, " +
 		" hora_desde as horaDesde, " +
 		" hora_ata as horaHasta, " + 
@@ -171,8 +188,27 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" id_traballador as idEmpleado, " +
 		" id_produccion as idProduccion, " +
 		" cor_horario as colorHorario " +
-		" from definicions_horarios " +
-		" where id_traballador = ? and extract (year from data_desde) = ? ";
+		" from definicions_horarios d " +
+		" left join produccions p on d.id_produccion = p.codigo " +
+		" left join ubicacions u on d.id_ubicacion = u.codigo " +
+		" where id_traballador = ? and extract (year from data_desde) = ? " +
+		" order by fechaDesde asc, fechaHasta asc ";
+	
+	private static final String SQL_SELECT_EXCEPCIONES_HORARIOS_BY_EMPLEADO_AND_ANHO = 
+		" select " + 
+		" id_excepcion as idExcepcion, " + 
+		" id_estado as idEstado, " + 
+		" descricion as descripcionExcepcion, " + 
+		" id_sustituto as idSustituto, " + 
+		" estado_contrato as codigoEstadoContratoSustituto, " + 
+		" cor_excepcion as colorExcepcion " +
+		" from excepcions_horarios " + 
+		" where id_excepcion in " + 
+		"   (select id_excepcion " + 
+		"   from horarios_horas h " + 
+		"   inner join definicions_horarios d on h.id_definicion = d.id_definicion " + 
+		"   where d.id_traballador = ? and extract (year from d.data_desde) = ? ) " +
+		" order by idExcepcion "; // El ordenarlos por idExcepcion equivale a ordenarlos por fecha ya que al insertarlo se insertan por fecha	
 	
 	@Override
 	public List<UnidadHorarioPojo> getUnidadesHorariosBySeccionSemana(Long idSeccion, Date semana) {
@@ -214,7 +250,6 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		
 	}
 
-
 	
 	@Override
 	public void insertUnidadesHorarios(final List<UnidadHorarioPojo> unidadesHorarios) {
@@ -237,9 +272,27 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 					ps.setTimestamp(4, new java.sql.Timestamp(unidadHorario.getHoraHasta().getTime()));
 				
 				ps.setString(5, unidadHorario.getIdEmpleado());
-				ps.setLong(6, unidadHorario.getIdDefinicionHorario());
-				ps.setLong(7, unidadHorario.getIdExcepcionHorario());
-				ps.setString(8, unidadHorario.getIdProduccion());
+				
+				if (unidadHorario.getIdDefinicionHorario() != null) {
+					ps.setLong(6, unidadHorario.getIdDefinicionHorario());
+				}
+				else {
+					ps.setNull(6, Types.NUMERIC);
+				}
+				
+				if (unidadHorario.getIdExcepcionHorario() != null) {
+					ps.setLong(7, unidadHorario.getIdExcepcionHorario());
+				}
+				else {
+					ps.setNull(7, Types.NUMERIC);
+				}
+				
+				if (unidadHorario.getIdProduccion() != null) {
+					ps.setString(8, unidadHorario.getIdProduccion());
+				}
+				else {
+					ps.setNull(8, Types.VARCHAR);
+				}
 				
 			}
 		 
@@ -294,8 +347,20 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 				if (definicionHorario.getHoraHasta() != null)
 					ps.setTimestamp(13, new java.sql.Timestamp(definicionHorario.getHoraHasta().getTime()));
 				
-				ps.setString(14, definicionHorario.getIdProduccion());
-				ps.setString(15, definicionHorario.getIdUbicacion());
+				if (definicionHorario.getIdProduccion() != null) {
+					ps.setString(14, definicionHorario.getIdProduccion());
+				}
+				else {
+					ps.setNull(14, Types.VARCHAR);
+				}
+				
+				if (definicionHorario.getIdUbicacion() != null) {
+					ps.setString(15, definicionHorario.getIdUbicacion());
+				}
+				else {
+					ps.setNull(15, Types.VARCHAR);
+				}
+				
 				ps.setString(16, definicionHorario.getColorHorario());
 				
 			}
@@ -314,13 +379,53 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 				 		
 		Object[] args = {idEmpleado, anho};
 		
-		definicionesHorarios = super.jdbcTemplate.query(SQL_SELECT_DEFINICIONES_HORARIO_BY_EMPLEADO_AND_ANHO, args, new DefinicionHorarioRowMapper());
+		definicionesHorarios = super.jdbcTemplate.query(SQL_SELECT_DEFINICIONES_HORARIOS_BY_EMPLEADO_AND_ANHO, args, new DefinicionHorarioRowMapper());
 		
 		return definicionesHorarios;
+	}
+
+	@Override
+	public List<ExcepcionHorarioPojo> getExcepcionesHorarios(String idEmpleado, Integer anho) {
+		List<ExcepcionHorarioPojo> excepcionesHorarios = new ArrayList<ExcepcionHorarioPojo>();
+				 		
+		Object[] args = {idEmpleado, anho};
+		
+		excepcionesHorarios = super.jdbcTemplate.query(SQL_SELECT_EXCEPCIONES_HORARIOS_BY_EMPLEADO_AND_ANHO, args, new ExcepcionHorarioRowMapper());
+		
+		return excepcionesHorarios;
 	}	
 	
+
+	@Override
+	public void deleteAllExcepcionesHorariosAnho(String idEmpleado, Integer anho) {
+		
+		super.jdbcTemplate.update(SQL_DELETE_ALL_EXCEPCIONES_HORARIO_ANHO, idEmpleado, anho);
+		
+	}
+
+
+	@Override
+	public void insertExcepcionesHorarios(final List<ExcepcionHorarioPojo> excepcionesHorarios) {
+
+		jdbcTemplate.batchUpdate(SQL_INSERT_EXCEPCIONES_HORARIO, new BatchPreparedStatementSetter() {
+ 			
+			public void setValues(PreparedStatement ps, int i) throws SQLException {
+				
+				ExcepcionHorarioPojo excepcionHorario = excepcionesHorarios.get(i);
+												
+				ps.setString(1, excepcionHorario.getIdEstado());
+				ps.setString(2, excepcionHorario.getDescripcionExcepcion());
+				ps.setString(3, excepcionHorario.getIdSustituto());
+				ps.setInt(4, excepcionHorario.getCodigoEstadoContratoSustituto());
+				ps.setString(5, excepcionHorario.getColorExcepcion());								
+			}
+		 
+			public int getBatchSize() {
+				return excepcionesHorarios.size();
+			}
+			
+		});
+	}
 	
-	
-	
-	
+		
 }

@@ -20,9 +20,10 @@ public class UbicacionDto extends BaseDto implements Cloneable{
 	
 	
 	
-	public UbicacionDto(String idUbicacion) {
+	public UbicacionDto(String idUbicacion, String nombreUbicacion) {
 		super();
 		this.idUbicacion = idUbicacion;
+		this.nombreUbicacion = nombreUbicacion;
 	}
 
 

@@ -5851,6 +5851,7 @@ create table excepcions_horarios (
   id_excepcion number not null,
   id_estado varchar(10) not null,
   descricion varchar(255),
+  cor_excepcion varchar(10),
   
   id_sustituto varchar(10),
   estado_contrato number(10),
@@ -5888,7 +5889,7 @@ create table horarios_horas (
   data_modificacion timestamp NOT NULL,
   
   primary key (id_horas_dia),
-  constraint horas_traballador_unique unique (id_traballador, data_dia, id_ubicacion, hora_desde, hora_ata),
+  constraint horas_traballador_unique unique (id_traballador, data_dia, hora_desde, hora_ata),
   constraint fk_horas_ubicacion foreign key (id_ubicacion) references ubicacions (codigo),
   constraint fk_horas_traballadores foreign key (id_traballador) references traballadores (dni),
   constraint fk_horas_producciones foreign key (id_produccion) references produccions (codigo),

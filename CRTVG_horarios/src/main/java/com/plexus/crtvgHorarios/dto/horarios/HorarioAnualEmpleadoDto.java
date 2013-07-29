@@ -37,6 +37,7 @@ public class HorarioAnualEmpleadoDto extends BaseDto {
 	private HorarioMesDto diciembre;
 	
 	private List<DefinicionHorarioDto> definicionesHorarios; // Lista con los definicionesHorarios para el empleado
+	private List<ExcepcionHorarioDto> excepcionesHorarios; // Lista con las excepciones a los horarios definidos para el empleado: Vacaciones, ausencias...
 	
 	public HorarioAnualEmpleadoDto(Integer anho, EmpleadoDto empleado) {
 		super();
@@ -240,7 +241,13 @@ public class HorarioAnualEmpleadoDto extends BaseDto {
 	public void setEmpleado(EmpleadoDto empleado) {
 		this.empleado = empleado;
 	}
-	
-	
+
+	public List<ExcepcionHorarioDto> getExcepcionesHorarios() {
+		return excepcionesHorarios;
+	}
+
+	public void setExcepcionesHorarios(List<ExcepcionHorarioDto> excepcionesHorarios) {
+		this.excepcionesHorarios = excepcionesHorarios;
+	}	
 	
 }

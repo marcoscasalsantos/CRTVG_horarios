@@ -3,6 +3,7 @@ package com.plexus.crtvgHorarios.dto.horarios;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.plexus.crtvgHorarios.dataAccess.pojo.UnidadHorarioPojo;
 import com.plexus.crtvgHorarios.dto.common.BaseDto;
 import com.plexus.crtvgHorarios.dto.empleados.EmpleadoDto;
 import com.plexus.crtvgHorarios.dto.producciones.ProduccionDto;
@@ -46,7 +47,9 @@ public class DefinicionHorarioDto extends BaseDto {
 		// TODO Auto-generated constructor stub
 	}
 	
-	
+	public DefinicionHorarioDto(UnidadHorarioPojo unidadHorarioPojo) {
+		this.setIdDefinicionHorario(unidadHorarioPojo.getIdDefinicionHorario());
+	}
 
 	
 	public DefinicionHorarioDto(EmpleadoDto empleado) {

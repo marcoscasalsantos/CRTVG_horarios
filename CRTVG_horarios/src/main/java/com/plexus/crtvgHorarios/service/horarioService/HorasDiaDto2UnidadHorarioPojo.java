@@ -21,8 +21,9 @@ public class HorasDiaDto2UnidadHorarioPojo  {
 		unidadHorarioPojo.setIdHorasDia(horasDiaDto.getIdHorasDia());
 		unidadHorarioPojo.setFechaDia(horasDiaDto.getFechaDia());
 		
-		if (horasDiaDto.getUbicacion() != null)
+		if (horasDiaDto.getUbicacion() != null){
 			unidadHorarioPojo.setIdUbicacion(horasDiaDto.getUbicacion().getIdUbicacion());
+		}
 		
 		unidadHorarioPojo.setIdEmpleado(horasDiaDto.getEmpleado().getIdEmpleado());
 		
@@ -34,6 +35,12 @@ public class HorasDiaDto2UnidadHorarioPojo  {
 		
 		if (horasDiaDto.getEmpleadoSustituto() != null)
 			unidadHorarioPojo.setIdSustituto(horasDiaDto.getEmpleadoSustituto().getIdEmpleado());
+		
+		if (horasDiaDto.getDefinicionHorario() != null)
+			unidadHorarioPojo.setIdDefinicionHorario(horasDiaDto.getDefinicionHorario().getIdDefinicionHorario());
+		
+		if (horasDiaDto.getExcepcionHorario() != null)
+			unidadHorarioPojo.setIdExcepcionHorario(horasDiaDto.getExcepcionHorario().getIdExcepcionHorario());
 		
 		return unidadHorarioPojo;
 	}

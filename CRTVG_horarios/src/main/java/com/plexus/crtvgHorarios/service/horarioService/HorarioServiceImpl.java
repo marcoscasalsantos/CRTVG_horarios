@@ -14,21 +14,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.plexus.crtvgHorarios.dataAccess.dao.horario.HorarioDao;
-import com.plexus.crtvgHorarios.dataAccess.pojo.CategoriaPojo;
 import com.plexus.crtvgHorarios.dataAccess.pojo.DefinicionHorarioPojo;
+import com.plexus.crtvgHorarios.dataAccess.pojo.ExcepcionHorarioPojo;
 import com.plexus.crtvgHorarios.dataAccess.pojo.UnidadHorarioPojo;
-import com.plexus.crtvgHorarios.dto.categorias.CategoriaDto;
 import com.plexus.crtvgHorarios.dto.empleados.EmpleadoDto;
 import com.plexus.crtvgHorarios.dto.horarios.DefinicionHorarioDto;
+import com.plexus.crtvgHorarios.dto.horarios.ExcepcionHorarioDto;
 import com.plexus.crtvgHorarios.dto.horarios.HorarioAnualEmpleadoDto;
+import com.plexus.crtvgHorarios.dto.horarios.HorarioMesDto;
 import com.plexus.crtvgHorarios.dto.horarios.HorarioSemanaEmpleadoDto;
 import com.plexus.crtvgHorarios.dto.horarios.HorarioSemanaUbicacionDto;
-import com.plexus.crtvgHorarios.dto.horarios.HorarioMesDto;
 import com.plexus.crtvgHorarios.dto.horarios.HorasDiaDto;
-//import com.plexus.crtvgHorarios.dto.horarios.RangoHorarioDto;
 import com.plexus.crtvgHorarios.dto.producciones.ProduccionDto;
 import com.plexus.crtvgHorarios.dto.ubicaciones.UbicacionDto;
-import com.plexus.crtvgHorarios.service.empleadoService.CategoriaPojo2CategoriaDto;
+//import com.plexus.crtvgHorarios.dto.horarios.RangoHorarioDto;
 
 
 @Service("horarioService")
@@ -90,8 +89,8 @@ public class HorarioServiceImpl implements HorarioService {
 					}
 				}
 							
-				// se mete la unidadHorario en el día que le corresponda del horarioSemanaDto tratado 							
-				c.setTime(unidadHorarioPojo.getFechaDia());				
+				// se mete la unidadHorario en el día que le corresponda del horarioSemanaDto tratado
+				c.setTime(unidadHorarioPojo.getFechaDia());
 				int dayOfWeek = c.get(Calendar.DAY_OF_WEEK); // MONDAY = 2, TUESDAY = 3, WEDNESDAY = 4, THURSDAY = 5, FRIDAY = 6 ,SATURDAY = 7, SUNDAY = 1
 				
 				horasDiaDto = new HorasDiaDto(unidadHorarioPojo);
@@ -99,7 +98,7 @@ public class HorarioServiceImpl implements HorarioService {
 				if (horasDiaDto.getIdHorasDia() != null) {
 					
 					// si el día semana tratado aún no se ha inicializado se inicializa
-					List<HorasDiaDto> diaSemana = horarioSemanaUbicacionDto.getDiaSemana(dayOfWeek);				
+					List<HorasDiaDto> diaSemana = horarioSemanaUbicacionDto.getDiaSemana(dayOfWeek);
 					if (diaSemana == null ){
 						horarioSemanaUbicacionDto.setDiaSemana(dayOfWeek, new ArrayList<HorasDiaDto>());
 					}
@@ -118,35 +117,8 @@ public class HorarioServiceImpl implements HorarioService {
 	}
 
 
-	private boolean perteneceAdefinicion(HorasDiaDto horasDia, DefinicionHorarioDto definicionHorario) {
-		
-		if (horasDia == null || definicionHorario == null) {
-			return false;
-		}
-		
-		if (!horasDia.getHoraDesde().equals(definicionHorario.getHoraDesde())) {
-			return false;
-		}
-		
-		if (!horasDia.getHoraHasta().equals(definicionHorario.getHoraHasta())) {
-			return false;
-		}
-		
-		if (!horasDia.getProduccion().equals(definicionHorario.getProduccion())) {
-			return false;
-		}
-		
-		if (!horasDia.getUbicacion().equals(definicionHorario.getUbicacion())) {
-			return false;
-		}
-		
-		return true;
-		
-	}
-	
 
-	@Override
-	public HorarioMesDto getHorarioMesEmpleado(Date mesAnho, EmpleadoDto empleado, List<DefinicionHorarioDto> definicionesHorarios) {
+	private HorarioMesDto getHorarioMesEmpleado(Date mesAnho, EmpleadoDto empleado, List<DefinicionHorarioDto> definicionesHorarios, List<ExcepcionHorarioDto> excepcionesHorarios) {
 		// Obtener los horarios de horarioDao que cumplen el criterio de busqueda
 		List<UnidadHorarioPojo> unidadesHorariosPojos = horarioDao.getUnidadesHorariosByMesAnhoEmpleado(mesAnho, empleado.getIdEmpleado());
 		// las unidadesHorariosPojos deben estar ordenados por fecha y hora_desde para que el siguiente
@@ -192,16 +164,22 @@ public class HorarioServiceImpl implements HorarioService {
 					horarioSemanaEmpleadoDto.setDiaSemana(dayOfWeek, new ArrayList<HorasDiaDto>());
 				}
 					 
-				horarioSemanaEmpleadoDto.getDiaSemana(dayOfWeek).add(horasDiaDto);
-				
-								 
-				// FIXME: Cambiar en BD la tabla Horarios_horas para que guarde la relación de cada horario_hora con la definicionHorario y con el tipo de ausencia
-				// o sustitución que pueda tener en ese día.				
+				horarioSemanaEmpleadoDto.getDiaSemana(dayOfWeek).add(horasDiaDto);				
 				
 				// Se comprueba si las horas del horasDiaDto tratado coincide con alguna de las definicionesHorarios y si es así se fija el color
-				for(DefinicionHorarioDto definicionHorario: definicionesHorarios)
-					if (perteneceAdefinicion(horasDiaDto, definicionHorario) ) {				 
-					 horarioSemanaEmpleadoDto.setColorHorarioDia(dayOfWeek, definicionHorario.getColorHorario());						 
+				for(DefinicionHorarioDto definicionHorario: definicionesHorarios) {
+					
+					if (horasDiaDto.getExcepcionHorario() != null) {
+						
+						for (ExcepcionHorarioDto excepcionHorario: excepcionesHorarios) {
+							
+							if (horasDiaDto.getExcepcionHorario().getIdExcepcionHorario().equals(excepcionHorario.getIdExcepcionHorario()))							
+							horarioSemanaEmpleadoDto.setColorHorarioDia(dayOfWeek, horasDiaDto.getExcepcionHorario().getColorExcepcion());
+						}						
+						
+					}else if (horasDiaDto.getDefinicionHorario() != null && horasDiaDto.getDefinicionHorario().getIdDefinicionHorario().equals(definicionHorario.getIdDefinicionHorario()) ) {						
+							horarioSemanaEmpleadoDto.setColorHorarioDia(dayOfWeek, definicionHorario.getColorHorario());						
+					}
 				}
 				
 				
@@ -221,24 +199,34 @@ public class HorarioServiceImpl implements HorarioService {
 	public HorarioAnualEmpleadoDto getHorarioAnualEmpleado(Integer anho, EmpleadoDto empleado) {
 
 		HorarioAnualEmpleadoDto horarioAnual = new HorarioAnualEmpleadoDto(anho, empleado);	
-				
-		// Almacena los distintos rangos horarios encontrados para fijar el rangoHorario a asignar a cada día.
-		// se va actualizando en cada llamada a los metodos this.getHorarioMes()
-				
+						
+		// Obtiene las definicionesHorarios del empleado y año tratado
 		List<DefinicionHorarioPojo> definicionesHorariosPojos = horarioDao.getDefinicionesHorarios(empleado.getIdEmpleado(), anho);
 		List<DefinicionHorarioDto> definicionesHorariosDtos = new ArrayList<DefinicionHorarioDto>();
 		for (DefinicionHorarioPojo definicionHorarioPojo: definicionesHorariosPojos) {
 			definicionesHorariosDtos.add(new DefinicionHorarioPojo2DefinicionHorarioDto(mapper).transform(definicionHorarioPojo));
 		}		
-						
-		horarioAnual.setDefinicionesHorarios(definicionesHorariosDtos);
 		
-		Calendar cal = Calendar.getInstance();
-					
+		
+		// Obtiene las excepcionesHorarios del empleado y año tratado
+		List<ExcepcionHorarioPojo> excepcionesHorariosPojos = horarioDao.getExcepcionesHorarios(empleado.getIdEmpleado(), anho);
+		List<ExcepcionHorarioDto> excepcionesHorariosDtos = new ArrayList<ExcepcionHorarioDto>();
+		for (ExcepcionHorarioPojo excepcionHorarioPojo: excepcionesHorariosPojos) {
+			excepcionesHorariosDtos.add(new ExcepcionHorarioPojo2ExcepcionHorarioDto(mapper).transform(excepcionHorarioPojo));
+		}						
+		
+		
+		// Setea las definicionesHorarios y excepcionesHorarios en el horarioAnual tratado
+		horarioAnual.setDefinicionesHorarios(definicionesHorariosDtos);
+		horarioAnual.setExcepcionesHorarios(excepcionesHorariosDtos);
+		
+		
 		//Rellena el horarioAnual empleado para cada mes del año
+		// se va actualizando en cada llamada a los metodos this.getHorarioMes()
+		Calendar cal = Calendar.getInstance();							
 		for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER; i++) {			
 			cal.set(anho, i, 1);			
-			horarioAnual.setMes(i, this.getHorarioMesEmpleado(cal.getTime(), empleado, definicionesHorariosDtos));			
+			horarioAnual.setMes(i, this.getHorarioMesEmpleado(cal.getTime(), empleado, definicionesHorariosDtos, excepcionesHorariosDtos));			
 		}						
 		
 		return horarioAnual;
@@ -311,7 +299,7 @@ public class HorarioServiceImpl implements HorarioService {
 			// numSemanaRelativoDefinicion contiene el numero de la semana tomando como primera semana la primera semana indicada en la definicion del horario
 			int numSemanaRelativoDefinicion = numSemanaRelativoAnho - numSemanaInicioDefinicionRelativoAnho + 1;
 					
-			if (numSemanaRelativoDefinicion % definicionHorario.getNumSemanasAlternancia() == 0) {
+			if ((numSemanaRelativoDefinicion - 1) % definicionHorario.getNumSemanasAlternancia() == 0) {
 				return true;
 			}
 				return false;
@@ -368,7 +356,7 @@ public class HorarioServiceImpl implements HorarioService {
 						
 			// para evitar comparar dias de la semana anteriores al día de la semana con la que comienza el rangoHorario definido
 			// para la primera semana tratada del primer mes se empieza en el día en el día de la semana correspondiente al incicio del rango horario definido
-			if (esPrimerMes && esPrimeraSemanaTratada) {
+			if (esPrimerMes && esPrimeraSemanaTratada && semana.getFechaSemana().compareTo(definicionHorario.getFechaDesde()) >= 0) {
 				
 				for (int i= diasSemana.indexOf(dayOfWeek_fechaIniRango); i<= 6; i++)  {
 					
@@ -387,7 +375,7 @@ public class HorarioServiceImpl implements HorarioService {
 						Boolean festivo = semana.getFestivoDiaSemana(diaSemana[i]);
 
 						if (definicionHorario.aplicarDiaSemana(diaSemana[i])) {							
-							horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(diaSemana[i]), festivo, horaDesde, horaHasta, ubicacion, produccion));
+							horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(diaSemana[i]), festivo, horaDesde, horaHasta, ubicacion, produccion, definicionHorario));
 							semana.setColorHorarioDia(diaSemana[i],definicionHorario.getColorHorario());
 							yearMonthWeek = sdf_yearMonthWeek.format(semana.getFechaDiaSemana(diaSemana[i]));
 						}
@@ -429,7 +417,7 @@ public class HorarioServiceImpl implements HorarioService {
 								Boolean festivo = semana.getFestivoDiaSemana(diaSemana[i]);
 								
 								if (definicionHorario.aplicarDiaSemana(diaSemana[i])) {								
-									horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(diaSemana[i]), festivo, horaDesde, horaHasta, ubicacion, produccion));
+									horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(diaSemana[i]), festivo, horaDesde, horaHasta, ubicacion, produccion, definicionHorario));
 									semana.setColorHorarioDia(diaSemana[i],definicionHorario.getColorHorario());
 									yearMonthWeek = sdf_yearMonthWeek.format(semana.getFechaDiaSemana(diaSemana[i]));
 								}
@@ -471,7 +459,7 @@ public class HorarioServiceImpl implements HorarioService {
 								Boolean festivo = semana.getFestivoDiaSemana(diaSemana[i]);
 												
 								if (definicionHorario.aplicarDiaSemana(diaSemana[i])) {
-									horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(diaSemana[i]), festivo, horaDesde, horaHasta, ubicacion, produccion));
+									horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(diaSemana[i]), festivo, horaDesde, horaHasta, ubicacion, produccion, definicionHorario));
 									semana.setColorHorarioDia(diaSemana[i],definicionHorario.getColorHorario());
 									yearMonthWeek = sdf_yearMonthWeek.format(semana.getFechaDiaSemana(diaSemana[i]));
 								}
@@ -500,20 +488,35 @@ public class HorarioServiceImpl implements HorarioService {
 		
 		// TODO posibles validaciones previas???
 		
+		horarioDao.deleteAllUnidadesHorariosAnho(idEmpleado, horarioAnual.getAnho());
 				
-		// Guarda las nuevas definicionesHorario del empleado y año indicados
-		
+		// Guarda las nuevas definicionesHorario del empleado y año indicados		
 		horarioDao.deleteAllDefinicionesHorariosAnho(idEmpleado, horarioAnual.getAnho());
-				
+		
 		List<DefinicionHorarioPojo> definicionesHorariosPojos = new ArrayList<DefinicionHorarioPojo>();
 		for (DefinicionHorarioDto definicionHorarioDto: horarioAnual.getDefinicionesHorarios()) {
-			definicionesHorariosPojos.add(new DefinicionHorarioDto2DefinicionHorarioPojo(mapper).transform(definicionHorarioDto));			
-		}
+			definicionesHorariosPojos.add(new DefinicionHorarioDto2DefinicionHorarioPojo(mapper).transform(definicionHorarioDto));
+		}						
+		horarioDao.insertDefinicionesHorarios(definicionesHorariosPojos); 
 				
-		horarioDao.insertDefinicionesHorarios(definicionesHorariosPojos);
+		// Guarda las nuevas excepcionesHorario del empleado y año indicados
+		horarioDao.deleteAllExcepcionesHorariosAnho(idEmpleado, horarioAnual.getAnho());
 		
+		List<ExcepcionHorarioPojo> excepcionesHorariosPojos = new ArrayList<ExcepcionHorarioPojo>();
+		for (ExcepcionHorarioDto excepcionHorarioDto: horarioAnual.getExcepcionesHorarios()) {
+			excepcionesHorariosPojos.add(new ExcepcionHorarioDto2ExcepcionHorarioPojo(mapper).transform(excepcionHorarioDto));			
+		}						
+		horarioDao.insertExcepcionesHorarios(excepcionesHorariosPojos);				
+		
+				
 		// Guarda las nuevas unidadesHorarios del empleado y año indicados
-		horarioDao.deleteAllUnidadesHorariosAnho(idEmpleado, horarioAnual.getAnho());
+		
+		Long idDefinicionHorario;		
+		int indexExcepciones = -1;		
+		Long idExcepcionHorario = null;
+		// Traemos de BD las definicionesHorarios y excecpcionesHorarios con los respectivos idDefincionHorario y idExcepcionHorario seteados 
+		definicionesHorariosPojos = horarioDao.getDefinicionesHorarios(idEmpleado, horarioAnual.getAnho());
+		excepcionesHorariosPojos = horarioDao.getExcepcionesHorarios(idEmpleado, horarioAnual.getAnho());		
 		
 		List<UnidadHorarioPojo> unidadesHorariosPojos = new ArrayList<UnidadHorarioPojo>();
 		
@@ -527,20 +530,55 @@ public class HorarioServiceImpl implements HorarioService {
 					// los horariosDia puede ser null para los días no definidos del calendario, primeros días de 1era semana enero que pertenecen a diciembre del año anterior 
 					// y últimos dias de última semana de diciembre que pertenecen a enero del siguiente año
 					if (horariosDia != null) {
-						for (HorasDiaDto horasDia: horariosDia) {
-						
-							UnidadHorarioPojo unidadHorarioPojo = (new HorasDiaDto2UnidadHorarioPojo(horasDia)).getUnidadHorarioPojo();												
+						for (HorasDiaDto horasDia: horariosDia) {							
+							
+							idDefinicionHorario = getIdDefinicionHorario(horasDia.getDefinicionHorario(), definicionesHorariosPojos);
+							
+							// Como las excepciones se traen de BD ordenadas por fecha, se setea el idExcepcionHorario de cada horarioDia que tengaExcepcion secuencialmente
+							if (horasDia.getExcepcionHorario() != null) {
+								indexExcepciones++;
+								idExcepcionHorario = excepcionesHorariosPojos.get(indexExcepciones).getIdExcepcionHorario();
+							}							
+													
+							UnidadHorarioPojo unidadHorarioPojo = (new HorasDiaDto2UnidadHorarioPojo(horasDia)).getUnidadHorarioPojo();	
+							unidadHorarioPojo.setIdDefinicionHorario(idDefinicionHorario);
+							unidadHorarioPojo.setIdExcepcionHorario(idExcepcionHorario);
+							
 							unidadesHorariosPojos.add(unidadHorarioPojo);
 						}
 					}										
 				}								
 			}			
 		}
-					
+							
 		horarioDao.insertUnidadesHorarios(unidadesHorariosPojos);	
 		
 	}
 	
+
+	private Long getIdDefinicionHorario(DefinicionHorarioDto definicionHorarioDto, List<DefinicionHorarioPojo> definicionesHorariosPojos) {
+		
+		
+		if (definicionHorarioDto != null) {					
+			for (DefinicionHorarioPojo definicionHorarioPojo : definicionesHorariosPojos) {
+				
+				// El usuario y anho será siempre el mismo para Dto y Pojo, únicamente hay que comparar las fechas y horas ya que no puede haber más de un registro con estos campos iguales para un mismo
+				// empleado y anho
+				if ( definicionHorarioDto.getFechaDesde().equals(definicionHorarioPojo.getFechaDesde()) &&
+						definicionHorarioDto.getFechaHasta().equals(definicionHorarioPojo.getFechaHasta()) &&
+						definicionHorarioDto.getHoraDesde().equals(definicionHorarioPojo.getHoraDesde()) &&
+						definicionHorarioDto.getHoraHasta().equals(definicionHorarioPojo.getHoraHasta()) ) {
+					
+					return definicionHorarioPojo.getIdDefinicionHorario();
+				}
+				
+			}
+		}
+		
+		// Si no se encontro una definicionHorarioPojo que coincida con la definciionHorarioDto tratada se devuelve null
+		return null;
+		
+	}
 	
 	
 }

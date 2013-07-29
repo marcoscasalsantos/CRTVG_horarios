@@ -37,6 +37,8 @@ public class UnidadHorarioRowMapper implements RowMapper<UnidadHorarioPojo> {
             
             unidadHorario.setCategoria(rs.getString("categoria"));
             
+            unidadHorario.setColorExcepcion(rs.getString("colorExcepcion"));
+            
             unidadHorario.setColorHorario(rs.getString("colorHorario"));
             
             unidadHorario.setDescripcionEstado(rs.getString("descripcionEstado"));

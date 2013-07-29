@@ -21,9 +21,10 @@ public class ProduccionDto extends BaseDto implements Cloneable{
 	}
 
 
-	public ProduccionDto(String idProduccion) {
+	public ProduccionDto(String idProduccion, String nombreProduccion) {
 		super();
 		this.idProduccion = idProduccion;
+		this.nombreProduccion = nombreProduccion;
 	}
 	
 	

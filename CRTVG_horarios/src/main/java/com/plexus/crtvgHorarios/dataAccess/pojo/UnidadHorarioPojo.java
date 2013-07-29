@@ -61,6 +61,7 @@ public class UnidadHorarioPojo extends BasePojo {
 	private String idSustituto;		
 	private String descripcionExcepcion;
 	private Integer estadoContrato;
+	private String colorExcepcion;
 	
 	// Estado
 	private String descripcionEstado; 
@@ -254,6 +255,12 @@ public class UnidadHorarioPojo extends BasePojo {
 	}
 	public void setIdExcepcionHorario(Long idExcepcionHorario) {
 		this.idExcepcionHorario = idExcepcionHorario;
+	}
+	public String getColorExcepcion() {
+		return colorExcepcion;
+	}
+	public void setColorExcepcion(String colorExcepcion) {
+		this.colorExcepcion = colorExcepcion;
 	}
 
 	

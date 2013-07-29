@@ -31,6 +31,8 @@ public class HorasDiaDto extends BaseDto implements Cloneable{
 	
 	private ProduccionDto produccion;
 	private UbicacionDto ubicacion;
+	private DefinicionHorarioDto definicionHorario;
+	private ExcepcionHorarioDto excepcionHorario;
 	
 	public HorasDiaDto() {
 		super();
@@ -76,9 +78,18 @@ public class HorasDiaDto extends BaseDto implements Cloneable{
 		ubicacionDto.setNombreUbicacion(unidadHorarioPojo.getNombreUbicacion());
 		this.setUbicacion(ubicacionDto);
 		
+		if (unidadHorarioPojo.getIdDefinicionHorario() != null) {
+			DefinicionHorarioDto definicionHorario = new DefinicionHorarioDto(unidadHorarioPojo); 
+			this.setDefinicionHorario(definicionHorario);
+		}
+		
+		if (unidadHorarioPojo.getIdExcepcionHorario() != null) {
+			ExcepcionHorarioDto excepcionHorario = new ExcepcionHorarioDto(unidadHorarioPojo);
+			this.setExcepcionHorario(excepcionHorario);
+		}
 	}
 
-	public HorasDiaDto(EmpleadoDto empleado, Date fechaDia, Boolean festivo, Date horaDesde, Date horaHasta, UbicacionDto ubicacion, ProduccionDto produccion) {
+	public HorasDiaDto(EmpleadoDto empleado, Date fechaDia, Boolean festivo, Date horaDesde, Date horaHasta, UbicacionDto ubicacion, ProduccionDto produccion, DefinicionHorarioDto definicionHorario) {
 		this.setEmpleado(empleado);
 		this.setFechaDia(fechaDia);
 		this.setHoraDesde(horaDesde);
@@ -86,6 +97,7 @@ public class HorasDiaDto extends BaseDto implements Cloneable{
 		this.setUbicacion(ubicacion);
 		this.setProduccion(produccion);
 		this.setFestivo(festivo);
+		this.setDefinicionHorario(definicionHorario);
 	}
 	
 	
@@ -165,20 +177,31 @@ public class HorasDiaDto extends BaseDto implements Cloneable{
 	public void setUbicacion(UbicacionDto ubicacion) {
 		this.ubicacion = ubicacion;
 	}
-
-	/*
-	public RangoHorarioDto getRangoHorario() {
-		
-		RangoHorarioDto rangoHorario = null;
-		
-		if (this.horaDesde != null && this.horaHasta != null) {			
-			rangoHorario = new RangoHorarioDto(horaDesde, horaHasta);			
-		}
-		
-		return rangoHorario;
-	}
-	*/
 	
+	
+	public ExcepcionHorarioDto getExcepcionHorario() {
+		return excepcionHorario;
+	}
+
+
+
+	public DefinicionHorarioDto getDefinicionHorario() {
+		return definicionHorario;
+	}
+
+
+
+	public void setDefinicionHorario(DefinicionHorarioDto definicionHorario) {
+		this.definicionHorario = definicionHorario;
+	}
+
+
+
+	public void setExcepcionHorario(ExcepcionHorarioDto excepcionHorario) {
+		this.excepcionHorario = excepcionHorario;
+	}
+
+
 	@Override
 	public HorasDiaDto clone() {		
 		HorasDiaDto horasDia = new HorasDiaDto();
@@ -207,6 +230,9 @@ public class HorasDiaDto extends BaseDto implements Cloneable{
 		
 		if (this.getUbicacion() != null)
 			horasDia.setUbicacion(this.getUbicacion().clone());
+		
+		if (this.getExcepcionHorario() != null)
+			horasDia.setExcepcionHorario(this.getExcepcionHorario().clone());
 				
 		return horasDia;
 	}

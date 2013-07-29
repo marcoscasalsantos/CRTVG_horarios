@@ -32,6 +32,9 @@ public class DefinicionHorarioPojo extends BasePojo {
 	private String idProduccion;
 	private String colorHorario;
 	
+	private String nombreUbicacion;
+	private String nombreProduccion;
+	
 	public Long getIdDefinicionHorario() {
 		return idDefinicionHorario;
 	}
@@ -134,6 +137,18 @@ public class DefinicionHorarioPojo extends BasePojo {
 	}
 	public void setNumSemanasAlternancia(Integer numSemanasAlternancia) {
 		this.numSemanasAlternancia = numSemanasAlternancia;
+	}
+	public String getNombreUbicacion() {
+		return nombreUbicacion;
+	}
+	public void setNombreUbicacion(String nombreUbicacion) {
+		this.nombreUbicacion = nombreUbicacion;
+	}
+	public String getNombreProduccion() {
+		return nombreProduccion;
+	}
+	public void setNombreProduccion(String nombreProduccion) {
+		this.nombreProduccion = nombreProduccion;
 	}
 
 	

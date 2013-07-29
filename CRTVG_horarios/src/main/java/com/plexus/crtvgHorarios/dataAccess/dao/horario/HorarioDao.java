@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.plexus.crtvgHorarios.dataAccess.pojo.DefinicionHorarioPojo;
+import com.plexus.crtvgHorarios.dataAccess.pojo.ExcepcionHorarioPojo;
 import com.plexus.crtvgHorarios.dataAccess.pojo.UnidadHorarioPojo;
 import com.plexus.crtvgHorarios.dto.empleados.EmpleadoDto;
 import com.plexus.crtvgHorarios.dto.horarios.DefinicionHorarioDto;
@@ -42,6 +43,14 @@ public interface HorarioDao  {
 
 
 	public List<DefinicionHorarioPojo> getDefinicionesHorarios(String idEmpleado, Integer anho);
+
+
+	public void deleteAllExcepcionesHorariosAnho(String idEmpleado, Integer anho);
+
+
+	public void insertExcepcionesHorarios(List<ExcepcionHorarioPojo> excepcionesHorariosPojos);
+
+	public List<ExcepcionHorarioPojo> getExcepcionesHorarios(String idEmpleado, Integer anho);
 		
 	
 }

@@ -20,12 +20,12 @@ public class DefinicionHorarioPojo2DefinicionHorarioDto  extends TransformadorGe
     @Override
     protected void aplicaPropiedadesExtendidas(DefinicionHorarioPojo origen,  DefinicionHorarioDto destino) {   
     	
-    	// OJO!!! Los objetos EmpleadoDto, UbicacionDto y ProduccionDto solo tienen el correspondiente id seteado ya que
-    	// es el único atributo que se guardará en BD al actualizar las definicionesHorario
-    	
+    	// OJO!!! Los objetos EmpleadoDto, UbicacionDto y ProduccionDto solo tienen el correspondiente id y nombre seteado
+    	    	    	
     	destino.setEmpleado(new EmpleadoDto(origen.getIdEmpleado()));
-    	destino.setUbicacion(new UbicacionDto(origen.getIdUbicacion()));
-    	destino.setProduccion(new ProduccionDto(origen.getIdProduccion()));	                
+    	destino.setUbicacion(new UbicacionDto(origen.getIdUbicacion(), origen.getNombreUbicacion()));
+    	destino.setProduccion(new ProduccionDto(origen.getIdProduccion(), origen.getNombreProduccion()));
+    	
     }
 
 }

@@ -34,6 +34,9 @@ public class DefinicionHorarioRowMapper implements RowMapper<DefinicionHorarioPo
             definicionHorario.setAplicarSabado(rs.getBoolean("aplicarSabado"));
             definicionHorario.setAplicarDomingo(rs.getBoolean("aplicarDomingo"));
             
+            definicionHorario.setNombreProduccion(rs.getString("nombreProduccion"));
+            definicionHorario.setNombreUbicacion(rs.getString("nombreUbicacion"));
+            
             definicionHorario.setNumSemanasAlternancia(rs.getInt("numSemanasAlternancia"));
             if(rs.wasNull())
             	definicionHorario.setNumSemanasAlternancia(null);
