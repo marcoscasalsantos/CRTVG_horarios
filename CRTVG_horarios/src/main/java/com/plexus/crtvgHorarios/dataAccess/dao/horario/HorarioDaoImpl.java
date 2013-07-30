@@ -55,6 +55,12 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" h.hora_desde as horaDesde, " +
 		" h.hora_ata as horaHasta, " +
 		" dh.id_definicion as idDefinicionHorario, " +
+		
+		" dh.data_desde as fechaDefinicionDesde, " +
+		" dh.data_ata as fechaDefinicionHasta, " +
+		" dh.hora_desde as horaDefinicionDesde, " +
+		" dh.hora_ata as horaDefinicionHasta, " +		
+		
 		" h.id_traballador as idEmpleado, " +
 		" eh.id_estado as idEstado, " +
 		" eh.id_excepcion as idExcepcionHorario, " +
@@ -85,7 +91,7 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" left join traballadores t2 on eh.id_sustituto = t2.dni " +
 		" left join produccions p on h.id_produccion = p.codigo " +
 		" where s.id_seccion = ? " +
-		" order by h.id_ubicacion, h.data_dia, h.hora_desde ";
+		" order by h.id_ubicacion, h.data_dia, h.hora_desde asc, h.hora_desde desc ";
 	
 	
 	private static final String SQL_SELECT_BY_MES_ANHO_AND_EMPLEADO =
@@ -106,6 +112,13 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" h.hora_desde as horaDesde, " + 
 		" h.hora_ata as horaHasta, " +
 		" dh.id_definicion as idDefinicionHorario, " +
+		
+		" dh.data_desde as fechaDefinicionDesde, " +
+		" dh.data_ata as fechaDefinicionHasta, " +
+		" dh.hora_desde as horaDefinicionDesde, " +
+		" dh.hora_ata as horaDefinicionHasta, " +
+		
+		
 		" h.id_traballador as idEmpleado, " +
 		" eh.id_estado as idEstado, " +
 		" eh.id_excepcion as idExcepcionHorario, " +

@@ -32,9 +32,15 @@ public interface HorarioService {
 	 * @param horarioAnual
 	 * @return El horarioAnual con la nueva definicionHorario actualizada en los meses correspondientes, también se añade la definicion a horarioAnual.denificionesHorario.
 	 */
-	public HorarioAnualEmpleadoDto actualizarDefinicionHorario(DefinicionHorarioDto definicionHorario, HorarioAnualEmpleadoDto horarioAnual);
+	public HorarioAnualEmpleadoDto actualizarHorasAnhoPorNuevaDefinicionHorario(DefinicionHorarioDto definicionHorario, HorarioAnualEmpleadoDto horarioAnual);
 
+	public HorarioAnualEmpleadoDto actualizarHorasAnhoPorCambiosEnDefinicionHorario(DefinicionHorarioDto definicionHorarioEdicion, HorarioAnualEmpleadoDto horarioAnual);
 	
 	public void saveHorarioAnualEmpleado(HorarioAnualEmpleadoDto horarioAnual, String idEmpleado);
+
+	public HorarioAnualEmpleadoDto actualizarHorasAnhoPorEliminarDefinicionHorario(DefinicionHorarioDto selectedDefinicionHorario,
+			HorarioAnualEmpleadoDto horarioAnual);
+
+	
 	
 }

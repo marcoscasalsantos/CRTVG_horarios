@@ -49,6 +49,10 @@ public class DefinicionHorarioDto extends BaseDto {
 	
 	public DefinicionHorarioDto(UnidadHorarioPojo unidadHorarioPojo) {
 		this.setIdDefinicionHorario(unidadHorarioPojo.getIdDefinicionHorario());
+		this.setFechaDesde(unidadHorarioPojo.getFechaDefinicionDesde());
+		this.setFechaHasta(unidadHorarioPojo.getFechaDefinicionHasta());
+		this.setHoraDesde(unidadHorarioPojo.getHoraDefinicionDesde());
+		this.setHoraHasta(unidadHorarioPojo.getHoraDefinicionHasta());
 	}
 
 	
@@ -253,6 +257,31 @@ public class DefinicionHorarioDto extends BaseDto {
 
 	public void setNumSemanasAlternancia(Integer numSemanasAlternancia) {
 		this.numSemanasAlternancia = numSemanasAlternancia;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((idDefinicionHorario == null) ? 0 : idDefinicionHorario.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof DefinicionHorarioDto))
+			return false;
+		DefinicionHorarioDto other = (DefinicionHorarioDto) obj;
+		if (idDefinicionHorario == null) {
+			if (other.idDefinicionHorario != null)
+				return false;
+		} else if (!idDefinicionHorario.equals(other.idDefinicionHorario))
+			return false;
+		return true;
 	}
 
 	

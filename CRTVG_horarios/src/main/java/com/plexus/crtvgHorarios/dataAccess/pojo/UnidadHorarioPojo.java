@@ -54,7 +54,14 @@ public class UnidadHorarioPojo extends BasePojo {
 	private String nombreSeccion;
 	
 	// definiciones
-	private String colorHorario;
+	private String colorHorario;	
+	
+	// Los campos fechaDefinicionDesde, fechaDefinicionHasta, horaDefinicionDesde y horaDefinicionHasta
+	// son necesarios que los tenga cada unidadHoraria para poder identificar la definicionHoraria a la hora de insertar en BD.
+	private Date fechaDefinicionDesde;
+	private Date fechaDefinicionHasta;
+	private Date horaDefinicionDesde;
+	private Date horaDefinicionHasta;
 	
 	// excepciones
 	private String idEstado;
@@ -261,6 +268,30 @@ public class UnidadHorarioPojo extends BasePojo {
 	}
 	public void setColorExcepcion(String colorExcepcion) {
 		this.colorExcepcion = colorExcepcion;
+	}
+	public Date getFechaDefinicionDesde() {
+		return fechaDefinicionDesde;
+	}
+	public void setFechaDefinicionDesde(Date fechaDefinicionDesde) {
+		this.fechaDefinicionDesde = fechaDefinicionDesde;
+	}
+	public Date getFechaDefinicionHasta() {
+		return fechaDefinicionHasta;
+	}
+	public void setFechaDefinicionHasta(Date fechaDefinicionHasta) {
+		this.fechaDefinicionHasta = fechaDefinicionHasta;
+	}
+	public Date getHoraDefinicionDesde() {
+		return horaDefinicionDesde;
+	}
+	public void setHoraDefinicionDesde(Date horaDefinicionDesde) {
+		this.horaDefinicionDesde = horaDefinicionDesde;
+	}
+	public Date getHoraDefinicionHasta() {
+		return horaDefinicionHasta;
+	}
+	public void setHoraDefinicionHasta(Date horaDefinicionHasta) {
+		this.horaDefinicionHasta = horaDefinicionHasta;
 	}
 
 	

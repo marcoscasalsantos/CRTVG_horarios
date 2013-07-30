@@ -1,6 +1,7 @@
 package com.plexus.crtvgHorarios.dto.horarios;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.plexus.crtvgHorarios.dataAccess.pojo.UnidadHorarioPojo;
@@ -100,6 +101,13 @@ public class HorasDiaDto extends BaseDto implements Cloneable{
 		this.setDefinicionHorario(definicionHorario);
 	}
 	
+	
+	public int getDiaSemana() {		
+		Calendar c = Calendar.getInstance();
+		c.setTime(this.getFechaDia());
+		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+		return dayOfWeek;
+	}
 	
 	public Long getIdHorasDia() {
 		return idHorasDia;

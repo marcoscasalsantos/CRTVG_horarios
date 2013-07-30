@@ -57,12 +57,16 @@ public class HorarioAnualBean implements Serializable {
 	
 	private List<SelectItem> numSemanasAlternanciaSelectItems;
 		
+	private long idNuevaDefinicionHorario = 0; //Ese id se utilizará para identificar la definicionHorario mientras que no se persista en BD.
+	
+	private DefinicionHorarioDto selectedDefinicionHorario;
+	
 	@PostConstruct
 	private void postConstrut(){
 
 		panelNuevaDefinicionHorarioVisible = false;
 		botonAplicarCambiosDefinicionHorarioVisible = false;
-		botonGuardarVisible = false;
+		botonGuardarVisible = true;
 	
 		SelectItem selectItem0 = new SelectItem(null, "Todas las semanas");
 		SelectItem selectItem1 = new SelectItem(new Integer(2), "Semanas alternas");
@@ -178,21 +182,21 @@ public class HorarioAnualBean implements Serializable {
 	
 	public void definicionHorarioRowEditListener(RowEditEvent event) {
 		
-		DefinicionHorarioDto ddd = (DefinicionHorarioDto) event.getObject();
-		// TODO: aplica los cambios de la definiciónHorario seleccionada en el horario anual tratado.
+		DefinicionHorarioDto definicionHorarioEdicion = (DefinicionHorarioDto) event.getObject();
 		
-		
+		HorarioService horarioService = FacesUtils.getService("horarioService", HorarioService.class);		
+		this.setHorarioAnual(horarioService.actualizarHorasAnhoPorCambiosEnDefinicionHorario(definicionHorarioEdicion, this.getHorarioAnual()));
+				
+		this.setBotonGuardarVisible(true);
 	}
 	
-	
-	
-	
-	
+		
 	public void eliminarDefinicionHorario() {
+				
+		HorarioService horarioService = FacesUtils.getService("horarioService", HorarioService.class);
+		this.setHorarioAnual(horarioService.actualizarHorasAnhoPorEliminarDefinicionHorario(this.getSelectedDefinicionHorario(), this.getHorarioAnual()));		
 		
-		// TODO: elimina el rango horario tratado y lo actualiza en los calendariosMensuales		
-		
-		
+		this.setBotonGuardarVisible(true);
 	}
 	
 	
@@ -217,7 +221,11 @@ public class HorarioAnualBean implements Serializable {
 			this.getHorarioAnual().setDefinicionesHorarios(new ArrayList<DefinicionHorarioDto>());
 		}
 		
-		this.setHorarioAnual(horarioService.actualizarDefinicionHorario(this.getDefinicionHorario(), this.getHorarioAnual()));
+		// Mientras que no se persista en BD la nuevaDefinicionHorario se establece un idDefinicionHorario provisional para identificarlo para la edición (será negativo -1, -2, -3...)
+		DefinicionHorarioDto nuevaDefinicionHorario = this.getDefinicionHorario();
+		nuevaDefinicionHorario.setIdDefinicionHorario(idNuevaDefinicionHorario--);
+		
+		this.setHorarioAnual(horarioService.actualizarHorasAnhoPorNuevaDefinicionHorario(this.getDefinicionHorario(), this.getHorarioAnual()));
 		
 		this.setDefinicionHorario(null);
 		this.setPanelNuevaDefinicionHorarioVisible(false);
@@ -487,6 +495,16 @@ public class HorarioAnualBean implements Serializable {
 
 	public void setSelectedProduccion(ProduccionDto selectedProduccion) {
 		this.selectedProduccion = selectedProduccion;
+	}
+
+
+	public DefinicionHorarioDto getSelectedDefinicionHorario() {
+		return selectedDefinicionHorario;
+	}
+
+
+	public void setSelectedDefinicionHorario(DefinicionHorarioDto selectedDefinicionHorario) {
+		this.selectedDefinicionHorario = selectedDefinicionHorario;
 	}
 
 	

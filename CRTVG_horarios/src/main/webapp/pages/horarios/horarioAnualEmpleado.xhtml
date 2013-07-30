@@ -55,7 +55,7 @@
 	        			       
 	        	</h:panelGrid>
 
-				<p:panelGrid columns="2" columnClasses="topAlignedReducedPadding,topAlignedReducedPadding" >
+				<p:panelGrid id="calendarioYdefinicionesPanelGrid" columns="2" columnClasses="topAlignedReducedPadding,topAlignedReducedPadding" >
 				
 					<p:panelGrid id="calendarioAnualPanelGrid" columns="3" styleClass="calendarPanelGrid" style="width:408"> 
 	
@@ -955,7 +955,8 @@
 		        
 					<p:panelGrid id="definicionesHorariosPanelGrid" columns="1" styleClass="topAligned">
 					
-						<p:panel id="nuevaDefinicionHorarioPanel" header="#{msg.horarioAnualEmpleado_nuevaDefinicionHorario}" styleClass="middleAligned" rendered="#{horarioAnualBean.panelNuevaDefinicionHorarioVisible}">
+						<p:panel id="nuevaDefinicionHorarioPanel" header="#{msg.horarioAnualEmpleado_nuevaDefinicionHorario}" styleClass="middleAligned" 
+							rendered="#{horarioAnualBean.panelNuevaDefinicionHorarioVisible}" style="width: 370px">
 														
 							<h:panelGrid columns="2" columnClasses="columnAlignRight, middleAligned">
 							
@@ -1065,7 +1066,7 @@
     					</p:panel>					
 							        	       
 						<p:dataTable id="definicionesHorariosTable" var="definicionHorario" value="#{horarioAnualBean.horarioAnual.definicionesHorarios}"
-							emptyMessage="#{msg.horarioAnualEmpleado_sinHorariosDefinidos}" editable="true" >
+							emptyMessage="#{msg.horarioAnualEmpleado_sinHorariosDefinidos}" editable="true" style="width: 100%">
 							
 		   					<f:facet name="header">
 		   						<h:outputText value="#{msg.horarioAnualEmpleado_definicionesHorarios}"/> 
@@ -1073,9 +1074,9 @@
 		   					
 		   					<p:ajax event="rowEdit" listener="#{horarioAnualBean.definicionHorarioRowEditListener}" update=":horarioAnualForm:calendarioAnualPanelGrid"/>
 														
-							<p:column style="width:10%">
+							<p:column style="width: 20px">
 								<f:facet name="header" >
-									<h:outputText value="Color" />
+									<h:outputText value="Cor" />
 					            </f:facet>
 										           		
 								<p:cellEditor>  
@@ -1090,7 +1091,7 @@
 										           												        			
 					        </p:column>
 																																				
-							<p:column style="width:10%">
+							<p:column>
 								<f:facet name="header" >
 									<h:outputText value="#{msg.horarioAnualEmpleado_periodoHoras}" />
 					            </f:facet>
@@ -1107,19 +1108,20 @@
                 					</f:facet>  
                 					
                 					<f:facet name="input">  
-			    						<h:panelGrid columns="2" cellpadding="5" styleClass="middleAligned">							         									    										 
+			    						<h:panelGrid columns="3" cellpadding="0" columnClasses="columnAlignLeft,columnAlignLeft,columnAlignLeft">							         									    										 
 										    <p:calendar id="horaDesde" value="#{definicionHorario.horaDesde}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField"> 
-										    	<p:ajax event="dateSelect" listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="guardarCambiosHorariosButton" /> 
-										    </p:calendar> -  
+										    	<p:ajax event="dateSelect"/> 
+										    </p:calendar>
+										    <h:outputText value="-"/>
 										    <p:calendar id="horaHasta" value="#{definicionHorario.horaHasta}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField">
-										    	<p:ajax event="dateSelect" listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="guardarCambiosHorariosButton" />
+										    	<p:ajax event="dateSelect"/>
 										    </p:calendar>
 										</h:panelGrid>                    					  
                 					</f:facet>  
             					</p:cellEditor>
 							</p:column>
 							
-							<p:column style="width:10%">
+							<p:column>
 							
 								<f:facet name="header" >
 									<h:outputText value="Ubicacion" />
@@ -1133,7 +1135,7 @@
                 					<f:facet name="input">  
 										<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->	 
 										<p:selectOneMenu id="ubicaciones" value="#{definicionHorario.ubicacion}" converter="omnifaces.SelectItemsConverter">
-											<p:ajax listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="definicionesHorariosTable"/>
+											<p:ajax listener="#{horarioAnualBean.definicionHorarioChangeListener}"/>
 						            		<f:selectItems value="#{horarioAnualBean.ubicacionesSelectItems}" /> 
 						        		</p:selectOneMenu>
                 					</f:facet>  
@@ -1141,7 +1143,7 @@
 														
 					        </p:column>
 					        
-					        <p:column style="width:10%">
+					        <p:column>
 								<f:facet name="header" >
 									<h:outputText value="#{msg.horarioAnualEmpleado_produccion}" />
 					            </f:facet>					        
@@ -1151,23 +1153,25 @@
                 						<h:outputText value="#{definicionHorario.produccion.nombreProduccion}" />                					  
                 					</f:facet>  
                 					
-                					<f:facet name="input">  
+                					<f:facet name="input" style="width:100%">  
 										<!-- IMPORTANTE: Implementar los métodos hashCode y Equals del Dto para que funcione el converter -->									 					  				
 										<p:selectOneMenu id="producciones" value="#{definicionHorario.produccion}" converter="omnifaces.SelectItemsConverter">
-											<p:ajax listener="#{horarioAnualBean.definicionHorarioChangeListener}" update="definicionesHorariosTable"/>
+											<p:ajax listener="#{horarioAnualBean.definicionHorarioChangeListener}"/>
 					            			<f:selectItems value="#{horarioAnualBean.produccionesSelectItems}" /> 
 					        			</p:selectOneMenu>
                 					</f:facet>  
             					</p:cellEditor>			
 							</p:column>
 							
-							<p:column style="width:5%">								
+							<p:column style="width:2%">								
 								<p:rowEditor/>
         					</p:column>
         					
-        					<p:column style="width:5%">
+        					<p:column style="width:2%">
 								<p:commandLink id="eliminarHorarioButton" actionListener="#{horarioAnualBean.eliminarDefinicionHorario}" update=":horarioAnualForm:calendarioAnualPanelGrid" 
-            						 title="#{msg.boton_eliminar}" styleClass="ui-icon ui-icon-trash" />
+            						 title="#{msg.boton_eliminar}" styleClass="ui-icon ui-icon-trash" >
+            						 <f:setPropertyActionListener value="#{definicionHorario}" target="#{horarioAnualBean.selectedDefinicionHorario}" />
+            					</p:commandLink>
             				</p:column>
 								            						 						        							
 							
@@ -1182,13 +1186,13 @@
 							 -->
 																									
 							<f:facet name="footer">
-		   						 <p:commandButton id="nuevoHorarioButton" value="#{msg.boton_nuevo}" update=":horarioAnualForm:definicionesHorariosPanelGrid" actionListener="#{horarioAnualBean.nuevaDefinicionHorario}"
+		   						<p:commandButton id="nuevoHorarioButton" value="#{msg.boton_nuevo}" update=":horarioAnualForm:definicionesHorariosPanelGrid" actionListener="#{horarioAnualBean.nuevaDefinicionHorario}"
 				        			 icon="ui-icon-plusthick" />
 				        			 				        			 
 				        		<p:spacer width="5" />
 				        			 
 				        		<p:commandButton id="guardarCambiosHorariosButton" value="#{msg.boton_guardar}" update=":horarioAnualForm:growl" actionListener="#{horarioAnualBean.guardarCambiosHorarioEmpleado}"
-				        			  icon="ui-icon-check"  rendered="#{horarioAnualBean.botonGuardarVisible}"/>				        			 
+				        			  icon="ui-icon-check"  rendered="#{horarioAnualBean.botonGuardarVisible}"/>
 		   					</f:facet>	
 										
 						</p:dataTable>

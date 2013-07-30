@@ -35,7 +35,14 @@ public class DefinicionHorarioRowMapper implements RowMapper<DefinicionHorarioPo
             definicionHorario.setAplicarDomingo(rs.getBoolean("aplicarDomingo"));
             
             definicionHorario.setNombreProduccion(rs.getString("nombreProduccion"));
+            if (!StringUtils.isEmpty(definicionHorario.getNombreProduccion())) {            	            	
+            	definicionHorario.setNombreProduccion(WordUtils.capitalizeFully(definicionHorario.getNombreProduccion()));
+            }            
+            
             definicionHorario.setNombreUbicacion(rs.getString("nombreUbicacion"));
+            if (!StringUtils.isEmpty(definicionHorario.getNombreUbicacion())) {            	            	
+            	definicionHorario.setNombreUbicacion(WordUtils.capitalizeFully(definicionHorario.getNombreUbicacion()));
+            }            
             
             definicionHorario.setNumSemanasAlternancia(rs.getInt("numSemanasAlternancia"));
             if(rs.wasNull())

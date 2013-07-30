@@ -59,6 +59,16 @@ public class UnidadHorarioRowMapper implements RowMapper<UnidadHorarioPojo> {
             	unidadHorario.setIdDefinicionHorario(null);
             }
             
+            
+            unidadHorario.setFechaDefinicionDesde(rs.getDate("fechaDefinicionDesde"));            
+            unidadHorario.setFechaDefinicionHasta(rs.getDate("fechaDefinicionHasta"));            
+            //OJO!! Usar getTime para obtener la hora
+            unidadHorario.setHoraDefinicionDesde(rs.getTime("horaDefinicionDesde"));
+            unidadHorario.setHoraDefinicionHasta(rs.getTime("horaDefinicionHasta"));            
+            
+            
+            
+            
             unidadHorario.setIdEmpleado(rs.getString("idEmpleado"));
             
             unidadHorario.setIdEstado(rs.getString("idEstado"));

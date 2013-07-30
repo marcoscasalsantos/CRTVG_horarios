@@ -51,7 +51,7 @@
 	        		
 	        		<!-- rowKey="#{horarioSemanaUbicacion.idHorarioSemanaUbicacion}" -->
 				<p:dataTable id="horariosSemanasUbicacionesTable" var="horarioSemanaUbicacion" value="#{horariosBean.horariosSemanasUbicaciones}" paginator="false"					
-					resizableColumns="false" emptyMessage="" rendered="#{not empty horariosBean.horariosSemanasUbicaciones}">
+					resizableColumns="false" emptyMessage="">
 								 								    
 			    	<f:facet name="header">
 			    		<h:outputText value="Semana do " style="font-weight: bold"/>
@@ -303,16 +303,14 @@
 													
 					</f:facet>				        
 			        
-			    </p:dataTable> 		
-			    
-			    <h:outputText id="noHayDatosTexto" value="#{msg.horariosUbicacionesSeccion_noHayDatos}" rendered="#{empty horariosBean.horariosSemanasUbicaciones}"/>
+			    </p:dataTable>
 			    
 			    
    				<!-- Mejor poner los componentes hidden al final de la página para que no se den problemas en el renderizado del resto de componentes -->
 			    <!--  ver: http://forum.primefaces.org/viewtopic.php?f=3&t=22346 -->
 			    
 			    		
-			    <p:dialog id="dialog" widgetVar="horarioDialog" resizable="false" header="Edición horario" rendered="#{not empty horariosBean.horariosSemanasUbicaciones}">
+			    <p:dialog id="dialog" widgetVar="horarioDialog" resizable="false" header="Edición horario">
 				
 					<p:ajax event="close" update=":horariosForm:horariosSemanasUbicacionesTable" oncomplete="horarioDialog.hide()"/>
     			    			

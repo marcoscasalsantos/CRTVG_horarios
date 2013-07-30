@@ -236,7 +236,7 @@ public class HorarioServiceImpl implements HorarioService {
 
 
 	@Override
-	public HorarioAnualEmpleadoDto actualizarDefinicionHorario(DefinicionHorarioDto definicionHorario, HorarioAnualEmpleadoDto horarioAnual) {
+	public HorarioAnualEmpleadoDto actualizarHorasAnhoPorNuevaDefinicionHorario(DefinicionHorarioDto definicionHorario, HorarioAnualEmpleadoDto horarioAnual) {
 		
 		Calendar cal = Calendar.getInstance();
 				
@@ -251,7 +251,7 @@ public class HorarioServiceImpl implements HorarioService {
 				horarioAnual.setDefinicionesHorarios(new ArrayList<DefinicionHorarioDto>());				
 		}
 			
-		// TODO: si hay un rango horario ya definido con el mismo horario que se hace?				
+		// TODO: si hay un rango horario ya definido con el mismo horario que se hace?
 				
 		boolean esPrimerMes = true;
 		boolean esUltimoMes = false;
@@ -265,7 +265,7 @@ public class HorarioServiceImpl implements HorarioService {
 			if (mesFinRango == mes )
 				esUltimoMes = true;
 			
-			actualizarDefinicionHorarioEnMes(horarioAnual.getEmpleado(), definicionHorario, horarioMes, esPrimerMes, esUltimoMes, mes);				
+			actualizarHorasMesPorNuevaDefinicionHorario(horarioAnual.getEmpleado(), definicionHorario, horarioMes, esPrimerMes, esUltimoMes, mes);				
 			
 			esPrimerMes = false;			
 		}
@@ -313,7 +313,7 @@ public class HorarioServiceImpl implements HorarioService {
 	/**
 	 * Inserta el rangoHorarioDefinido en el mes a tratar
 	 */
-	private void actualizarDefinicionHorarioEnMes(EmpleadoDto empleado, DefinicionHorarioDto definicionHorario, 
+	private void actualizarHorasMesPorNuevaDefinicionHorario(EmpleadoDto empleado, DefinicionHorarioDto definicionHorario, 
 			HorarioMesDto horarioMes, boolean esPrimerMes, boolean esUltimoMes, int mes) {
 		
 		Date horaDesde = definicionHorario.getHoraDesde();
@@ -486,13 +486,12 @@ public class HorarioServiceImpl implements HorarioService {
 	@Transactional
 	public void saveHorarioAnualEmpleado(HorarioAnualEmpleadoDto horarioAnual, String idEmpleado) {
 		
-		// TODO posibles validaciones previas???
-		
+		// TODO posibles validaciones previas???		
 		horarioDao.deleteAllUnidadesHorariosAnho(idEmpleado, horarioAnual.getAnho());
 				
 		// Guarda las nuevas definicionesHorario del empleado y año indicados		
 		horarioDao.deleteAllDefinicionesHorariosAnho(idEmpleado, horarioAnual.getAnho());
-		
+
 		List<DefinicionHorarioPojo> definicionesHorariosPojos = new ArrayList<DefinicionHorarioPojo>();
 		for (DefinicionHorarioDto definicionHorarioDto: horarioAnual.getDefinicionesHorarios()) {
 			definicionesHorariosPojos.add(new DefinicionHorarioDto2DefinicionHorarioPojo(mapper).transform(definicionHorarioDto));
@@ -506,8 +505,7 @@ public class HorarioServiceImpl implements HorarioService {
 		for (ExcepcionHorarioDto excepcionHorarioDto: horarioAnual.getExcepcionesHorarios()) {
 			excepcionesHorariosPojos.add(new ExcepcionHorarioDto2ExcepcionHorarioPojo(mapper).transform(excepcionHorarioDto));			
 		}						
-		horarioDao.insertExcepcionesHorarios(excepcionesHorariosPojos);				
-		
+		horarioDao.insertExcepcionesHorarios(excepcionesHorariosPojos);		
 				
 		// Guarda las nuevas unidadesHorarios del empleado y año indicados
 		
@@ -520,7 +518,7 @@ public class HorarioServiceImpl implements HorarioService {
 		
 		List<UnidadHorarioPojo> unidadesHorariosPojos = new ArrayList<UnidadHorarioPojo>();
 		
-		for (HorarioMesDto horarioMes: horarioAnual.getMesesAnho()) {
+		for (HorarioMesDto horarioMes: horarioAnual.getMesesAnho()) { 
 			
 			for (HorarioSemanaEmpleadoDto horarioSemanaEmpleado: horarioMes.getSemanas()) {
 			
@@ -531,18 +529,24 @@ public class HorarioServiceImpl implements HorarioService {
 					// y últimos dias de última semana de diciembre que pertenecen a enero del siguiente año
 					if (horariosDia != null) {
 						for (HorasDiaDto horasDia: horariosDia) {							
+
+							UnidadHorarioPojo unidadHorarioPojo = (new HorasDiaDto2UnidadHorarioPojo(horasDia)).getUnidadHorarioPojo();
 							
-							idDefinicionHorario = getIdDefinicionHorario(horasDia.getDefinicionHorario(), definicionesHorariosPojos);
+							// Si las horasDia tratada se le asigno un nuevo horario se establece el nuevo idDenificionHorario que se le dio al insertar en BD
+							// TODO: cuando una definicionHorario se modifica se pone a null su idDefinicionHorario para que se recalcule en este momento
+							if (horasDia.getDefinicionHorario() != null) {
+								idDefinicionHorario = getIdDefinicionHorario(horasDia.getDefinicionHorario(), definicionesHorariosPojos);
+								unidadHorarioPojo.setIdDefinicionHorario(idDefinicionHorario);
+							}
 							
+							// si las horasDia tratada se le asigno una nueva excepción se establece el nuevo idExcepcionHorario que se le dio al insertar en BD
 							// Como las excepciones se traen de BD ordenadas por fecha, se setea el idExcepcionHorario de cada horarioDia que tengaExcepcion secuencialmente
+							// TODO: cuando una excepcionHorario se modifica se pone a null su idExcepcionHorario para que se recalcule en este momento
 							if (horasDia.getExcepcionHorario() != null) {
 								indexExcepciones++;
 								idExcepcionHorario = excepcionesHorariosPojos.get(indexExcepciones).getIdExcepcionHorario();
-							}							
-													
-							UnidadHorarioPojo unidadHorarioPojo = (new HorasDiaDto2UnidadHorarioPojo(horasDia)).getUnidadHorarioPojo();	
-							unidadHorarioPojo.setIdDefinicionHorario(idDefinicionHorario);
-							unidadHorarioPojo.setIdExcepcionHorario(idExcepcionHorario);
+								unidadHorarioPojo.setIdExcepcionHorario(idExcepcionHorario);
+							}														
 							
 							unidadesHorariosPojos.add(unidadHorarioPojo);
 						}
@@ -579,6 +583,81 @@ public class HorarioServiceImpl implements HorarioService {
 		return null;
 		
 	}
+
+
+
+	@Override
+	public HorarioAnualEmpleadoDto actualizarHorasAnhoPorCambiosEnDefinicionHorario(DefinicionHorarioDto definicionHorario, HorarioAnualEmpleadoDto horarioAnual) {
+				
+		for (HorarioMesDto horarioMes: horarioAnual.getMesesAnho()) {  
+					
+			for (HorarioSemanaEmpleadoDto horarioSemanaEmpleado: horarioMes.getSemanas()) {
+					
+				/// bucle for horarioSemanaEmpleado.getDias()
+				for (List<HorasDiaDto> horariosDia :horarioSemanaEmpleado.getDiasSemana()) {
+							
+					// los horariosDia puede ser null para los días no definidos del calendario, primeros días de 1era semana enero que pertenecen a diciembre del año anterior 
+					// y últimos dias de última semana de diciembre que pertenecen a enero del siguiente año
+					if (horariosDia != null) {
+						for (HorasDiaDto horasDia: horariosDia) {							
+							
+							// Si las horasDia tratadas son una excepcion al horario no se actualizan
+							if (horasDia.getExcepcionHorario() == null) {
+								 
+								// Aunque la definicionHorario no esté aún insertada en BD el idDefinicionHorario para el empleado tratado si existirá (con número negativo)
+								if (horasDia.getDefinicionHorario().getIdDefinicionHorario() == definicionHorario.getIdDefinicionHorario() ){												
+									horasDia.setDefinicionHorario(definicionHorario);
+									// Actualiza el color que se guarda en el objeto Semana
+									horarioSemanaEmpleado.setColorHorarioDia(horasDia.getDiaSemana(), definicionHorario.getColorHorario());
+								}								
+							}
+						}
+					}										
+				}								
+			}			
+		}
+				
+		return horarioAnual;
+	}
+
+
+
+	@Override
+	public HorarioAnualEmpleadoDto actualizarHorasAnhoPorEliminarDefinicionHorario(DefinicionHorarioDto definicionHorario, HorarioAnualEmpleadoDto horarioAnual) {
+		for (HorarioMesDto horarioMes: horarioAnual.getMesesAnho()) {  
+			
+			for (HorarioSemanaEmpleadoDto horarioSemanaEmpleado: horarioMes.getSemanas()) {
+					
+				/// bucle for horarioSemanaEmpleado.getDias()
+				for (List<HorasDiaDto> horariosDia :horarioSemanaEmpleado.getDiasSemana()) {
+							
+					// los horariosDia puede ser null para los días no definidos del calendario, primeros días de 1era semana enero que pertenecen a diciembre del año anterior 
+					// y últimos dias de última semana de diciembre que pertenecen a enero del siguiente año
+					if (horariosDia != null) {
+						for (HorasDiaDto horasDia: horariosDia) {							
+							
+							// Si las horasDia tratadas son una excepcion al horario no se actualizan
+							if (horasDia.getExcepcionHorario() == null) {
+								 
+								// Aunque la definicionHorario no esté aún insertada en BD el idDefinicionHorario para el empleado tratado si existirá (con número negativo)
+								if (horasDia.getDefinicionHorario().getIdDefinicionHorario() == definicionHorario.getIdDefinicionHorario() ){
+									
+									horarioSemanaEmpleado.setColorHorarioDia(horasDia.getDiaSemana(), "");
+									horasDia = null;
+								}								
+							}
+						}
+					}										
+				}								
+			}			
+		}
+		
+		horarioAnual.getDefinicionesHorarios().remove(definicionHorario);
+				
+		return horarioAnual;
+	}
+	
+	
 	
 	
 }

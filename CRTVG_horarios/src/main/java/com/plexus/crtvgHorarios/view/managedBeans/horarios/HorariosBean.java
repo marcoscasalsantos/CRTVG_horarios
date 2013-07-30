@@ -97,6 +97,12 @@ public class HorariosBean implements Serializable {
 	}	
 	
 	
+	public boolean getHayDatos() {
+		if (horariosSemanasUbicaciones != null && horariosSemanasUbicaciones.size() > 0)
+			return true;
+		
+		return false;					
+	}
 	
 
 
