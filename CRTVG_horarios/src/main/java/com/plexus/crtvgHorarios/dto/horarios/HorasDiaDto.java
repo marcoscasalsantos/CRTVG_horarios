@@ -244,5 +244,36 @@ public class HorasDiaDto extends BaseDto implements Cloneable{
 				
 		return horasDia;
 	}
+
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((idHorasDia == null) ? 0 : idHorasDia.hashCode());
+		return result;
+	}
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof HorasDiaDto))
+			return false;
+		HorasDiaDto other = (HorasDiaDto) obj;
+		if (idHorasDia == null) {
+			if (other.idHorasDia != null)
+				return false;
+		} else if (!idHorasDia.equals(other.idHorasDia))
+			return false;
+		return true;
+	}
+	
+	
 	
 }

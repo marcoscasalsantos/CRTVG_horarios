@@ -573,6 +573,11 @@ insert into seccions_ubicacions (id_seccion, id_ubicacion) values (2, 'PP006');
 insert into seccions_ubicacions (id_seccion, id_ubicacion) values (2, 'PP007');
 insert into seccions_ubicacions (id_seccion, id_ubicacion) values (2, 'PP008');
 
+insert into seccions_ubicacions (id_seccion, id_ubicacion) values (8, 'PL300');
+insert into seccions_ubicacions (id_seccion, id_ubicacion) values (8, 'PL150');
+insert into seccions_ubicacions (id_seccion, id_ubicacion) values (8, 'EST-4');
+insert into seccions_ubicacions (id_seccion, id_ubicacion) values (8, 'EST-5');
+
 
 CREATE TABLE TRABALLADORES(
 DNI VARCHAR(10) NOT NULL,

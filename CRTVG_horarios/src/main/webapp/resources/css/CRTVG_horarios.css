@@ -42,6 +42,11 @@ a:hover {text-decoration: underline;}
 	text-align: left;
 }
 
+.columnAlignLeftNoPadding{
+	text-align: left;
+	padding: 0px px;
+}
+
 .columnAlignLeftTop{
 	text-align: left;
 	vertical-align: top;
@@ -297,6 +302,7 @@ border-color: transparent;
 .topAligned tr
 {
 	vertical-align: top;
+	width: 100% !important;
 }
 
 .topAlignedReducedPadding
@@ -328,14 +334,15 @@ border-color: transparent;
 .calendarDay
 {
 	width:30px;
-	padding:1px !important;
+	font-size: 8px;
+	background: none !important;
+	background-color: none !important;
+	text-shadow: none;
+	box-shadow: none;
 	
 }
 
 .calendarDaySelected {
-	width:30px;	
-	padding:1px;
-	text-align:center;
 	background-color:#8080ff !important;
 }
 

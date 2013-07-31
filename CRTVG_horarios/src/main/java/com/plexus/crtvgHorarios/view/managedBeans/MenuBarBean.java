@@ -19,4 +19,24 @@ public class MenuBarBean implements Serializable {
 		return "horarioAnualEmpleado";
 	}	
 	
+	
+	public String goUsuarios() {
+		
+		//TODO: ir a donde tiene que ir
+		return null;
+	}	
+	
+	public String goPerfiles() {
+		
+		//TODO: ir a donde tiene que ir
+		return null;
+	}	
+	
+	public String goDatosMaestros() {
+		
+		//TODO: ir a donde tiene que ir
+		return null;
+	}	
+	
+	
 }

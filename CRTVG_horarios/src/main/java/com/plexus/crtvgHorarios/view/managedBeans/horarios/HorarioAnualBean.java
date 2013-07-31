@@ -68,7 +68,7 @@ public class HorarioAnualBean implements Serializable {
 		botonAplicarCambiosDefinicionHorarioVisible = false;
 		botonGuardarVisible = true;
 	
-		SelectItem selectItem0 = new SelectItem(null, "Todas las semanas");
+		SelectItem selectItem0 = new SelectItem(null, "Todas as semanas");
 		SelectItem selectItem1 = new SelectItem(new Integer(2), "Semanas alternas");
 		SelectItem selectItem2 = new SelectItem(new Integer(3), "Cada 3 semanas");
 		SelectItem selectItem3 = new SelectItem(new Integer(4), "Cada 4 semanas");

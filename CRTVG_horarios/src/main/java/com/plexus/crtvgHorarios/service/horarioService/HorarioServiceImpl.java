@@ -606,7 +606,14 @@ public class HorarioServiceImpl implements HorarioService {
 								 
 								// Aunque la definicionHorario no esté aún insertada en BD el idDefinicionHorario para el empleado tratado si existirá (con número negativo)
 								if (horasDia.getDefinicionHorario().getIdDefinicionHorario() == definicionHorario.getIdDefinicionHorario() ){												
+									
 									horasDia.setDefinicionHorario(definicionHorario);
+									
+									horasDia.setHoraDesde(definicionHorario.getHoraDesde());
+									horasDia.setHoraHasta(definicionHorario.getHoraHasta());
+									horasDia.setUbicacion(definicionHorario.getUbicacion());
+									horasDia.setProduccion(definicionHorario.getProduccion());
+									
 									// Actualiza el color que se guarda en el objeto Semana
 									horarioSemanaEmpleado.setColorHorarioDia(horasDia.getDiaSemana(), definicionHorario.getColorHorario());
 								}								
@@ -643,8 +650,9 @@ public class HorarioServiceImpl implements HorarioService {
 								if (horasDia.getDefinicionHorario().getIdDefinicionHorario() == definicionHorario.getIdDefinicionHorario() ){
 									
 									horarioSemanaEmpleado.setColorHorarioDia(horasDia.getDiaSemana(), "");
-									horasDia = null;
-								}								
+									horariosDia.remove(horasDia);
+									break;
+								}
 							}
 						}
 					}										

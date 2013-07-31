@@ -91,7 +91,7 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" left join traballadores t2 on eh.id_sustituto = t2.dni " +
 		" left join produccions p on h.id_produccion = p.codigo " +
 		" where s.id_seccion = ? " +
-		" order by h.id_ubicacion, h.data_dia, h.hora_desde asc, h.hora_desde desc ";
+		" order by h.id_ubicacion, h.data_dia, h.hora_desde asc, h.hora_desde asc ";
 	
 	
 	private static final String SQL_SELECT_BY_MES_ANHO_AND_EMPLEADO =
