@@ -47,8 +47,7 @@ public class HorarioAnualBean implements Serializable {
 	private CategoriaDto selectedUbicacion;
 	
 	private boolean botonAplicarCambiosDefinicionHorarioVisible;	
-	private boolean panelNuevaDefinicionHorarioVisible;
-	private boolean botonGuardarVisible;
+	private boolean panelNuevaDefinicionHorarioVisible;	
 	
 	private DefinicionHorarioDto definicionHorario;
 	
@@ -66,7 +65,6 @@ public class HorarioAnualBean implements Serializable {
 
 		panelNuevaDefinicionHorarioVisible = false;
 		botonAplicarCambiosDefinicionHorarioVisible = false;
-		botonGuardarVisible = true;
 	
 		SelectItem selectItem0 = new SelectItem(null, "Todas as semanas");
 		SelectItem selectItem1 = new SelectItem(new Integer(2), "Semanas alternas");
@@ -186,8 +184,6 @@ public class HorarioAnualBean implements Serializable {
 		
 		HorarioService horarioService = FacesUtils.getService("horarioService", HorarioService.class);		
 		this.setHorarioAnual(horarioService.actualizarHorasAnhoPorCambiosEnDefinicionHorario(definicionHorarioEdicion, this.getHorarioAnual()));
-				
-		this.setBotonGuardarVisible(true);
 	}
 	
 		
@@ -195,8 +191,6 @@ public class HorarioAnualBean implements Serializable {
 				
 		HorarioService horarioService = FacesUtils.getService("horarioService", HorarioService.class);
 		this.setHorarioAnual(horarioService.actualizarHorasAnhoPorEliminarDefinicionHorario(this.getSelectedDefinicionHorario(), this.getHorarioAnual()));		
-		
-		this.setBotonGuardarVisible(true);
 	}
 	
 	
@@ -228,8 +222,7 @@ public class HorarioAnualBean implements Serializable {
 		this.setHorarioAnual(horarioService.actualizarHorasAnhoPorNuevaDefinicionHorario(this.getDefinicionHorario(), this.getHorarioAnual()));
 		
 		this.setDefinicionHorario(null);
-		this.setPanelNuevaDefinicionHorarioVisible(false);
-		this.setBotonGuardarVisible(true);		
+		this.setPanelNuevaDefinicionHorarioVisible(false);		
 	}
 	
 	
@@ -429,20 +422,6 @@ public class HorarioAnualBean implements Serializable {
 	public void setPanelNuevaDefinicionHorarioVisible(boolean panelNuevaDefinicionHorarioVisible) {
 		this.panelNuevaDefinicionHorarioVisible = panelNuevaDefinicionHorarioVisible;
 	}	
-
-
-	public boolean isBotonGuardarVisible() {
-		return botonGuardarVisible;
-	}
-
-
-
-
-	public void setBotonGuardarVisible(boolean botonGuardarVisible) {
-		this.botonGuardarVisible = botonGuardarVisible;
-	}
-
-
 
 
 	public DefinicionHorarioDto getDefinicionHorario() {

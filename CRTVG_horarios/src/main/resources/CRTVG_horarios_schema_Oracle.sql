@@ -522,6 +522,7 @@ insert into seccions (id_seccion, nome_seccion, data_modificacion) values (7, 'S
 insert into seccions (id_seccion, nome_seccion, data_modificacion) values (8, 'Cámaras', current_timestamp);
 insert into seccions (id_seccion, nome_seccion, data_modificacion) values (9, 'Controis de cámara', current_timestamp);
 insert into seccions (id_seccion, nome_seccion, data_modificacion) values (10, 'Realización', current_timestamp);
+insert into seccions (id_seccion, nome_seccion, data_modificacion) values (11, 'Postproducción de audio', current_timestamp);
 
   
 --FIXME: 
@@ -5840,7 +5841,7 @@ create table definicions_horarios (
   data_modificacion timestamp NOT NULL,  
 
   primary key (id_definicion),
-  constraint definicion_traballador_unique unique (id_traballador, data_desde, data_ata, hora_desde, hora_ata),
+  constraint definicion_traballador_unique unique (id_traballador, data_desde, data_ata, hora_desde, hora_ata, id_ubicacion, id_produccion),
   constraint fk_definicions_ubicacions foreign key (id_ubicacion) references ubicacions (codigo),
   constraint fk_definicions_traballadores foreign key (id_traballador) references traballadores (dni),
   constraint fk_definicions_produccions foreign key (id_produccion) references produccions (codigo)

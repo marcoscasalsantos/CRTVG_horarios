@@ -59,16 +59,14 @@ public class UnidadHorarioRowMapper implements RowMapper<UnidadHorarioPojo> {
             	unidadHorario.setIdDefinicionHorario(null);
             }
             
+            unidadHorario.setIdUbicacionDefinicion(rs.getString("idUbicacionDefinicion"));            
             
             unidadHorario.setFechaDefinicionDesde(rs.getDate("fechaDefinicionDesde"));            
             unidadHorario.setFechaDefinicionHasta(rs.getDate("fechaDefinicionHasta"));            
             //OJO!! Usar getTime para obtener la hora
             unidadHorario.setHoraDefinicionDesde(rs.getTime("horaDefinicionDesde"));
             unidadHorario.setHoraDefinicionHasta(rs.getTime("horaDefinicionHasta"));            
-            
-            
-            
-            
+                        
             unidadHorario.setIdEmpleado(rs.getString("idEmpleado"));
             
             unidadHorario.setIdEstado(rs.getString("idEstado"));
@@ -91,15 +89,16 @@ public class UnidadHorarioRowMapper implements RowMapper<UnidadHorarioPojo> {
             if(rs.wasNull())
             	unidadHorario.setIdHorasDia(null);
             
-            unidadHorario.setIdProduccion(rs.getString("idProduccion"));                                    
+            unidadHorario.setIdProduccion(rs.getString("idProduccion"));
+            
+            unidadHorario.setIdProduccionDefinicion(rs.getString("idProduccionDefinicion"));
+            
             unidadHorario.setIdSustituto(rs.getString("idSustituto"));                        
             unidadHorario.setIdUbicacion(rs.getString("idUbicacion"));
             unidadHorario.setNombreEmpleado(rs.getString("nombreEmpleado")); 
             if (!StringUtils.isEmpty(unidadHorario.getNombreEmpleado())) {            	            	
             	unidadHorario.setNombreEmpleado(WordUtils.capitalizeFully(unidadHorario.getNombreEmpleado()));
             }
-            
-            
                         
             unidadHorario.setNombreProduccion(rs.getString("nombreProduccion")); 
             if (!StringUtils.isEmpty(unidadHorario.getNombreProduccion())) {            	            	

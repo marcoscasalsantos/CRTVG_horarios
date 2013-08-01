@@ -59,7 +59,9 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" dh.data_desde as fechaDefinicionDesde, " +
 		" dh.data_ata as fechaDefinicionHasta, " +
 		" dh.hora_desde as horaDefinicionDesde, " +
-		" dh.hora_ata as horaDefinicionHasta, " +		
+		" dh.hora_ata as horaDefinicionHasta, " +	
+		" dh.id_ubicacion as idUbicacionDefinicion, " +
+		" dh.id_produccion as idProduccionDefinicion, " +
 		
 		" h.id_traballador as idEmpleado, " +
 		" eh.id_estado as idEstado, " +
@@ -117,7 +119,8 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		" dh.data_ata as fechaDefinicionHasta, " +
 		" dh.hora_desde as horaDefinicionDesde, " +
 		" dh.hora_ata as horaDefinicionHasta, " +
-		
+		" dh.id_ubicacion as idUbicacionDefinicion, " +
+		" dh.id_produccion as idProduccionDefinicion, " +		
 		
 		" h.id_traballador as idEmpleado, " +
 		" eh.id_estado as idEstado, " +
@@ -328,6 +331,11 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 	
 	@Override
 	public void insertDefinicionesHorarios(final List<DefinicionHorarioPojo> definicionesHorarios) {
+		
+		
+		// TODO: enviar al service la excepción y capturarla la excepción producida por la restriccion "definicion_traballador_unique" y enviarla al controlador para que muestre el mensaje correspondiente
+		// ej. si se define un horario igual a otro en fechas, horas, ubicación y producción en la que solo difiere el patrón entonces ya se puede contener ampliando el patron de la definicion ya existente
+		// y así se evita la creación de definiciones innecesarias
 
 		jdbcTemplate.batchUpdate(SQL_INSERT_DEFINICIONES_HORARIO, new BatchPreparedStatementSetter() {
  			

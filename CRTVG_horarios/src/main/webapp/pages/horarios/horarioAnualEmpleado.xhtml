@@ -1171,7 +1171,7 @@
         					
         					<p:column style="width:2% !important">
 								<p:commandLink id="eliminarHorarioButton" action="#{horarioAnualBean.eliminarDefinicionHorario}" update=":horarioAnualForm:calendarioAnualPanelGrid :horarioAnualForm:definicionesHorariosPanelGrid" 
-            						 title="#{msg.boton_eliminar}" styleClass="ui-icon ui-icon-trash" >
+            						 title="#{msg.boton_eliminar}" styleClass="ui-icon ui-icon-trash">
             						 <f:setPropertyActionListener value="#{definicionHorario}" target="#{horarioAnualBean.selectedDefinicionHorario}" />
             					</p:commandLink>
             				</p:column>
@@ -1193,8 +1193,8 @@
 				        			 				        			 
 				        		<p:spacer width="5" />
 				        			 
-				        		<p:commandButton id="guardarCambiosHorariosButton" value="#{msg.boton_guardar}" update=":horarioAnualForm:growl" actionListener="#{horarioAnualBean.guardarCambiosHorarioEmpleado}"
-				        			  icon="ui-icon-check"  rendered="#{horarioAnualBean.botonGuardarVisible}"/>
+				        		<p:commandButton id="guardarCambiosHorariosButton" widgetVar="botonGuardar" value="#{msg.boton_guardar}" update=":horarioAnualForm:growl" actionListener="#{horarioAnualBean.guardarCambiosHorarioEmpleado}"
+				        			  icon="ui-icon-check"/>
 		   					</f:facet>	
 										
 						</p:dataTable>
@@ -1202,12 +1202,27 @@
 					</p:panelGrid>
 		        
 		        </p:panelGrid>	        
-	        		
-			</h:form>		 				
+			</h:form>	
+			
+			
+			<!-- execute the script after the DOM is ready.  -->
+			<script type="text/javascript">	
+			    $(document).ready(function() {
+			    	$('#guardarCambiosHorariosButton').hide();
+			    	PF('botonGuardar').hide();
+			    });			
+			</script> 				
 			
 		</ui:define>
 	</ui:composition>
+	
+
+	
+		
 </html>
+
+
+
 
 		
 

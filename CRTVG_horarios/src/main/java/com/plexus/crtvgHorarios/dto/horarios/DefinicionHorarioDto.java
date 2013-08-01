@@ -53,6 +53,8 @@ public class DefinicionHorarioDto extends BaseDto {
 		this.setFechaHasta(unidadHorarioPojo.getFechaDefinicionHasta());
 		this.setHoraDesde(unidadHorarioPojo.getHoraDefinicionDesde());
 		this.setHoraHasta(unidadHorarioPojo.getHoraDefinicionHasta());
+		this.setUbicacion(new UbicacionDto(unidadHorarioPojo.getIdUbicacionDefinicion()));
+		this.setProduccion(new ProduccionDto(unidadHorarioPojo.getIdProduccionDefinicion()));
 	}
 
 	

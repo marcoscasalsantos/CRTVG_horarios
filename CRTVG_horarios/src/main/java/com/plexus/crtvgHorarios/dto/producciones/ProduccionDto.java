@@ -20,6 +20,10 @@ public class ProduccionDto extends BaseDto implements Cloneable{
 		// TODO Auto-generated constructor stub
 	}
 
+	public ProduccionDto(String idProduccion) {
+		super();
+		this.idProduccion = idProduccion;
+	}	
 
 	public ProduccionDto(String idProduccion, String nombreProduccion) {
 		super();

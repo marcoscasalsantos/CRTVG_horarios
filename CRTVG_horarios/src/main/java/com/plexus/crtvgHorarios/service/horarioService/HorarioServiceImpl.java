@@ -496,7 +496,7 @@ public class HorarioServiceImpl implements HorarioService {
 		for (DefinicionHorarioDto definicionHorarioDto: horarioAnual.getDefinicionesHorarios()) {
 			definicionesHorariosPojos.add(new DefinicionHorarioDto2DefinicionHorarioPojo(mapper).transform(definicionHorarioDto));
 		}						
-		horarioDao.insertDefinicionesHorarios(definicionesHorariosPojos); 
+		horarioDao.insertDefinicionesHorarios(definicionesHorariosPojos);
 				
 		// Guarda las nuevas excepcionesHorario del empleado y año indicados
 		horarioDao.deleteAllExcepcionesHorariosAnho(idEmpleado, horarioAnual.getAnho());
@@ -571,7 +571,9 @@ public class HorarioServiceImpl implements HorarioService {
 				if ( definicionHorarioDto.getFechaDesde().equals(definicionHorarioPojo.getFechaDesde()) &&
 						definicionHorarioDto.getFechaHasta().equals(definicionHorarioPojo.getFechaHasta()) &&
 						definicionHorarioDto.getHoraDesde().equals(definicionHorarioPojo.getHoraDesde()) &&
-						definicionHorarioDto.getHoraHasta().equals(definicionHorarioPojo.getHoraHasta()) ) {
+						definicionHorarioDto.getHoraHasta().equals(definicionHorarioPojo.getHoraHasta()) &&
+						definicionHorarioDto.getUbicacion().getIdUbicacion().equals(definicionHorarioPojo.getIdUbicacion()) &&
+						definicionHorarioDto.getProduccion().getIdProduccion().equals(definicionHorarioPojo.getIdProduccion()) ) {
 					
 					return definicionHorarioPojo.getIdDefinicionHorario();
 				}
