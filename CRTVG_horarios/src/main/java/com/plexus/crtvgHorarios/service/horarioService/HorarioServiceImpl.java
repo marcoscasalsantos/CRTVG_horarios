@@ -9,6 +9,8 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.dozer.Mapper;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,7 +52,6 @@ public class HorarioServiceImpl implements HorarioService {
 		
 		// Añade las UnidadHorarioPojos transformados en los HorarioSemanaUbicacionDto correspondientes a cada semana y ubicación 
 		// correspondientes a las sección y semana indicadas.
-		Calendar c = Calendar.getInstance();
 		SimpleDateFormat sdf_yearMonthWeek = new SimpleDateFormat("yyyyMMww");
 		String yearMonthWeek = null;
 		String idUbicacion  = null;
@@ -90,8 +91,8 @@ public class HorarioServiceImpl implements HorarioService {
 				}
 							
 				// se mete la unidadHorario en el día que le corresponda del horarioSemanaDto tratado
-				c.setTime(unidadHorarioPojo.getFechaDia());
-				int dayOfWeek = c.get(Calendar.DAY_OF_WEEK); // MONDAY = 2, TUESDAY = 3, WEDNESDAY = 4, THURSDAY = 5, FRIDAY = 6 ,SATURDAY = 7, SUNDAY = 1
+				LocalDate localDate = new LocalDate(unidadHorarioPojo.getFechaDia());
+				int dayOfWeek = localDate.getDayOfWeek(); // MONDAY = 1, TUESDAY = 2, WEDNESDAY = 3, THURSDAY = 4, FRIDAY = 5 ,SATURDAY = 6, SUNDAY = 7 
 				
 				horasDiaDto = new HorasDiaDto(unidadHorarioPojo);
 							
@@ -125,8 +126,6 @@ public class HorarioServiceImpl implements HorarioService {
 		// algoritmo funcione correctamente.
 		
 		// Añade las UnidadHorarioPojos transformados en los HorarioSemanaEmpleadoDto correspondientes a cada semana 
-
-		Calendar c = Calendar.getInstance();
 		
 		SimpleDateFormat sdf_yearMonthWeek = new SimpleDateFormat("yyyyMMww");
 		String yearMonthWeek = null;
@@ -149,10 +148,9 @@ public class HorarioServiceImpl implements HorarioService {
 				horarioSemanaEmpleadoDto = new HorarioSemanaEmpleadoDto(empleado, yearMonthWeek);
 			}
 				
-			// se mete la unidadHorario en el día que le corresponda del horarioSemanaEmpleadoDto tratado
-							
-			c.setTime(unidadHorarioPojo.getFechaDia());				
-			int dayOfWeek = c.get(Calendar.DAY_OF_WEEK); // MONDAY = 2, TUESDAY = 3, WEDNESDAY = 4, THURSDAY = 5, FRIDAY = 6 ,SATURDAY = 7, SUNDAY = 1
+			// se mete la unidadHorario en el día que le corresponda del horarioSemanaEmpleadoDto tratado			
+			LocalDate localDate = new LocalDate(unidadHorarioPojo.getFechaDia());
+			int dayOfWeek = localDate.getDayOfWeek(); // MONDAY = 1, TUESDAY = 2, WEDNESDAY = 3, THURSDAY = 4, FRIDAY = 5 ,SATURDAY = 6, SUNDAY = 7 
 			
 			horasDiaDto = new HorasDiaDto(unidadHorarioPojo);
 				
@@ -224,9 +222,10 @@ public class HorarioServiceImpl implements HorarioService {
 		//Rellena el horarioAnual empleado para cada mes del año
 		// se va actualizando en cada llamada a los metodos this.getHorarioMes()
 		Calendar cal = Calendar.getInstance();							
-		for (int i = Calendar.JANUARY; i <= Calendar.DECEMBER; i++) {			
-			cal.set(anho, i, 1);			
-			horarioAnual.setMes(i, this.getHorarioMesEmpleado(cal.getTime(), empleado, definicionesHorariosDtos, excepcionesHorariosDtos));			
+		for (int monthOfYear = DateTimeConstants.JANUARY; monthOfYear <= DateTimeConstants.DECEMBER; monthOfYear++) {
+			
+			cal.set(anho, monthOfYear, 1);			
+			horarioAnual.setMes(monthOfYear, this.getHorarioMesEmpleado(cal.getTime(), empleado, definicionesHorariosDtos, excepcionesHorariosDtos));			
 		}						
 		
 		return horarioAnual;
@@ -237,15 +236,14 @@ public class HorarioServiceImpl implements HorarioService {
 
 	@Override
 	public HorarioAnualEmpleadoDto actualizarHorasAnhoPorNuevaDefinicionHorario(DefinicionHorarioDto definicionHorario, HorarioAnualEmpleadoDto horarioAnual) {
-		
-		Calendar cal = Calendar.getInstance();
 				
-		cal.setTime(definicionHorario.getFechaDesde());		
-		int mesIniRango = cal.get(Calendar.MONTH); 
+		LocalDate localDate = new LocalDate(definicionHorario.getFechaDesde());		
+		int mesIniRango = localDate.getMonthOfYear();
 		
-		cal.clear();
-		cal.setTime(definicionHorario.getFechaHasta());		
-		int mesFinRango = cal.get(Calendar.MONTH);
+		localDate = new LocalDate(definicionHorario.getFechaHasta());
+		int mesFinRango = localDate.getMonthOfYear();
+				
+		// FIXME Cambiar las constantes de Calendar por las de JodaTime
 		
 		if (horarioAnual.getDefinicionesHorarios() == null) {
 				horarioAnual.setDefinicionesHorarios(new ArrayList<DefinicionHorarioDto>());				
@@ -289,6 +287,11 @@ public class HorarioServiceImpl implements HorarioService {
 		if (definicionHorario.getNumSemanasAlternancia() != null && definicionHorario.getNumSemanasAlternancia() !=0) {
 
 			
+			// FIXME: Cambiar las constantes de Calendar por las de JodaTime
+			
+			asdfasdfafasdfasdf
+			
+			
 			Calendar cal = Calendar.getInstance();			
 			cal.setTime(definicionHorario.getFechaDesde());			
 			int numSemanaInicioDefinicionRelativoAnho = cal.get(Calendar.WEEK_OF_YEAR);
@@ -320,29 +323,18 @@ public class HorarioServiceImpl implements HorarioService {
 		Date horaHasta = definicionHorario.getHoraHasta();
 		UbicacionDto ubicacion = definicionHorario.getUbicacion();
 		ProduccionDto produccion = definicionHorario.getProduccion();		
-		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(definicionHorario.getFechaDesde());
-		int dayOfWeek_fechaIniRango = cal.get(Calendar.DAY_OF_WEEK); // MONDAY = 2, TUESDAY = 3, WEDNESDAY = 4, THURSDAY = 5, FRIDAY = 6 ,SATURDAY = 7, SUNDAY = 1		
-		
+				
+		LocalDate localDate = new LocalDate(definicionHorario.getFechaDesde());
+		int dayOfWeek_fechaIniRango = localDate.getDayOfWeek(); // MONDAY = 1, TUESDAY = 2, WEDNESDAY = 3, THURSDAY = 4, FRIDAY = 5 ,SATURDAY = 6, SUNDAY = 7 
+				
 		boolean esPrimeraSemanaTratada= true;
 		
 		SimpleDateFormat sdf_yearMonthWeek = new SimpleDateFormat("yyyyMMww");
 		String yearMonthWeek_semanaFinRango = sdf_yearMonthWeek.format(definicionHorario.getFechaHasta());
-				
-		cal.setTime(definicionHorario.getFechaHasta());
-		int dayOfWeek_fechaFinRango = cal.get(Calendar.DAY_OF_WEEK);
-				
-		ArrayList<Integer> diasSemana = new ArrayList<Integer>(); // Contiene los dias de la semana tal como los representa java.util.Calendar
-		diasSemana.add(2);
-		diasSemana.add(3);
-		diasSemana.add(4);
-		diasSemana.add(5);
-		diasSemana.add(6);
-		diasSemana.add(7);
-		diasSemana.add(1);		
+						
+		localDate = new LocalDate(definicionHorario.getFechaHasta());
+		int dayOfWeek_fechaFinRango = localDate.getDayOfWeek(); // MONDAY = 1, TUESDAY = 2, WEDNESDAY = 3, THURSDAY = 4, FRIDAY = 5 ,SATURDAY = 6, SUNDAY = 7
 		
-		int[] diaSemana = {2,3,4,5,6,7,1}; // Contiene los dias de la semana tal como los representa java.util.Calendar
 		
 		// la variable yearMonthWeek se seteará con el valor de la semana cada horario que se inserte para poder finalizar la iteración sobre las semanas en cuanto se detecte que la
 		// semanaTratada es igual que la semana del fin de rango.
@@ -358,26 +350,26 @@ public class HorarioServiceImpl implements HorarioService {
 			// para la primera semana tratada del primer mes se empieza en el día en el día de la semana correspondiente al incicio del rango horario definido
 			if (esPrimerMes && esPrimeraSemanaTratada && semana.getFechaSemana().compareTo(definicionHorario.getFechaDesde()) >= 0) {
 				
-				for (int i= diasSemana.indexOf(dayOfWeek_fechaIniRango); i<= 6; i++)  {
+				for (int i= dayOfWeek_fechaIniRango; i<= 7; i++)  {
 					
-					if (semana.getFechaDiaSemana(diaSemana[i]).compareTo(definicionHorario.getFechaDesde()) >= 0 && 
-							semana.getFechaDiaSemana(diaSemana[i]).compareTo(definicionHorario.getFechaHasta()) <=0) {
+					if (semana.getFechaDiaSemana(i).compareTo(definicionHorario.getFechaDesde()) >= 0 && 
+							semana.getFechaDiaSemana(i).compareTo(definicionHorario.getFechaHasta()) <=0) {
 						
 						List<HorasDiaDto> horariosDia = new ArrayList<HorasDiaDto>();
-						horariosDia= semana.getDiaSemana(diaSemana[i]);
+						horariosDia= semana.getDiaSemana(i);
 						
 						// Si el empleado no tenía horario horarioDia será null por lo que se inicializará a una lista vacía
 						if (horariosDia == null) {
 							horariosDia = new ArrayList<HorasDiaDto>();
-							semana.setDiaSemana(diaSemana[i], horariosDia);
+							semana.setDiaSemana(i, horariosDia);
 						}
 						
-						Boolean festivo = semana.getFestivoDiaSemana(diaSemana[i]);
+						Boolean festivo = semana.getFestivoDiaSemana(i);
 
-						if (definicionHorario.aplicarDiaSemana(diaSemana[i])) {							
-							horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(diaSemana[i]), festivo, horaDesde, horaHasta, ubicacion, produccion, definicionHorario));
-							semana.setColorHorarioDia(diaSemana[i],definicionHorario.getColorHorario());
-							yearMonthWeek = sdf_yearMonthWeek.format(semana.getFechaDiaSemana(diaSemana[i]));
+						if (definicionHorario.aplicarDiaSemana(i)) {							
+							horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(i), festivo, horaDesde, horaHasta, ubicacion, produccion, definicionHorario));
+							semana.setColorHorarioDia(i,definicionHorario.getColorHorario());
+							yearMonthWeek = sdf_yearMonthWeek.format(semana.getFechaDiaSemana(i));
 						}
 					}										
 				}
@@ -393,36 +385,36 @@ public class HorarioServiceImpl implements HorarioService {
 					// si es últimoMes y la semana tratada es igual a la última semana del rango indicado..
 					if (esUltimoMes && semana.getYearMonthWeek().equals(yearMonthWeek_semanaFinRango)) {  
 											
-						for (int i= 0; i <= 6; i++) {
+						for (int i= 1; i <= 7; i++) {
 	
 							// Si el día no contiene fecha, por ejemplo por que es la primera semana de un mes que comienza en miercoles -> el lunes y martes 
 							// tendrán fecha a null
-							if (semana.getFechaDiaSemana(diaSemana[i]) == null) {
+							if (semana.getFechaDiaSemana(i) == null) {
 								continue;
 							}
 							
 							// si la fecha del lunes es mayor o igual que la del inicio del rangoHorario y menor o igual que la fecha de fin del rango-> inserta el rango horario en el día			
-							if (semana.getFechaDiaSemana(diaSemana[i]).compareTo(definicionHorario.getFechaDesde()) >= 0 && 
-									semana.getFechaDiaSemana(diaSemana[i]).compareTo(definicionHorario.getFechaHasta()) <=0) {
+							if (semana.getFechaDiaSemana(i).compareTo(definicionHorario.getFechaDesde()) >= 0 && 
+									semana.getFechaDiaSemana(i).compareTo(definicionHorario.getFechaHasta()) <=0) {
 								
 								List<HorasDiaDto> horariosDia = new ArrayList<HorasDiaDto>();
-								horariosDia = semana.getDiaSemana(diaSemana[i]);
+								horariosDia = semana.getDiaSemana(i);
 								
 								// Si el empleado no tenía horario horarioDia será null por lo que se inicializará a una lista vacía
 								if (horariosDia == null) {
 									horariosDia = new ArrayList<HorasDiaDto>();
-									semana.setDiaSemana(diaSemana[i], horariosDia);
+									semana.setDiaSemana(i, horariosDia);
 								}
 								
-								Boolean festivo = semana.getFestivoDiaSemana(diaSemana[i]);
+								Boolean festivo = semana.getFestivoDiaSemana(i);
 								
-								if (definicionHorario.aplicarDiaSemana(diaSemana[i])) {								
-									horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(diaSemana[i]), festivo, horaDesde, horaHasta, ubicacion, produccion, definicionHorario));
-									semana.setColorHorarioDia(diaSemana[i],definicionHorario.getColorHorario());
-									yearMonthWeek = sdf_yearMonthWeek.format(semana.getFechaDiaSemana(diaSemana[i]));
+								if (definicionHorario.aplicarDiaSemana(i)) {								
+									horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(i), festivo, horaDesde, horaHasta, ubicacion, produccion, definicionHorario));
+									semana.setColorHorarioDia(i,definicionHorario.getColorHorario());
+									yearMonthWeek = sdf_yearMonthWeek.format(semana.getFechaDiaSemana(i));
 								}
 								
-								if (diaSemana[i] == dayOfWeek_fechaFinRango)
+								if (i == dayOfWeek_fechaFinRango)
 									break;
 	
 							}
@@ -433,35 +425,35 @@ public class HorarioServiceImpl implements HorarioService {
 					else { // para aquellas semanas que no sean ni la primera del rango definido ni la última...
 										
 						
-						for (int i= 0; i <= 6; i++) {
+						for (int i= 1; i <= 7; i++) {
 							
 							
 							//sí el día de la semana tratado es del siguiente mes salimos de la iteración
 							// Aquellas semanas que acaban en el siguiente mes tienen las fechas de los días del mes siguiente a null
-							if (semana.getFechaDiaSemana(diaSemana[i]) == null) continue;						 						
+							if (semana.getFechaDiaSemana(i) == null) continue;						 						
 							//cal.setTime(semana.getFechaDiaSemana(diaSemana[i]));
 							//if (cal.get(Calendar.MONTH) != mes) break;
 							
 						
 							// si la fecha del lunes es mayor o igual que la del inicio del rangoHorario y menor o igual que la fecha de fin del rango-> inserta el rango horario en el día			
-							if (semana.getFechaDiaSemana(diaSemana[i]).compareTo(definicionHorario.getFechaDesde()) >= 0 && 
-									semana.getFechaDiaSemana(diaSemana[i]).compareTo(definicionHorario.getFechaHasta()) <=0) {
+							if (semana.getFechaDiaSemana(i).compareTo(definicionHorario.getFechaDesde()) >= 0 && 
+									semana.getFechaDiaSemana(i).compareTo(definicionHorario.getFechaHasta()) <=0) {
 								
 								List<HorasDiaDto> horariosDia = new ArrayList<HorasDiaDto>();
-								horariosDia = semana.getDiaSemana(diaSemana[i]);
+								horariosDia = semana.getDiaSemana(i);
 								
 								// Si el empleado no tenía horario horarioDia será null por lo que se inicializará a una lista vacía
 								if (horariosDia == null) {
 									horariosDia = new ArrayList<HorasDiaDto>();
-									semana.setDiaSemana(diaSemana[i], horariosDia);
+									semana.setDiaSemana(i, horariosDia);
 								}							
 								
-								Boolean festivo = semana.getFestivoDiaSemana(diaSemana[i]);
+								Boolean festivo = semana.getFestivoDiaSemana(i);
 												
-								if (definicionHorario.aplicarDiaSemana(diaSemana[i])) {
-									horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(diaSemana[i]), festivo, horaDesde, horaHasta, ubicacion, produccion, definicionHorario));
-									semana.setColorHorarioDia(diaSemana[i],definicionHorario.getColorHorario());
-									yearMonthWeek = sdf_yearMonthWeek.format(semana.getFechaDiaSemana(diaSemana[i]));
+								if (definicionHorario.aplicarDiaSemana(i)) {
+									horariosDia.add(new HorasDiaDto(empleado, semana.getFechaDiaSemana(i), festivo, horaDesde, horaHasta, ubicacion, produccion, definicionHorario));
+									semana.setColorHorarioDia(i,definicionHorario.getColorHorario());
+									yearMonthWeek = sdf_yearMonthWeek.format(semana.getFechaDiaSemana(i));
 								}
 							}
 						}
@@ -607,7 +599,7 @@ public class HorarioServiceImpl implements HorarioService {
 							if (horasDia.getExcepcionHorario() == null) {
 								 
 								// Aunque la definicionHorario no esté aún insertada en BD el idDefinicionHorario para el empleado tratado si existirá (con número negativo)
-								if (horasDia.getDefinicionHorario().getIdDefinicionHorario() == definicionHorario.getIdDefinicionHorario() ){												
+								if (horasDia.getDefinicionHorario().getIdDefinicionHorario().longValue() == definicionHorario.getIdDefinicionHorario().longValue() ){												
 									
 									horasDia.setDefinicionHorario(definicionHorario);
 									
@@ -649,7 +641,7 @@ public class HorarioServiceImpl implements HorarioService {
 							if (horasDia.getExcepcionHorario() == null) {
 								 
 								// Aunque la definicionHorario no esté aún insertada en BD el idDefinicionHorario para el empleado tratado si existirá (con número negativo)
-								if (horasDia.getDefinicionHorario().getIdDefinicionHorario() == definicionHorario.getIdDefinicionHorario() ){
+								if (horasDia.getDefinicionHorario().getIdDefinicionHorario().longValue() == definicionHorario.getIdDefinicionHorario().longValue() ){
 									
 									horarioSemanaEmpleado.setColorHorarioDia(horasDia.getDiaSemana(), "");
 									horariosDia.remove(horasDia);

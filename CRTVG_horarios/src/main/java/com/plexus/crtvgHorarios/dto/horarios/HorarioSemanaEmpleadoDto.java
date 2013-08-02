@@ -2,9 +2,10 @@ package com.plexus.crtvgHorarios.dto.horarios;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import org.joda.time.DateTimeConstants;
 
 import com.plexus.crtvgHorarios.dto.common.BaseDto;
 import com.plexus.crtvgHorarios.dto.empleados.EmpleadoDto;
@@ -22,9 +23,7 @@ public class HorarioSemanaEmpleadoDto extends BaseDto implements Cloneable{
 	
 	private static SimpleDateFormat sdf = new SimpleDateFormat("d");
 	private static SimpleDateFormat sdf_yearMonthWeek = new SimpleDateFormat("yyyyMMww");
-	
-	private static int[] diaSemana = {2,3,4,5,6,7,1}; // Contiene los dias de la semana tal como los representa java.util.Calendar
-	
+		
 	// TODO: Refactorizar creando un tipo de objeto día que incluya los distintos atributos de los días;
 	
 	private List<HorasDiaDto> lunes;
@@ -82,14 +81,15 @@ public class HorarioSemanaEmpleadoDto extends BaseDto implements Cloneable{
 	
 	public List<HorasDiaDto> getDiaSemana(int diaSemana) {
 		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: return lunes;
-			case Calendar.TUESDAY: return martes;
-			case Calendar.WEDNESDAY: return miercoles;
-			case Calendar.THURSDAY: return jueves;
-			case Calendar.FRIDAY: return viernes;
-			case Calendar.SATURDAY: return sabado;
-			case Calendar.SUNDAY: return domingo;
+			case DateTimeConstants.MONDAY: return lunes;
+			case DateTimeConstants.TUESDAY: return martes;
+			case DateTimeConstants.WEDNESDAY: return miercoles;
+			case DateTimeConstants.THURSDAY: return jueves;
+			case DateTimeConstants.FRIDAY: return viernes;
+			case DateTimeConstants.SATURDAY: return sabado;
+			case DateTimeConstants.SUNDAY: return domingo;
 		}
 		
 		return null;		
@@ -97,14 +97,15 @@ public class HorarioSemanaEmpleadoDto extends BaseDto implements Cloneable{
 	
 	public void setDiaSemana(int diaSemana, List<HorasDiaDto> horariosDia) {
 
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: this.setLunes(horariosDia); break;
-			case Calendar.TUESDAY: this.setMartes(horariosDia); break;
-			case Calendar.WEDNESDAY: this.setMiercoles(horariosDia); break;
-			case Calendar.THURSDAY: this.setJueves(horariosDia); break;
-			case Calendar.FRIDAY: this.setViernes(horariosDia); break;
-			case Calendar.SATURDAY: this.setSabado(horariosDia); break;
-			case Calendar.SUNDAY: this.setDomingo(horariosDia); break;
+			case DateTimeConstants.MONDAY: this.setLunes(horariosDia); break;
+			case DateTimeConstants.TUESDAY: this.setMartes(horariosDia); break;
+			case DateTimeConstants.WEDNESDAY: this.setMiercoles(horariosDia); break;
+			case DateTimeConstants.THURSDAY: this.setJueves(horariosDia); break;
+			case DateTimeConstants.FRIDAY: this.setViernes(horariosDia); break;
+			case DateTimeConstants.SATURDAY: this.setSabado(horariosDia); break;
+			case DateTimeConstants.SUNDAY: this.setDomingo(horariosDia); break;
 		}
 		
 	}
@@ -112,14 +113,15 @@ public class HorarioSemanaEmpleadoDto extends BaseDto implements Cloneable{
 	
 	public Date getFechaDiaSemana(int diaSemana) {
 		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: return fechaLunes;
-			case Calendar.TUESDAY: return fechaMartes;
-			case Calendar.WEDNESDAY: return fechaMiercoles;
-			case Calendar.THURSDAY: return fechaJueves;
-			case Calendar.FRIDAY: return fechaViernes;
-			case Calendar.SATURDAY: return fechaSabado;
-			case Calendar.SUNDAY: return fechaDomingo;
+			case DateTimeConstants.MONDAY: return fechaLunes;
+			case DateTimeConstants.TUESDAY: return fechaMartes;
+			case DateTimeConstants.WEDNESDAY: return fechaMiercoles;
+			case DateTimeConstants.THURSDAY: return fechaJueves;
+			case DateTimeConstants.FRIDAY: return fechaViernes;
+			case DateTimeConstants.SATURDAY: return fechaSabado;
+			case DateTimeConstants.SUNDAY: return fechaDomingo;
 		}
 		
 		return null;		
@@ -127,14 +129,15 @@ public class HorarioSemanaEmpleadoDto extends BaseDto implements Cloneable{
 	
 	public void setFechaDiaSemana(int diaSemana, Date fecha) {
 		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: this.setFechaLunes(fecha); break;
-			case Calendar.TUESDAY: this.setFechaMartes(fecha); break;
-			case Calendar.WEDNESDAY: this.setFechaMiercoles(fecha); break;
-			case Calendar.THURSDAY: this.setFechaJueves(fecha); break;
-			case Calendar.FRIDAY: this.setFechaViernes(fecha); break;
-			case Calendar.SATURDAY: this.setFechaSabado(fecha); break;
-			case Calendar.SUNDAY: this.setFechaDomingo(fecha); break;
+			case DateTimeConstants.MONDAY: this.setFechaLunes(fecha); break;
+			case DateTimeConstants.TUESDAY: this.setFechaMartes(fecha); break;
+			case DateTimeConstants.WEDNESDAY: this.setFechaMiercoles(fecha); break;
+			case DateTimeConstants.THURSDAY: this.setFechaJueves(fecha); break;
+			case DateTimeConstants.FRIDAY: this.setFechaViernes(fecha); break;
+			case DateTimeConstants.SATURDAY: this.setFechaSabado(fecha); break;
+			case DateTimeConstants.SUNDAY: this.setFechaDomingo(fecha); break;
 		}
 		
 	}	
@@ -142,14 +145,15 @@ public class HorarioSemanaEmpleadoDto extends BaseDto implements Cloneable{
 	
 	public Boolean getFestivoDiaSemana(int diaSemana) {
 		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: return lunesFestivo;
-			case Calendar.TUESDAY: return martesFestivo;
-			case Calendar.WEDNESDAY: return miercolesFestivo;
-			case Calendar.THURSDAY: return juevesFestivo;
-			case Calendar.FRIDAY: return viernesFestivo;
-			case Calendar.SATURDAY: return sabadoFestivo;
-			case Calendar.SUNDAY: return domingoFestivo;
+			case DateTimeConstants.MONDAY: return lunesFestivo;
+			case DateTimeConstants.TUESDAY: return martesFestivo;
+			case DateTimeConstants.WEDNESDAY: return miercolesFestivo;
+			case DateTimeConstants.THURSDAY: return juevesFestivo;
+			case DateTimeConstants.FRIDAY: return viernesFestivo;
+			case DateTimeConstants.SATURDAY: return sabadoFestivo;
+			case DateTimeConstants.SUNDAY: return domingoFestivo;
 		}
 		
 		return null;		
@@ -158,27 +162,30 @@ public class HorarioSemanaEmpleadoDto extends BaseDto implements Cloneable{
 
 	public void setFestivoDiaSemana(int diaSemana, boolean festivo) {
 		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: this.setLunesFestivo(festivo); break;
-			case Calendar.TUESDAY: this.setMartesFestivo(festivo); break;
-			case Calendar.WEDNESDAY: this.setMiercolesFestivo(festivo); break;
-			case Calendar.THURSDAY: this.setJuevesFestivo(festivo); break;
-			case Calendar.FRIDAY: this.setViernesFestivo(festivo); break;
-			case Calendar.SATURDAY: this.setSabadoFestivo(festivo); break;
-			case Calendar.SUNDAY: this.setDomingoFestivo(festivo); break;
+			case DateTimeConstants.MONDAY: this.setLunesFestivo(festivo); break;
+			case DateTimeConstants.TUESDAY: this.setMartesFestivo(festivo); break;
+			case DateTimeConstants.WEDNESDAY: this.setMiercolesFestivo(festivo); break;
+			case DateTimeConstants.THURSDAY: this.setJuevesFestivo(festivo); break;
+			case DateTimeConstants.FRIDAY: this.setViernesFestivo(festivo); break;
+			case DateTimeConstants.SATURDAY: this.setSabadoFestivo(festivo); break;
+			case DateTimeConstants.SUNDAY: this.setDomingoFestivo(festivo); break;
 		}
 	}	
 	
 	
 	public void setColorHorarioDia(int diaSemana, String color) {
+		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: this.setColorHorarioLunes(color); break;
-			case Calendar.TUESDAY: this.setColorHorarioMartes(color); break;
-			case Calendar.WEDNESDAY: this.setColorHorarioMiercoles(color); break;
-			case Calendar.THURSDAY: this.setColorHorarioJueves(color); break;
-			case Calendar.FRIDAY: this.setColorHorarioViernes(color); break;
-			case Calendar.SATURDAY: this.setColorHorarioSabado(color); break;
-			case Calendar.SUNDAY: this.setColorHorarioDomingo(color); break;
+			case DateTimeConstants.MONDAY: this.setColorHorarioLunes(color); break;
+			case DateTimeConstants.TUESDAY: this.setColorHorarioMartes(color); break;
+			case DateTimeConstants.WEDNESDAY: this.setColorHorarioMiercoles(color); break;
+			case DateTimeConstants.THURSDAY: this.setColorHorarioJueves(color); break;
+			case DateTimeConstants.FRIDAY: this.setColorHorarioViernes(color); break;
+			case DateTimeConstants.SATURDAY: this.setColorHorarioSabado(color); break;
+			case DateTimeConstants.SUNDAY: this.setColorHorarioDomingo(color); break;
 		}				
 	}
 	
@@ -189,8 +196,9 @@ public class HorarioSemanaEmpleadoDto extends BaseDto implements Cloneable{
 	 */
 	public Date getFechaSemana() {
 		
-		for (int i=0; i<=6; i++) {
-			Date fechaSemana = getFechaDiaSemana(diaSemana[i]); 
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
+		for (int i=1; i<=7; i++) {
+			Date fechaSemana = getFechaDiaSemana(i); 
 			if ( fechaSemana != null)
 				return fechaSemana;
 		}
@@ -203,8 +211,9 @@ public class HorarioSemanaEmpleadoDto extends BaseDto implements Cloneable{
 		
 		List<List<HorasDiaDto>> listaDiasSemana = new ArrayList<List<HorasDiaDto>>();
 		
-		for (int i=0; i<= 6; i++) {
-			listaDiasSemana.add(this.getDiaSemana(diaSemana[i]));
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
+		for (int i=1; i<= 7; i++) {
+			listaDiasSemana.add(this.getDiaSemana(i));
 		}
 		
 		return listaDiasSemana;
@@ -213,9 +222,10 @@ public class HorarioSemanaEmpleadoDto extends BaseDto implements Cloneable{
 	// Todas la semanas deberían contener almenos un día con fecha distinta de null
 	public String getYearMonthWeek() {
 		
-		for (int i= 0; i<= 6; i++) {
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
+		for (int i= 1; i<= 7; i++) {
 			
-			Date fecha = this.getFechaDiaSemana(diaSemana[i]); 
+			Date fecha = this.getFechaDiaSemana(i); 
 			if (fecha != null) {
 				return sdf_yearMonthWeek.format(fecha);				
 			}			

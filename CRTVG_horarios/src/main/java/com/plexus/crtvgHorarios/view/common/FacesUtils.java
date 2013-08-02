@@ -422,7 +422,10 @@ public class FacesUtils {
 	public static TimeZone getTimeZone() {
 		
 		//TODO: probar si return  TimeZone.getDefault() devuelve lo mismo		
-		return TimeZone.getTimeZone("Europe/Madrid");
+		TimeZone timeZone = TimeZone.getTimeZone("Europe/Madrid");
+		TimeZone defaultTimeZone = TimeZone.getDefault();
+		
+		return TimeZone.getDefault();
 	}
 
 	public static Locale getLocale() {

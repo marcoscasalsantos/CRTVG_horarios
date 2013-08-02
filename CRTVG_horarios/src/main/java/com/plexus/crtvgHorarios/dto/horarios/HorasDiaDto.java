@@ -1,8 +1,8 @@
 package com.plexus.crtvgHorarios.dto.horarios;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+
+import org.joda.time.LocalDate;
 
 import com.plexus.crtvgHorarios.dataAccess.pojo.UnidadHorarioPojo;
 import com.plexus.crtvgHorarios.dto.common.BaseDto;
@@ -103,9 +103,10 @@ public class HorasDiaDto extends BaseDto implements Cloneable{
 	
 	
 	public int getDiaSemana() {		
-		Calendar c = Calendar.getInstance();
-		c.setTime(this.getFechaDia());
-		int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+		
+		LocalDate localDate = new LocalDate(this.getFechaDia());
+		int dayOfWeek = localDate.getDayOfWeek(); // MONDAY = 1, TUESDAY = 2, WEDNESDAY = 3, THURSDAY = 4, FRIDAY = 5 ,SATURDAY = 6, SUNDAY = 7 
+		
 		return dayOfWeek;
 	}
 	

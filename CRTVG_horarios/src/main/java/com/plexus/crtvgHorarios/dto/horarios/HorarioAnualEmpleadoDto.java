@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.joda.time.DateTimeConstants;
+
 import com.plexus.crtvgHorarios.dto.common.BaseDto;
 import com.plexus.crtvgHorarios.dto.empleados.EmpleadoDto;
 import com.plexus.crtvgHorarios.view.common.dataModel.HorariosSemanasEmpleadoDataModel;
@@ -56,19 +58,20 @@ public class HorarioAnualEmpleadoDto extends BaseDto {
 
 	public HorarioMesDto getMes(int mes) {
 		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que los meses van de 1 a 12 en lugar de 0 a 11
 		switch (mes) {		
-			case Calendar.JANUARY: return enero;
-			case Calendar.FEBRUARY: return febrero;
-			case Calendar.MARCH: return marzo;
-			case Calendar.APRIL: return abril;
-			case Calendar.MAY: return mayo;
-			case Calendar.JUNE: return junio;
-			case Calendar.JULY: return julio;
-			case Calendar.AUGUST: return agosto;
-			case Calendar.SEPTEMBER: return septiembre;
-			case Calendar.OCTOBER: return octubre;
-			case Calendar.NOVEMBER: return noviembre;
-			case Calendar.DECEMBER: return diciembre;		
+			case DateTimeConstants.JANUARY: return enero;
+			case DateTimeConstants.FEBRUARY: return febrero;
+			case DateTimeConstants.MARCH: return marzo;
+			case DateTimeConstants.APRIL: return abril;
+			case DateTimeConstants.MAY: return mayo;
+			case DateTimeConstants.JUNE: return junio;
+			case DateTimeConstants.JULY: return julio;
+			case DateTimeConstants.AUGUST: return agosto;
+			case DateTimeConstants.SEPTEMBER: return septiembre;
+			case DateTimeConstants.OCTOBER: return octubre;
+			case DateTimeConstants.NOVEMBER: return noviembre;
+			case DateTimeConstants.DECEMBER: return diciembre;		
 		}
 		
 		return null;
@@ -78,18 +81,18 @@ public class HorarioAnualEmpleadoDto extends BaseDto {
 	public void setMes(int mes, HorarioMesDto horarioMes) {
 		
 		switch (mes) {		
-			case Calendar.JANUARY: this.setEnero(horarioMes); break;
-			case Calendar.FEBRUARY: this.setFebrero(horarioMes); break;
-			case Calendar.MARCH: this.setMarzo(horarioMes); break;
-			case Calendar.APRIL: this.setAbril(horarioMes); break;
-			case Calendar.MAY: this.setMayo(horarioMes); break;
-			case Calendar.JUNE: this.setJunio(horarioMes); break;
-			case Calendar.JULY: this.setJulio(horarioMes); break;
-			case Calendar.AUGUST: this.setAgosto(horarioMes); break;
-			case Calendar.SEPTEMBER: this.setSeptiembre(horarioMes); break;
-			case Calendar.OCTOBER: this.setOctubre(horarioMes); break;
-			case Calendar.NOVEMBER: this.setNoviembre(horarioMes); break;
-			case Calendar.DECEMBER: this.setDiciembre(horarioMes); break;
+			case DateTimeConstants.JANUARY: this.setEnero(horarioMes); break;
+			case DateTimeConstants.FEBRUARY: this.setFebrero(horarioMes); break;
+			case DateTimeConstants.MARCH: this.setMarzo(horarioMes); break;
+			case DateTimeConstants.APRIL: this.setAbril(horarioMes); break;
+			case DateTimeConstants.MAY: this.setMayo(horarioMes); break;
+			case DateTimeConstants.JUNE: this.setJunio(horarioMes); break;
+			case DateTimeConstants.JULY: this.setJulio(horarioMes); break;
+			case DateTimeConstants.AUGUST: this.setAgosto(horarioMes); break;
+			case DateTimeConstants.SEPTEMBER: this.setSeptiembre(horarioMes); break;
+			case DateTimeConstants.OCTOBER: this.setOctubre(horarioMes); break;
+			case DateTimeConstants.NOVEMBER: this.setNoviembre(horarioMes); break;
+			case DateTimeConstants.DECEMBER: this.setDiciembre(horarioMes); break;
 		}
 	}
 	
@@ -97,7 +100,7 @@ public class HorarioAnualEmpleadoDto extends BaseDto {
 		
 		List<HorarioMesDto> mesesAnho = new ArrayList<HorarioMesDto>();
 		
-		for (int mes = Calendar.JANUARY; mes <= Calendar.DECEMBER; mes++) {			
+		for (int mes = DateTimeConstants.JANUARY; mes <= DateTimeConstants.DECEMBER; mes++) {			
 			mesesAnho.add(this.getMes(mes));			
 		}
 		

@@ -1,7 +1,8 @@
 package com.plexus.crtvgHorarios.dto.horarios;
 
-import java.util.Calendar;
 import java.util.Date;
+
+import org.joda.time.DateTimeConstants;
 
 import com.plexus.crtvgHorarios.dataAccess.pojo.UnidadHorarioPojo;
 import com.plexus.crtvgHorarios.dto.common.BaseDto;
@@ -68,14 +69,15 @@ public class DefinicionHorarioDto extends BaseDto {
 
 	public boolean aplicarDiaSemana(int diaSemana) {
 		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: return aplicarLunes;
-			case Calendar.TUESDAY: return aplicarMartes;
-			case Calendar.WEDNESDAY: return aplicarMiercoles;
-			case Calendar.THURSDAY: return aplicarJueves;
-			case Calendar.FRIDAY: return aplicarViernes;
-			case Calendar.SATURDAY: return aplicarSabado;
-			case Calendar.SUNDAY: return aplicarDomingo;
+			case DateTimeConstants.MONDAY: return aplicarLunes;
+			case DateTimeConstants.TUESDAY: return aplicarMartes;
+			case DateTimeConstants.WEDNESDAY: return aplicarMiercoles;
+			case DateTimeConstants.THURSDAY: return aplicarJueves;
+			case DateTimeConstants.FRIDAY: return aplicarViernes;
+			case DateTimeConstants.SATURDAY: return aplicarSabado;
+			case DateTimeConstants.SUNDAY: return aplicarDomingo;
 		}		
 		return false;
 	}

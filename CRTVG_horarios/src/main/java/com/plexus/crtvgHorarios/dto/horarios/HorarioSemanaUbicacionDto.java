@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.joda.time.DateTimeConstants;
+
 import com.plexus.crtvgHorarios.dto.categorias.CategoriaDto;
 import com.plexus.crtvgHorarios.dto.common.BaseDto;
 import com.plexus.crtvgHorarios.dto.ubicaciones.UbicacionDto;
@@ -52,14 +54,15 @@ public class HorarioSemanaUbicacionDto extends BaseDto implements Cloneable{
 	
 	public List<HorasDiaDto> getDiaSemana(int diaSemana) {
 		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: return lunes;
-			case Calendar.TUESDAY: return martes;
-			case Calendar.WEDNESDAY: return miercoles;
-			case Calendar.THURSDAY: return jueves;
-			case Calendar.FRIDAY: return viernes;
-			case Calendar.SATURDAY: return sabado;
-			case Calendar.SUNDAY: return domingo;
+			case DateTimeConstants.MONDAY: return lunes;
+			case DateTimeConstants.TUESDAY: return martes;
+			case DateTimeConstants.WEDNESDAY: return miercoles;
+			case DateTimeConstants.THURSDAY: return jueves;
+			case DateTimeConstants.FRIDAY: return viernes;
+			case DateTimeConstants.SATURDAY: return sabado;
+			case DateTimeConstants.SUNDAY: return domingo;
 		}
 		
 		return null;		
@@ -67,14 +70,15 @@ public class HorarioSemanaUbicacionDto extends BaseDto implements Cloneable{
 	
 	public void setDiaSemana(int diaSemana, List<HorasDiaDto> horariosDia) {
 
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: this.setLunes(horariosDia); break;
-			case Calendar.TUESDAY: this.setMartes(horariosDia); break;
-			case Calendar.WEDNESDAY: this.setMiercoles(horariosDia); break;
-			case Calendar.THURSDAY: this.setJueves(horariosDia); break;
-			case Calendar.FRIDAY: this.setViernes(horariosDia); break;
-			case Calendar.SATURDAY: this.setSabado(horariosDia); break;
-			case Calendar.SUNDAY: this.setDomingo(horariosDia); break;
+			case DateTimeConstants.MONDAY: this.setLunes(horariosDia); break;
+			case DateTimeConstants.TUESDAY: this.setMartes(horariosDia); break;
+			case DateTimeConstants.WEDNESDAY: this.setMiercoles(horariosDia); break;
+			case DateTimeConstants.THURSDAY: this.setJueves(horariosDia); break;
+			case DateTimeConstants.FRIDAY: this.setViernes(horariosDia); break;
+			case DateTimeConstants.SATURDAY: this.setSabado(horariosDia); break;
+			case DateTimeConstants.SUNDAY: this.setDomingo(horariosDia); break;
 		}
 		
 	}	
@@ -82,14 +86,15 @@ public class HorarioSemanaUbicacionDto extends BaseDto implements Cloneable{
 	
 	public Boolean getFestivoDiaSemana(int diaSemana) {
 		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: return lunesFestivo;
-			case Calendar.TUESDAY: return martesFestivo;
-			case Calendar.WEDNESDAY: return miercolesFestivo;
-			case Calendar.THURSDAY: return juevesFestivo;
-			case Calendar.FRIDAY: return viernesFestivo;
-			case Calendar.SATURDAY: return sabadoFestivo;
-			case Calendar.SUNDAY: return domingoFestivo;
+			case DateTimeConstants.MONDAY: return lunesFestivo;
+			case DateTimeConstants.TUESDAY: return martesFestivo;
+			case DateTimeConstants.WEDNESDAY: return miercolesFestivo;
+			case DateTimeConstants.THURSDAY: return juevesFestivo;
+			case DateTimeConstants.FRIDAY: return viernesFestivo;
+			case DateTimeConstants.SATURDAY: return sabadoFestivo;
+			case DateTimeConstants.SUNDAY: return domingoFestivo;
 		}
 		
 		return null;		
@@ -98,14 +103,15 @@ public class HorarioSemanaUbicacionDto extends BaseDto implements Cloneable{
 
 	public void setFestivoDiaSemana(int diaSemana, boolean festivo) {
 		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
 		switch (diaSemana) {		
-			case Calendar.MONDAY: this.setLunesFestivo(festivo); break;
-			case Calendar.TUESDAY: this.setMartesFestivo(festivo); break;
-			case Calendar.WEDNESDAY: this.setMiercolesFestivo(festivo); break;
-			case Calendar.THURSDAY: this.setJuevesFestivo(festivo); break;
-			case Calendar.FRIDAY: this.setViernesFestivo(festivo); break;
-			case Calendar.SATURDAY: this.setSabadoFestivo(festivo); break;
-			case Calendar.SUNDAY: this.setDomingoFestivo(festivo); break;
+			case DateTimeConstants.MONDAY: this.setLunesFestivo(festivo); break;
+			case DateTimeConstants.TUESDAY: this.setMartesFestivo(festivo); break;
+			case DateTimeConstants.WEDNESDAY: this.setMiercolesFestivo(festivo); break;
+			case DateTimeConstants.THURSDAY: this.setJuevesFestivo(festivo); break;
+			case DateTimeConstants.FRIDAY: this.setViernesFestivo(festivo); break;
+			case DateTimeConstants.SATURDAY: this.setSabadoFestivo(festivo); break;
+			case DateTimeConstants.SUNDAY: this.setDomingoFestivo(festivo); break;
 		}
 	}	
 	

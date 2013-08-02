@@ -959,15 +959,17 @@
 							rendered="#{horarioAnualBean.panelNuevaDefinicionHorarioVisible}" style="width: 370px">
 														
 							<h:panelGrid columns="2" columnClasses="columnAlignRight, middleAligned">
-							
+							 
 								<p:outputLabel for="fechaInicio" value="#{msg.horarioAnualEmpleado_periodoFechas}:" />
 							
-								<h:panelGroup>
-									<p:calendar id="fechaInicio" value="#{horarioAnualBean.definicionHorario.fechaDesde}" locale="#{localeBean.locale}" pattern="dd/MM/yyyy" 
-										navigator="true" styleClass="timeField">        						  
+								<h:panelGroup>								
+									<p:calendar id="fechaInicio" value="#{horarioAnualBean.definicionHorario.fechaDesde}" pattern="dd/MM/yyyy" 
+										navigator="true" styleClass="timeField" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}">  
+											<f:convertDateTime pattern="dd/MM/yyyy" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>      						  
 		    						</p:calendar> -
-									<p:calendar id="fechaFin" value="#{horarioAnualBean.definicionHorario.fechaHasta}" locale="#{localeBean.locale}" pattern="dd/MM/yyyy" 
-										navigator="true" styleClass="timeField">        						  
+									<p:calendar id="fechaFin" value="#{horarioAnualBean.definicionHorario.fechaHasta}" pattern="dd/MM/yyyy" 
+										navigator="true" styleClass="timeField" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"> 
+											<f:convertDateTime pattern="dd/MM/yyyy" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>       						  
 		    						</p:calendar>
 	    						</h:panelGroup>
 	    								    					
@@ -1027,11 +1029,15 @@
 								<p:outputLabel for="nuevaDefinicionHorarioHoraDesde" value="#{msg.horarioAnualEmpleado_periodoHoras}:" />
 								    
 							    <h:panelGroup> 
-								    <p:calendar id="nuevaDefinicionHorarioHoraDesde" value="#{horarioAnualBean.definicionHorario.horaDesde}" pattern="HH:mm" timeOnly="true" styleClass="dateTimeField"> 
-								    	<p:ajax event="dateSelect" /> 
-								    </p:calendar> -  
-								    <p:calendar id="nuevaDefinicionHorarioHoraHasta" value="#{horarioAnualBean.definicionHorario.horaHasta}" pattern="HH:mm" timeOnly="true" styleClass="dateTimeField" >
+								    <p:calendar id="nuevaDefinicionHorarioHoraDesde" value="#{horarioAnualBean.definicionHorario.horaDesde}" pattern="HH:mm" timeOnly="true" 
+								    	locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}" styleClass="dateTimeField"> 
 								    	<p:ajax event="dateSelect" />
+								    	<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/> 
+								    </p:calendar> -  
+								    <p:calendar id="nuevaDefinicionHorarioHoraHasta" value="#{horarioAnualBean.definicionHorario.horaHasta}" pattern="HH:mm" timeOnly="true" 
+								    	locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}" styleClass="dateTimeField" >
+								    	<p:ajax event="dateSelect" />
+								    	<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
 								    </p:calendar>
 							    </h:panelGroup>
 							    
@@ -1092,13 +1098,13 @@
             					</p:cellEditor>										           		
 										           												        			
 					        </p:column>
-																																				
+																															
 							<p:column style="width: 100px !important">
 								<f:facet name="header" >
 									<h:outputText value="#{msg.horarioAnualEmpleado_periodoHoras}" />
 					            </f:facet>
 
-								<p:cellEditor>  
+								<p:cellEditor>  							 
                 					<f:facet name="output">  
 										<h:outputText value="#{definicionHorario.horaDesde}">
 		            						<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
@@ -1109,16 +1115,23 @@
 		            					</h:outputText>  
                 					</f:facet>  
                 					
-                					<f:facet name="input">  
+                					
+                					<f:facet name="input">
+                					   
 			    						<h:panelGroup>							         									    										 
-										    <p:calendar id="horaDesde" value="#{definicionHorario.horaDesde}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField"> 
-										    	<p:ajax event="dateSelect"/> 
+										    <p:calendar id="horaDesde" value="#{definicionHorario.horaDesde}" pattern="HH:mm" timeOnly="true" stepMinute="5" 
+										    	locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}" styleClass="dateTimeField"> 
+										    	<p:ajax event="dateSelect"/>
+										    	<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/> 
 										    </p:calendar>
 										    <h:outputText value="-"/>
-										    <p:calendar id="horaHasta" value="#{definicionHorario.horaHasta}" pattern="HH:mm" timeOnly="true" stepMinute="5" styleClass="dateTimeField">
+										    <p:calendar id="horaHasta" value="#{definicionHorario.horaHasta}" pattern="HH:mm" timeOnly="true" stepMinute="5" 
+										    	locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}" styleClass="dateTimeField">
 										    	<p:ajax event="dateSelect"/>
+										    	<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
 										    </p:calendar>
-										</h:panelGroup>                    					  
+										</h:panelGroup>
+									   
                 					</f:facet>  
             					</p:cellEditor>
 							</p:column>
@@ -1175,18 +1188,7 @@
             						 <f:setPropertyActionListener value="#{definicionHorario}" target="#{horarioAnualBean.selectedDefinicionHorario}" />
             					</p:commandLink>
             				</p:column>
-								            						 						        							
-							
-							<!-- 
-							<p:column>
-								<p:commandButton id="actualizarHorarioButton" update=":horarioAnualForm:calendarioAnualPanelGrid" actionListener="#{horarioAnualBean.aplicarCambiosDefinicionHorario}"
-					        		rendered="#{horarioAnualBean.botonAplicarCambiosDefinicionHorarioVisible}" icon="ui-icon-check" title="#{msg.boton_aplicar}"/>
-					        			
-								<p:commandButton id="eliminarHorarioButton" update=":horarioAnualForm:calendarioAnualPanelGrid" actionListener="#{horarioAnualBean.eliminarDefinicionHorario}"
-					        		 icon="ui-icon-minusthick" title="#{msg.boton_eliminar}"/>			        										
-							</p:column>
-							 -->
-																									
+								            						 						        																																
 							<f:facet name="footer">
 		   						<p:commandButton id="nuevoHorarioButton" value="#{msg.boton_nuevo}" update=":horarioAnualForm:definicionesHorariosPanelGrid" actionListener="#{horarioAnualBean.nuevaDefinicionHorario}"
 				        			 icon="ui-icon-plusthick" />
@@ -1203,21 +1205,9 @@
 		        
 		        </p:panelGrid>	        
 			</h:form>	
-			
-			
-			<!-- execute the script after the DOM is ready.  -->
-			<script type="text/javascript">	
-			    $(document).ready(function() {
-			    	$('#guardarCambiosHorariosButton').hide();
-			    	PF('botonGuardar').hide();
-			    });			
-			</script> 				
-			
+						
 		</ui:define>
-	</ui:composition>
-	
-
-	
+	</ui:composition>	
 		
 </html>
 

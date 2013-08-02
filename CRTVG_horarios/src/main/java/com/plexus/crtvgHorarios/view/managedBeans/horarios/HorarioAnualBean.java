@@ -25,6 +25,11 @@ import com.plexus.crtvgHorarios.service.horarioService.HorarioService;
 import com.plexus.crtvgHorarios.view.common.FacesUtils;
 
 
+	/* Just stick to java.util.Date in the model, view and persistence layer 
+	 * (as all have already builtin support for it and you generally don't need to perform date calculations/manipulations at those layers at all)
+	 *  and use JodaTime in business layer only whenever you need to perform calculations/manipulations based on the java.util.Date value.
+	 */
+
 
 @ManagedBean(name = "horarioAnualBean")
 @ViewScoped
@@ -59,6 +64,7 @@ public class HorarioAnualBean implements Serializable {
 	private long idNuevaDefinicionHorario = 0; //Ese id se utilizará para identificar la definicionHorario mientras que no se persista en BD.
 	
 	private DefinicionHorarioDto selectedDefinicionHorario;
+	
 	
 	@PostConstruct
 	private void postConstrut(){

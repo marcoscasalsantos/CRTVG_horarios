@@ -18,7 +18,7 @@ import com.plexus.crtvgHorarios.dataAccess.dao.common.BaseDao;
 import com.plexus.crtvgHorarios.dataAccess.pojo.DefinicionHorarioPojo;
 import com.plexus.crtvgHorarios.dataAccess.pojo.ExcepcionHorarioPojo;
 import com.plexus.crtvgHorarios.dataAccess.pojo.UnidadHorarioPojo;
-import com.plexus.crtvgHorarios.dto.horarios.DefinicionHorarioDto;
+import com.plexus.crtvgHorarios.view.common.FacesUtils;
 
 @Repository
 public class HorarioDaoImpl extends BaseDao implements HorarioDao {
@@ -232,7 +232,7 @@ public class HorarioDaoImpl extends BaseDao implements HorarioDao {
 		List<UnidadHorarioPojo> unidadesHorarios = new ArrayList<UnidadHorarioPojo>();
 				
 		LocalDate localDate = new LocalDate(semana);
-				
+		
 		Date fechaLunesSemana = localDate.withDayOfWeek(DateTimeConstants.MONDAY).toDate();		
 		Date fechaDomingoSemana = localDate.withDayOfWeek(DateTimeConstants.SUNDAY).toDate();
 		

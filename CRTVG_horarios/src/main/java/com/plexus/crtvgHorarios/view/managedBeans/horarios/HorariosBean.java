@@ -1,9 +1,7 @@
 package com.plexus.crtvgHorarios.view.managedBeans.horarios;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +17,6 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
 import org.omnifaces.util.selectitems.SelectItemsBuilder;
 
-import com.plexus.crtvgHorarios.dto.categorias.CategoriaDto;
 import com.plexus.crtvgHorarios.dto.empleados.EmpleadoDto;
 import com.plexus.crtvgHorarios.dto.horarios.HorarioSemanaUbicacionDto;
 import com.plexus.crtvgHorarios.dto.horarios.HorasDiaDto;
@@ -210,28 +207,49 @@ public class HorariosBean implements Serializable {
 	}
 
 
-
-
-
-	public Date getDiaInicioSemana() throws ParseException {		
-		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(this.getSelectedSemana());
-		
-		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
-		
-		return cal.getTime();		
+	public Date getDiaSemanaLunes() throws ParseException {		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
+		return getDiaSemana(DateTimeConstants.MONDAY);
 	}
 	
-	
-	public Date getDiaFinSemana() throws ParseException {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(this.getSelectedSemana());
-		
-		cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek()+6);
-				
-		return cal.getTime();
+	public Date getDiaSemanaMartes() throws ParseException {		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
+		return getDiaSemana(DateTimeConstants.TUESDAY);
 	}
+	
+	public Date getDiaSemanaMiercoles() throws ParseException {		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
+		return getDiaSemana(DateTimeConstants.WEDNESDAY);
+	}
+	
+	public Date getDiaSemanaJueves() throws ParseException {		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
+		return getDiaSemana(DateTimeConstants.THURSDAY);
+	}	
+	
+	public Date getDiaSemanaViernes() throws ParseException {		
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
+		return getDiaSemana(DateTimeConstants.FRIDAY);
+	}	
+	
+	public Date getDiaSemanaSabado() throws ParseException {
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
+		return getDiaSemana(DateTimeConstants.SATURDAY);
+	}
+	
+	public Date getDiaSemanaDomingo() throws ParseException {
+		// OJO! Usar las constantes de JodaTime en lugar de las de Calendar ya que empiezan la semana con el luenes en lugar del domingo
+		return getDiaSemana(DateTimeConstants.SUNDAY);
+	}
+	
+	public Date getDiaSemana(int diaSemana) throws ParseException {
+		
+		LocalDate localDate = new LocalDate(this.getSelectedSemana());		
+		Date fechaDiaSemana = localDate.withDayOfWeek(diaSemana).toDate();
+		
+		return fechaDiaSemana;
+	}
+			
 	
 
 	public void updateCambio(ActionEvent event){

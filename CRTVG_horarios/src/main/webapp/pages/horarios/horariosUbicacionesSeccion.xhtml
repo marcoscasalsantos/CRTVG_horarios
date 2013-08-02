@@ -37,8 +37,9 @@
 		        		<p:commandButton id="semanaAnteriorButton" icon="ui-icon-triangle-1-w" actionListener="#{horariosBean.mostrarSemanaAnterior}"   
 			               update="semana, horariosSemanasUbicacionesTable" style="height: 2em; vertical-align:top; width:2em;" title="Anterior"  />
 			               
-		        		<p:calendar id="semana" value="#{horariosBean.selectedSemana}" locale="#{localeBean.locale}" pattern="dd/MM/yyyy" styleClass="timeField">	        			
-	        				<p:ajax event="dateSelect" listener="#{horariosBean.semanaChangeListener}" update="horariosSemanasUbicacionesTable" />  
+		        		<p:calendar id="semana" value="#{horariosBean.selectedSemana}" pattern="dd/MM/yyyy" styleClass="timeField" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}">	        			
+	        				<p:ajax event="dateSelect" listener="#{horariosBean.semanaChangeListener}" update="horariosSemanasUbicacionesTable" />
+	        				<f:convertDateTime pattern="dd/MM/yyyy" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>  
 	    				</p:calendar>
 	    				
 	    				<p:spacer width="1"/>
@@ -55,11 +56,11 @@
 								 								    
 			    	<f:facet name="header">
 			    		<h:outputText value="Semana do " style="font-weight: bold"/>
-			    		<h:outputText value="#{horariosBean.diaInicioSemana}" >
+			    		<h:outputText value="#{horariosBean.diaSemanaLunes}" >
               				<f:convertDateTime pattern="dd" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
  						</h:outputText>
  						<h:outputText value=" ao " style="font-weight: bold"/>
- 						<h:outputText value="#{horariosBean.diaFinSemana}" >
+ 						<h:outputText value="#{horariosBean.diaSemanaDomingo}" >
               				<f:convertDateTime pattern="dd 'do' MM'/'yyyy" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>              					
  						</h:outputText>			    		
  						<h:outputText value=" - #{horariosBean.selectedSeccion.nombreSeccion}" style="font-weight: bold"/>
@@ -74,7 +75,10 @@
 			        
 			        <p:column styleClass="#{horarioSemanaUbicacion.lunesFestivo?'backgroundYellow':''}">			            
 			            <f:facet name="header" >
-							<h:outputText value="#{msg.horariosUbicacionesSeccion_lunes}"/>
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_lunes} "/>
+							<h:outputText value="#{horariosBean.diaSemanaLunes}" >
+              					<f:convertDateTime pattern="dd/MM" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+ 							</h:outputText>							
 			            </f:facet>
 			            
 						<p:dataTable id="horasDiaLunes" var="horasDia" value="#{horarioSemanaUbicacion.lunes}" styleClass="borderless hide-column-names"
@@ -106,7 +110,10 @@
 			        
 			        <p:column styleClass="#{horarioSemanaUbicacion.martesFestivo?'backgroundYellow':''}">			        	
 			            <f:facet name="header">
-							<h:outputText value="#{msg.horariosUbicacionesSeccion_martes}"/>				
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_martes} "/>
+							<h:outputText value="#{horariosBean.diaSemanaMartes}" >
+              					<f:convertDateTime pattern="dd/MM" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+ 							</h:outputText>							
 			            </f:facet>
 			           
 						<p:dataTable id="horasDiaMartes" var="horasDia" value="#{horarioSemanaUbicacion.martes}" styleClass="borderless hide-column-names"
@@ -137,7 +144,10 @@
 			        
 			        <p:column styleClass="#{horarioSemanaUbicacion.miercolesFestivo?'backgroundYellow':''}">
 			            <f:facet name="header">
-							<h:outputText value="#{msg.horariosUbicacionesSeccion_miercoles}"/>
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_miercoles} "/>
+							<h:outputText value="#{horariosBean.diaSemanaMiercoles}" >
+              					<f:convertDateTime pattern="dd/MM" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+ 							</h:outputText>														
 			            </f:facet>
 			            
 						<p:dataTable var="horasDia" value="#{horarioSemanaUbicacion.miercoles}" styleClass="borderless hide-column-names"
@@ -169,7 +179,10 @@
 
 			        <p:column styleClass="#{horarioSemanaUbicacion.juevesFestivo?'backgroundYellow':''}">
 			            <f:facet name="header">
-							<h:outputText value="#{msg.horariosUbicacionesSeccion_jueves}"/>
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_jueves} "/>
+							<h:outputText value="#{horariosBean.diaSemanaJueves}" >
+              					<f:convertDateTime pattern="dd/MM" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+ 							</h:outputText>																					
 			            </f:facet>
 			            <p:dataTable var="horasDia" value="#{horarioSemanaUbicacion.jueves}" styleClass="borderless hide-column-names"
 			            	selectionMode="single" selection="#{horariosBean.selectedHorasDia}" rowKey="#{horasDia.idHorasDia}" emptyMessage="">
@@ -199,7 +212,10 @@
 			        
 			        <p:column styleClass="#{horarioSemanaUbicacion.viernesFestivo?'backgroundYellow':''}">
 			            <f:facet name="header">
-							<h:outputText value="#{msg.horariosUbicacionesSeccion_viernes}"/>
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_viernes} "/>
+							<h:outputText value="#{horariosBean.diaSemanaViernes}" >
+              					<f:convertDateTime pattern="dd/MM" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+ 							</h:outputText>																												
 			            </f:facet>
 			            <p:dataTable var="horasDia" value="#{horarioSemanaUbicacion.viernes}" styleClass="borderless hide-column-names"
 			            	selectionMode="single" selection="#{horariosBean.selectedHorasDia}" rowKey="#{horasDia.idHorasDia}" emptyMessage="">
@@ -229,7 +245,10 @@
 			        
 			        <p:column  styleClass="#{horarioSemanaUbicacion.sabadoFestivo?'backgroundYellow':''}">
 			            <f:facet name="header">
-							<h:outputText value="#{msg.horariosUbicacionesSeccion_sabado}"/>
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_sabado} "/>
+							<h:outputText value="#{horariosBean.diaSemanaSabado}" >
+              					<f:convertDateTime pattern="dd/MM" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+ 							</h:outputText>							
 			            </f:facet>
 			            <p:dataTable var="horasDia" value="#{horarioSemanaUbicacion.sabado}" styleClass="borderless hide-column-names"
 			            	selectionMode="single" selection="#{horariosBean.selectedHorasDia}" rowKey="#{horasDia.idHorasDia}" emptyMessage="">
@@ -259,7 +278,10 @@
 			        
 			        <p:column styleClass="#{horarioSemanaUbicacion.domingoFestivo?'backgroundYellow':''}">
 			            <f:facet name="header">
-							<h:outputText value="#{msg.horariosUbicacionesSeccion_domingo}"/>
+							<h:outputText value="#{msg.horariosUbicacionesSeccion_domingo} "/>
+							<h:outputText value="#{horariosBean.diaSemanaDomingo}" >
+              					<f:convertDateTime pattern="dd/MM" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+ 							</h:outputText>														
 			            </f:facet>
 			            <p:dataTable var="horasDia" value="#{horarioSemanaUbicacion.domingo}" styleClass="borderless hide-column-names"
 			            	selectionMode="single" selection="#{horariosBean.selectedHorasDia}" rowKey="#{horasDia.idHorasDia}" emptyMessage="">
@@ -330,8 +352,12 @@
 															
 					    <p:outputLabel for="horaDesde" value="Horario día: " />
 					    <h:panelGroup>
-						    <p:calendar id="horaDesde" value="#{horariosBean.horasDiaEdicion.horaDesde}" pattern="HH:mm" timeOnly="true" styleClass="dateTimeField"/> -  
-						    <p:calendar id="horaHasta" value="#{horariosBean.horasDiaEdicion.horaHasta}" pattern="HH:mm" timeOnly="true" styleClass="dateTimeField"/>
+						    <p:calendar id="horaDesde" value="#{horariosBean.horasDiaEdicion.horaDesde}" pattern="HH:mm" timeOnly="true" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}" styleClass="dateTimeField">
+						    	<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+						    </p:calendar> -   
+						    <p:calendar id="horaHasta" value="#{horariosBean.horasDiaEdicion.horaHasta}" pattern="HH:mm" timeOnly="true" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}" styleClass="dateTimeField">
+						    	<f:convertDateTime pattern="HH:mm" locale="#{localeBean.locale}" timeZone="#{localeBean.timeZone}"/>
+						    </p:calendar>
 					    </h:panelGroup>
 					    																
 		        		<p:outputLabel for="produccion" value="#{msg.horarioAnualEmpleado_produccion}:" />
